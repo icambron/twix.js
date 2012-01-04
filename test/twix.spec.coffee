@@ -1,12 +1,19 @@
 if typeof module != "undefined"
-  require("should")
   moment = require("moment")
+  assert_equal = require('assert').equal
   Twix = require("../../lib/twix")
+else 
+  moment = window.moment
+  Twix = window.Twix
+  assert_equal = (a, b) -> throw new Error("Found #{a}, expected #{b}") unless a == b
+
 
 run_batch = (options, tests) ->
-  tests.forEach((t) ->
-    it("is as expected for " + t.name, -> new Twix(t.start, t.end, options).toString().should.equal(t.result))
-  )
+  for t in tests
+    it("is as expected for " + t.name, -> 
+      twix = new Twix(t.start, t.end, options)
+      assert_equal(twix.toString(), t.result)
+    )
 
 this_year = (partial, time) -> 
   full_date = "#{partial}/#{moment().year()}"

@@ -1,5 +1,6 @@
 if typeof module != "undefined"
   moment = require('moment')
+else moment = window.moment
 
 #ensure we can find moment
 if typeof moment == "undefined"
@@ -101,4 +102,7 @@ class Twix
 
     fold common_bucket
 
-module.exports = Twix
+if typeof module != "undefined"
+  module.exports = Twix
+else
+  window.Twix = Twix

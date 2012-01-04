@@ -1,0 +1,34 @@
+{
+  "name": "twix",
+  "version": "0.1.0",
+  "description": "Twix.js allows you format date ranges",
+  "homepage": "https://github.com/icambron/twix.js",
+  "author": "Isaac Cambron",
+  "keywords": [
+    "twix",
+    "date",
+    "date range"
+  ],
+  "dependencies": {
+    "moment": "1.2.0"
+  },
+  "devDependencies": {
+    "mocha" : "0.8.x"
+  },
+  "main": "./lib/twix",
+  "engines": {
+    "node": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/icambron/twix.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/icambron/twix.js/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ]
+}

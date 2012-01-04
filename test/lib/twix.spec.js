@@ -1,18 +1,30 @@
 (function() {
-  var Twix, moment, run_batch, this_year;
+  var Twix, assert_equal, moment, run_batch, this_year;
 
   if (typeof module !== "undefined") {
-    require("should");
     moment = require("moment");
+    assert_equal = require('assert').equal;
     Twix = require("../../lib/twix");
+  } else {
+    moment = window.moment;
+    Twix = window.Twix;
+    assert_equal = function(a, b) {
+      if (a !== b) throw new Error("Found " + a + ", expected " + b);
+    };
   }
 
   run_batch = function(options, tests) {
-    return tests.forEach(function(t) {
-      return it("is as expected for " + t.name, function() {
-        return new Twix(t.start, t.end, options).toString().should.equal(t.result);
-      });
-    });
+    var t, _i, _len, _results;
+    _results = [];
+    for (_i = 0, _len = tests.length; _i < _len; _i++) {
+      t = tests[_i];
+      _results.push(it("is as expected for " + t.name, function() {
+        var twix;
+        twix = new Twix(t.start, t.end, options);
+        return assert_equal(twix.toString(), t.result);
+      }));
+    }
+    return _results;
   };
 
   this_year = function(partial, time) {
