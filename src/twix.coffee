@@ -20,10 +20,27 @@ class Twix
   sameYear: ->
     @start.year() == @end.year()
 
-  daysIn: ->
+  countDays: ->
     startDate = datePart @start
     endDate = datePart @end
     endDate.diff(startDate, 'days') + 1
+
+  daysIn: (each) ->
+    startDate = datePart @start
+    endDate = datePart @end
+
+    iter = startDate
+
+    {
+      next: ->
+        if iter > endDate
+          null
+        else
+          val = iter.clone()
+          iter.add('days', 1)
+          val
+      hasNext: -> iter <= endDate
+    }
     
   format: (inopts) ->
     options =

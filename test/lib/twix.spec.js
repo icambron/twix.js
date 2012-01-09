@@ -17,7 +17,7 @@
     var fullDate;
     fullDate = "" + partial + "/" + (moment().year());
     if (time) fullDate += " " + time;
-    return fullDate;
+    return moment(fullDate);
   };
 
   describe("format()", function() {
@@ -235,27 +235,70 @@
     });
   });
 
-  describe("daysOf()", function() {
-    it("returns 1 if the range is inside a day", function() {
+  describe("countDays()", function() {
+    it("inside one day returns 1", function() {
       var end, range, start;
       start = thisYear("5/25", "3:00");
       end = thisYear("5/25", "14:00");
       range = new Twix(start, end);
-      return assertEqual(1, range.daysIn());
+      return assertEqual(1, range.countDays());
     });
     it("returns 2 if the range crosses midnight", function() {
       var end, range, start;
       start = thisYear("5/25", "16:00");
       end = thisYear("5/26", "3:00");
       range = new Twix(start, end);
-      return assertEqual(2, range.daysIn());
+      return assertEqual(2, range.countDays());
     });
     return it("works fine for all-day events", function() {
       var end, range, start;
       start = thisYear("5/25");
       end = thisYear("5/26");
       range = new Twix(start, end, true);
-      return assertEqual(2, range.daysIn());
+      return assertEqual(2, range.countDays());
+    });
+  });
+
+  describe("daysIn()", function() {
+    var assertSameDay;
+    assertSameDay = function(first, second) {
+      assertEqual(first.year(), second.year());
+      assertEqual(first.month(), second.month());
+      return assertEqual(first.date(), second.date());
+    };
+    it("provides 1 day if the range includes 1 day", function() {
+      var end, iter, range, start;
+      start = thisYear("5/25", "3:00");
+      end = thisYear("5/25", "14:00");
+      range = new Twix(start, end);
+      iter = range.daysIn();
+      assertSameDay(thisYear("5/25"), iter.next());
+      return assertEqual(null, iter.next());
+    });
+    it("provides 2 days if the range crosses midnight", function() {
+      var end, iter, range, start;
+      start = thisYear("5/25", "16:00");
+      end = thisYear("5/26", "3:00");
+      range = new Twix(start, end);
+      iter = range.daysIn();
+      assertSameDay(thisYear("5/25"), iter.next());
+      assertSameDay(thisYear("5/26"), iter.next());
+      return assertEqual(null, iter.next());
+    });
+    return it("provides 366 days if the range is a year", function() {
+      var end, iter, results, start;
+      start = thisYear("5/25", "16:00");
+      end = thisYear("5/25", "3:00").add('years', 1);
+      iter = new Twix(start, end).daysIn();
+      results = (function() {
+        var _results;
+        _results = [];
+        while (iter.hasNext()) {
+          _results.push(iter.next());
+        }
+        return _results;
+      })();
+      return assertEqual(366, results.length);
     });
   });
 
