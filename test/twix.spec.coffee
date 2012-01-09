@@ -136,6 +136,12 @@ describe "format()", ->
       options: {twentyFourHour: true},
       result: "May 25, 5:30 - 19:30"
 
+    test "always shows the :00"
+      start: thisYear "5/25", "12:00"
+      end: thisYear "5/25", "15:00"
+      options: {twentyFourHour: true},
+      result: "May 25, 12:00 - 15:00"
+
 describe "sameYear()", ->
 
   it "returns true if they're the same year", ->

@@ -160,13 +160,21 @@
       });
     });
     return describe("24 hours", function() {
-      return test("shouldn't show meridians", {
+      test("shouldn't show meridians", {
         start: thisYear("5/25", "5:30 AM"),
         end: thisYear("5/25", "7:30 PM"),
         options: {
           twentyFourHour: true
         },
         result: "May 25, 5:30 - 19:30"
+      });
+      return test("always shows the :00", {
+        start: thisYear("5/25", "12:00"),
+        end: thisYear("5/25", "15:00"),
+        options: {
+          twentyFourHour: true
+        },
+        result: "May 25, 12:00 - 15:00"
       });
     });
   });

@@ -27,7 +27,6 @@ class Twix
       showDate: true
       twentyFourHour: false
       implicitMinutes: true
-
       yearFormat: "YYYY"
       monthFormat: "MMM"
       dayFormat: "D"
@@ -89,11 +88,11 @@ class Twix
       fs.push
         name: "time",
         fn: (date) -> 
-          if date.minutes() == 0 && options.implicitMinutes
+          if date.minutes() == 0 && options.implicitMinutes && !options.twentyFourHour
             date.format options.hourFormat 
           else
             str = date.format "#{options.hourFormat}:#{options.minuteFormat}"
-            if !options.groupMeridiems && !options.twentyFourHours
+            if !options.groupMeridiems && !options.twentyFourHour
               str += " " if options.spaceBeforeMeridiem
               str += date.format options.meridiemFormat
             str
