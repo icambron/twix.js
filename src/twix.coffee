@@ -20,6 +20,11 @@ class Twix
   sameYear: ->
     @start.year() == @end.year()
 
+  daysIn: ->
+    startDate = datePart @start
+    endDate = datePart @end
+    endDate.diff(startDate, 'days') + 1
+    
   format: (inopts) ->
     options =
       groupMeridiems: true
@@ -150,11 +155,19 @@ class Twix
         local_first = false
       str
 
-    fold common_bucket  
+    fold common_bucket 
 
 extend = (first, second) ->
   for attr of second
     first[attr] = second[attr] unless typeof second[attr] == "undefined"
+
+#until it makes it into moment
+datePart = (moment) ->
+  moment.clone()
+    .hours(0)
+    .minutes(0)
+    .seconds(0)
+    .milliseconds(0)
   
 if typeof module != "undefined"
   module.exports = Twix

@@ -235,4 +235,28 @@
     });
   });
 
+  describe("daysOf()", function() {
+    it("returns 1 if the range is inside a day", function() {
+      var end, range, start;
+      start = thisYear("5/25", "3:00");
+      end = thisYear("5/25", "14:00");
+      range = new Twix(start, end);
+      return assertEqual(1, range.daysIn());
+    });
+    it("returns 2 if the range crosses midnight", function() {
+      var end, range, start;
+      start = thisYear("5/25", "16:00");
+      end = thisYear("5/26", "3:00");
+      range = new Twix(start, end);
+      return assertEqual(2, range.daysIn());
+    });
+    return it("works fine for all-day events", function() {
+      var end, range, start;
+      start = thisYear("5/25");
+      end = thisYear("5/26");
+      range = new Twix(start, end, true);
+      return assertEqual(2, range.daysIn());
+    });
+  });
+
 }).call(this);
