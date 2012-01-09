@@ -188,7 +188,7 @@ describe "sameDay()", ->
   it "returns true they're in different UTC days but the same local days", ->
     assertEqual true, new Twix("5/25/1982 5:30 AM", "5/25/1982 11:30 PM").sameDay()
 
-describe "daysOf()", ->
+describe "daysIn()", ->
 
   it "returns 1 if the range is inside a day", ->
     start = thisYear "5/25", "3:00"
