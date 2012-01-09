@@ -7,57 +7,98 @@ if typeof moment == "undefined"
   throw "Can't find moment"
 
 class Twix
-  constructor: (start, end, options) -> 
+  constructor: (start, end, allDay) -> 
     @start = moment start
     @end = moment end
-    @options = options || {}
+    @allDay = allDay
 
-  toString: ->
-    formatters = [
-      {
+  sameDay: ->
+    @start.year() == @end.year() &&
+    @start.month() == @end.month() &&
+    @start.date() == @end.date()
+
+  sameYear: ->
+    @start.year() == @end.year()
+
+  format: (inopts) ->
+    options =
+      groupMeridiems: true
+      spaceBeforeMeridiem: true
+      showDate: true
+      twentyFourHour: false
+      implicitMinutes: true
+
+      yearFormat: "YYYY"
+      monthFormat: "MMM"
+      dayFormat: "D"
+      meridiemFormat: "A"
+      hourFormat: "h"
+      minuteFormat: "mm"
+      allDay: "All day"
+
+    extend options, (inopts || {})
+
+    fs = []
+
+    options.hourFormat = options.hourFormat.replace("h", "H") if options.twentyFourHour
+    needDate = options.showDate || !@sameDay()
+
+    if @allDay && @sameDay() && !options.showDate
+      fs.push
+        name: "all day simple"
+        fn: -> options.allDay
+        slot: 0
+        pre: " "
+
+    if needDate && (@start.year() != moment().year() || !@sameYear())
+      fs.push
         name: "year", 
-        fn: (date) -> date.format "YYYY"
-        pre: ", "
-        slot: 2
-        #only show the year if it varies, or it isn't this year
-        skip: @start.year() == moment().year() && @start.year() == @end.year()
-      }
-      {
-        name: "month"
-        fn: (date) -> date.format "MMM"
-        slot: 0
-        skip: !@options.allDay
-        pre: " "
-      }
-      {
-        name: "date"
-        fn: (date) -> date.format "D"
-        slot: 1
-        skip: !@options.allDay,
-        pre: " "
-      }
-      {
-        name: "month and date"
-        fn: (date) -> date.format "MMM D"
-        slot: 0
-        skip: @options.allDay
-        pre: " "
-      }
-      {
-        name: "meridian", 
-        fn: (t) => t.format("A")
-        slot: 4
-        skip: @options.twentyFour || @options.allDay
-        pre: " "
-      }
-      {
-        name: "time",
-        fn: (date) -> if date.minutes() == 0 then date.format("h") else date.format("h:mm")
-        skip: @options.allDay
+        fn: (date) -> date.format options.yearFormat
         pre: ", "
         slot: 3
-      }
-    ]
+
+    if !@allDay && needDate
+      fs.push
+        name: "all day month"
+        fn: (date) -> date.format "#{options.monthFormat} #{options.dayFormat}"
+        slot: 1
+        pre: " "
+        
+    if @allDay && needDate
+      fs.push
+        name: "month"
+        fn: (date) -> date.format "MMM"
+        slot: 1
+        pre: " "
+
+    if @allDay && needDate
+      fs.push
+        name: "date"
+        fn: (date) -> date.format options.dayFormat
+        slot: 2
+        pre: " "
+
+    if options.groupMeridiems && !options.twentyFourHour && !@allDay
+      fs.push
+        name: "meridiem", 
+        fn: (t) => t.format options.meridiemFormat
+        slot: 5
+        pre: if options.spaceBeforeMeridiem then " " else ""
+
+    if !@allDay
+      fs.push
+        name: "time",
+        fn: (date) -> 
+          if date.minutes() == 0 && options.implicitMinutes
+            date.format options.hourFormat 
+          else
+            str = date.format "#{options.hourFormat}:#{options.minuteFormat}"
+            if !options.groupMeridiems && !options.twentyFourHours
+              str += " " if options.spaceBeforeMeridiem
+              str += date.format options.meridiemFormat
+            str
+        pre: ", "
+        slot: 4
 
     start_bucket = []
     end_bucket = []
@@ -80,7 +121,7 @@ class Twix
         start_bucket.push start_group
         end_bucket.push {format: format, value: -> end_str}
 
-    process format for format in formatters when format.skip isnt true
+    process format for format in fs when format.skip isnt true
 
     global_first = true
     fold = (array, skip_pre) =>
@@ -100,8 +141,12 @@ class Twix
         local_first = false
       str
 
-    fold common_bucket
+    fold common_bucket  
 
+extend = (first, second) ->
+  for attr of second
+    first[attr] = second[attr] unless typeof second[attr] == "undefined"
+  
 if typeof module != "undefined"
   module.exports = Twix
 else

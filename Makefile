@@ -3,4 +3,4 @@ build:
 	@find test -name '*.coffee' | xargs coffee -c -o test/lib
 
 test: build
-	@mocha test/lib/twix.spec.js
+	@mocha --reporter spec test/lib/twix.spec.js

@@ -15,12 +15,26 @@ Twix is a simple JS library for formatting date ranges. It currently depends on 
 
 ## Using ##
 
+You can create a Twix object with:
+
 ```js
-var t = new Twix("5/25/1982", "5/26/1982", {allDay: true});
-t.toString(); //=> 'May 25 - 26, 1982'
+new Twix(startTime, endTime);
 ```
 
-I'll add the full documentation here, in the meantime, check out the tests.
+or
+```js
+new Twix(startTime, endTime, true); //all-day range
+```
+
+The dates can be parsable strings, JS Date objects, or Moments.
+
+## Formatting ##
+
+### Different kinds of ranges ###
+
+
+### Formatting options ###
+
 
 ## TODO ##
 
