@@ -97,14 +97,15 @@ class Twix
       fs.push
         name: "time",
         fn: (date) -> 
-          if date.minutes() == 0 && options.implicitMinutes && !options.twentyFourHour
-            date.format options.hourFormat 
-          else
-            str = date.format "#{options.hourFormat}:#{options.minuteFormat}"
-            if !options.groupMeridiems && !options.twentyFourHour
-              str += " " if options.spaceBeforeMeridiem
-              str += date.format options.meridiemFormat
-            str
+          str = if date.minutes() == 0 && options.implicitMinutes && !options.twentyFourHour
+                  date.format options.hourFormat 
+                else
+                  date.format "#{options.hourFormat}:#{options.minuteFormat}"
+                  
+          if !options.groupMeridiems && !options.twentyFourHour
+            str += " " if options.spaceBeforeMeridiem
+            str += date.format options.meridiemFormat
+          str
         pre: ", "
         slot: 5
 

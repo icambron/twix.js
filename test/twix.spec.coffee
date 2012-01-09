@@ -122,6 +122,12 @@ describe "format()", ->
       options: {groupMeridiems: false}
       result: "May 25, 5:30 AM - 7:30 AM"
 
+    test "even with abbreviated hours",
+      start: thisYear "5/25", "7:00 PM"
+      end: thisYear "5/25", "9:00 PM"
+      options: {groupMeridiems: false}
+      result: "May 25, 7 PM - 9 PM"
+
   describe "no meridiem spaces", ->
     test "should skip the meridiem space"
       start: thisYear "5/25", "5:30 AM"

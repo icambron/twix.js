@@ -139,13 +139,21 @@
       });
     });
     describe("ungroup meridiems", function() {
-      return test("should put meridiems on both sides", {
+      test("should put meridiems on both sides", {
         start: thisYear("5/25", "5:30 AM"),
         end: thisYear("5/25", "7:30 AM"),
         options: {
           groupMeridiems: false
         },
         result: "May 25, 5:30 AM - 7:30 AM"
+      });
+      return test("even with abbreviated hours", {
+        start: thisYear("5/25", "7:00 PM"),
+        end: thisYear("5/25", "9:00 PM"),
+        options: {
+          groupMeridiems: false
+        },
+        result: "May 25, 7 PM - 9 PM"
       });
     });
     describe("no meridiem spaces", function() {
