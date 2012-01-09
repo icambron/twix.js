@@ -142,6 +142,27 @@ describe "format()", ->
       options: {twentyFourHour: true},
       result: "May 25, 12:00 - 15:00"
 
+  describe "show day of week", ->
+
+    test "should show day of week"
+      start: thisYear "5/25", "5:30 AM"
+      end: thisYear "5/28", "7:30 PM"
+      options: {showDayOfWeek: true},
+      result: "Fri May 25, 5:30 AM - Mon May 28, 7:30 PM"
+
+    test "collapses show day of week"
+      start: thisYear "5/25", "5:30 AM"
+      end: thisYear "5/25", "7:30 PM"
+      options: {showDayOfWeek: true},
+      result: "Fri May 25, 5:30 AM - 7:30 PM"
+
+    test "doesn't collapse with one week of separation"
+      start: thisYear "5/25"
+      end: thisYear "6/1"
+      allDay: true
+      options: {showDayOfWeek: true},
+      result: "Fri May 25 - Fri Jun 1"
+
 describe "sameYear()", ->
 
   it "returns true if they're the same year", ->

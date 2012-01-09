@@ -25,10 +25,12 @@ class Twix
       groupMeridiems: true
       spaceBeforeMeridiem: true
       showDate: true
+      showDayOfWeek: false
       twentyFourHour: false
       implicitMinutes: true
       yearFormat: "YYYY"
       monthFormat: "MMM"
+      weekdayFormat: "ddd"
       dayFormat: "D"
       meridiemFormat: "A"
       hourFormat: "h"
@@ -54,34 +56,41 @@ class Twix
         name: "year", 
         fn: (date) -> date.format options.yearFormat
         pre: ", "
-        slot: 3
+        slot: 4
 
     if !@allDay && needDate
       fs.push
         name: "all day month"
         fn: (date) -> date.format "#{options.monthFormat} #{options.dayFormat}"
-        slot: 1
+        slot: 2
         pre: " "
         
     if @allDay && needDate
       fs.push
         name: "month"
         fn: (date) -> date.format "MMM"
-        slot: 1
+        slot: 2
         pre: " "
 
     if @allDay && needDate
       fs.push
         name: "date"
         fn: (date) -> date.format options.dayFormat
-        slot: 2
+        slot: 3
         pre: " "
+
+    if needDate && options.showDayOfWeek
+      fs.push
+        name: "day of week",
+        fn: (date) -> date.format options.weekdayFormat
+        pre: " "
+        slot: 1
 
     if options.groupMeridiems && !options.twentyFourHour && !@allDay
       fs.push
         name: "meridiem", 
         fn: (t) => t.format options.meridiemFormat
-        slot: 5
+        slot: 6
         pre: if options.spaceBeforeMeridiem then " " else ""
 
     if !@allDay
@@ -97,7 +106,7 @@ class Twix
               str += date.format options.meridiemFormat
             str
         pre: ", "
-        slot: 4
+        slot: 5
 
     start_bucket = []
     end_bucket = []
