@@ -40,7 +40,7 @@ new Twix("1/25/2012", "1/25/2012", true).format();   //=> Jan 25
 new Twix("1/25/1982", "1/25/1982", true).format();   //=> Jan 25, 1982
 new Twix("1/25/2012", "1/26/2012", true).format();   //=> Jan 25 - 26
 new Twix("1/25/1982", "2/25/1982", true).format();   //=> Jan 25 - Feb 25, 1982
-new Twix("1/25/1982", new Date()", true).format();   //=> Jan 25, 1982 - Jan 9, 2012
+new Twix("1/25/1982", new Date(), true).format();   //=> Jan 25, 1982 - Jan 9, 2012
 ```
 
 Notice the various the different kinds of groupings and abbreviations:
