@@ -74,7 +74,7 @@ twix.format({implicitMinutes: false, groupMeridiems: false});     //=> May 25, 9
 Right, not everyone is American:
 
 ```js
-new Twix("5/25/2012 16:00", "5/25/2012 17:00").format({twentyFourHour: true});  //=> May 25, 16:00 - 17:00.
+new Twix("5/25/2012 16:00", "5/25/2012 17:00").format({twentyFourHour: true});  //=> May 25, 16:00 - 17:00
 ```
 
 Notice there's no hour abberviation.
