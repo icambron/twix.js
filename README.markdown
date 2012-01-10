@@ -53,8 +53,9 @@ Notice the various the different kinds of groupings and abbreviations:
 Unless the allDay parameter is set to true, the time is considered relevant:
 
 ```js
-new Twix("1/25/1982 9:30 AM", new Date()).format();  //=> Jan 25, 1982, 9:30 AM - Jan 9, 2012, 3:05 AM
-new Twix("1/25/1982", "1/27/1982").format();         //=> Jan 25, 12 AM - Jan 27, 12 AM, 1982
+new Twix("1/25/1982 9:30 AM", "1/25/1982 1:30 PM").format();  //=> Jan 25, 1982, 9:30 AM - 1:30 PM
+new Twix("1/25/1982 9:30 AM", new Date()).format();           //=> Jan 25, 1982, 9:30 AM - Jan 9, 2012, 3:05 AM
+new Twix("1/25/1982", "1/27/1982").format();                  //=> Jan 25, 12 AM - Jan 27, 12 AM, 1982
 ```
 
 ### Brevity and its discontents ###
