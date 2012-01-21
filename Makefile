@@ -1,6 +1,9 @@
 build:
-	@find src -name '*.coffee' | xargs coffee -c -o lib
-	@find test -name '*.coffee' | xargs coffee -c -o test/lib
+	@rm bin/*
+	@find src -name '*.coffee' | xargs coffee -c -o bin
+	@find test -name '*.coffee' | xargs coffee -c -o test/bin
+	@cp lib/*.js bin/
+	@node_modules/uglify-js/bin/uglifyjs bin/twix.js > bin/twix.min.js
 
 test: build
-	@mocha --reporter spec test/lib/twix.spec.js
+	@node_modules/mocha/bin/mocha --reporter spec test/bin/twix.spec.js

@@ -4,7 +4,7 @@
   if (typeof module !== "undefined") {
     moment = require("moment");
     assertEqual = require('assert').equal;
-    Twix = require("../../lib/twix");
+    Twix = require("../../bin/twix");
   } else {
     moment = window.moment;
     Twix = window.Twix;
