@@ -20,6 +20,113 @@
     return moment(fullDate);
   };
 
+  describe("sameYear()", function() {
+    it("returns true if they're the same year", function() {
+      return assertEqual(true, new Twix("5/25/1982", "10/14/1982").sameYear());
+    });
+    return it("returns false if they're different years", function() {
+      return assertEqual(false, new Twix("5/25/1982", "10/14/1983").sameYear());
+    });
+  });
+
+  describe("sameDay()", function() {
+    it("returns true if they're the same day", function() {
+      return assertEqual(true, new Twix("5/25/1982 5:30 AM", "5/25/1982 7:30 PM").sameDay());
+    });
+    it("returns false if they're different days day", function() {
+      return assertEqual(false, new Twix("5/25/1982 5:30 AM", "5/26/1982 7:30 PM").sameDay());
+    });
+    return it("returns true they're in different UTC days but the same local days", function() {
+      return assertEqual(true, new Twix("5/25/1982 5:30 AM", "5/25/1982 11:30 PM").sameDay());
+    });
+  });
+
+  describe("countDays()", function() {
+    it("inside one day returns 1", function() {
+      var end, range, start;
+      start = thisYear("5/25", "3:00");
+      end = thisYear("5/25", "14:00");
+      range = new Twix(start, end);
+      return assertEqual(1, range.countDays());
+    });
+    it("returns 2 if the range crosses midnight", function() {
+      var end, range, start;
+      start = thisYear("5/25", "16:00");
+      end = thisYear("5/26", "3:00");
+      range = new Twix(start, end);
+      return assertEqual(2, range.countDays());
+    });
+    return it("works fine for all-day events", function() {
+      var end, range, start;
+      start = thisYear("5/25");
+      end = thisYear("5/26");
+      range = new Twix(start, end, true);
+      return assertEqual(2, range.countDays());
+    });
+  });
+
+  describe("daysIn()", function() {
+    var assertSameDay;
+    assertSameDay = function(first, second) {
+      assertEqual(first.year(), second.year());
+      assertEqual(first.month(), second.month());
+      return assertEqual(first.date(), second.date());
+    };
+    it("provides 1 day if the range includes 1 day", function() {
+      var end, iter, range, start;
+      start = thisYear("5/25", "3:00");
+      end = thisYear("5/25", "14:00");
+      range = new Twix(start, end);
+      iter = range.daysIn();
+      assertSameDay(thisYear("5/25"), iter.next());
+      return assertEqual(null, iter.next());
+    });
+    it("provides 2 days if the range crosses midnight", function() {
+      var end, iter, range, start;
+      start = thisYear("5/25", "16:00");
+      end = thisYear("5/26", "3:00");
+      range = new Twix(start, end);
+      iter = range.daysIn();
+      assertSameDay(thisYear("5/25"), iter.next());
+      assertSameDay(thisYear("5/26"), iter.next());
+      return assertEqual(null, iter.next());
+    });
+    return it("provides 366 days if the range is a year", function() {
+      var end, iter, results, start;
+      start = thisYear("5/25", "16:00");
+      end = thisYear("5/25", "3:00").add('years', 1);
+      iter = new Twix(start, end).daysIn();
+      results = (function() {
+        var _results;
+        _results = [];
+        while (iter.hasNext()) {
+          _results.push(iter.next());
+        }
+        return _results;
+      })();
+      return assertEqual(366, results.length);
+    });
+  });
+
+  describe("duration()", function() {
+    describe("all-day events", function() {
+      it("formats single-day correctly", function() {
+        return assertEqual(new Twix("5/25/1982", "5.25/1982", true).duration(), "all day");
+      });
+      return it("formats multiday correctly", function() {
+        return assertEqual(new Twix("5/25/1982", "5/27/1982", true).duration(), "3 days");
+      });
+    });
+    return describe("non-all-day events", function() {
+      it("formats single-day correctly", function() {
+        return assertEqual(new Twix("5/25/1982 12:00", "5/25/1982 16:00").duration(), "4 hours");
+      });
+      return it("formats multiday correctly", function() {
+        return assertEqual(new Twix("5/25/1982", "5/27/1982").duration(), "2 days");
+      });
+    });
+  });
+
   describe("format()", function() {
     var test;
     test = function(name, t) {
@@ -210,113 +317,6 @@
           showDayOfWeek: true
         },
         result: "Fri May 25 - Fri Jun 1"
-      });
-    });
-  });
-
-  describe("sameYear()", function() {
-    it("returns true if they're the same year", function() {
-      return assertEqual(true, new Twix("5/25/1982", "10/14/1982").sameYear());
-    });
-    return it("returns false if they're different years", function() {
-      return assertEqual(false, new Twix("5/25/1982", "10/14/1983").sameYear());
-    });
-  });
-
-  describe("sameDay()", function() {
-    it("returns true if they're the same day", function() {
-      return assertEqual(true, new Twix("5/25/1982 5:30 AM", "5/25/1982 7:30 PM").sameDay());
-    });
-    it("returns false if they're different days day", function() {
-      return assertEqual(false, new Twix("5/25/1982 5:30 AM", "5/26/1982 7:30 PM").sameDay());
-    });
-    return it("returns true they're in different UTC days but the same local days", function() {
-      return assertEqual(true, new Twix("5/25/1982 5:30 AM", "5/25/1982 11:30 PM").sameDay());
-    });
-  });
-
-  describe("countDays()", function() {
-    it("inside one day returns 1", function() {
-      var end, range, start;
-      start = thisYear("5/25", "3:00");
-      end = thisYear("5/25", "14:00");
-      range = new Twix(start, end);
-      return assertEqual(1, range.countDays());
-    });
-    it("returns 2 if the range crosses midnight", function() {
-      var end, range, start;
-      start = thisYear("5/25", "16:00");
-      end = thisYear("5/26", "3:00");
-      range = new Twix(start, end);
-      return assertEqual(2, range.countDays());
-    });
-    return it("works fine for all-day events", function() {
-      var end, range, start;
-      start = thisYear("5/25");
-      end = thisYear("5/26");
-      range = new Twix(start, end, true);
-      return assertEqual(2, range.countDays());
-    });
-  });
-
-  describe("daysIn()", function() {
-    var assertSameDay;
-    assertSameDay = function(first, second) {
-      assertEqual(first.year(), second.year());
-      assertEqual(first.month(), second.month());
-      return assertEqual(first.date(), second.date());
-    };
-    it("provides 1 day if the range includes 1 day", function() {
-      var end, iter, range, start;
-      start = thisYear("5/25", "3:00");
-      end = thisYear("5/25", "14:00");
-      range = new Twix(start, end);
-      iter = range.daysIn();
-      assertSameDay(thisYear("5/25"), iter.next());
-      return assertEqual(null, iter.next());
-    });
-    it("provides 2 days if the range crosses midnight", function() {
-      var end, iter, range, start;
-      start = thisYear("5/25", "16:00");
-      end = thisYear("5/26", "3:00");
-      range = new Twix(start, end);
-      iter = range.daysIn();
-      assertSameDay(thisYear("5/25"), iter.next());
-      assertSameDay(thisYear("5/26"), iter.next());
-      return assertEqual(null, iter.next());
-    });
-    return it("provides 366 days if the range is a year", function() {
-      var end, iter, results, start;
-      start = thisYear("5/25", "16:00");
-      end = thisYear("5/25", "3:00").add('years', 1);
-      iter = new Twix(start, end).daysIn();
-      results = (function() {
-        var _results;
-        _results = [];
-        while (iter.hasNext()) {
-          _results.push(iter.next());
-        }
-        return _results;
-      })();
-      return assertEqual(366, results.length);
-    });
-  });
-
-  describe("duration()", function() {
-    describe("all-day events", function() {
-      it("formats single-day correctly", function() {
-        return assertEqual(new Twix("5/25/1982", "5.25/1982", true).duration(), "all day");
-      });
-      return it("formats multiday correctly", function() {
-        return assertEqual(new Twix("5/25/1982", "5/27/1982", true).duration(), "3 days");
-      });
-    });
-    return describe("non-all-day events", function() {
-      it("formats single-day correctly", function() {
-        return assertEqual(new Twix("5/25/1982 12:00", "5/25/1982 16:00").duration(), "4 hours");
-      });
-      return it("formats multiday correctly", function() {
-        return assertEqual(new Twix("5/25/1982", "5/27/1982").duration(), "2 days");
       });
     });
   });

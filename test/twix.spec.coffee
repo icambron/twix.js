@@ -12,6 +12,94 @@ thisYear = (partial, time) ->
   fullDate += " #{time}" if time
   moment fullDate
 
+describe "sameYear()", ->
+
+  it "returns true if they're the same year", ->
+    assertEqual true, new Twix("5/25/1982", "10/14/1982").sameYear()
+
+  it "returns false if they're different years", ->
+    assertEqual false, new Twix("5/25/1982", "10/14/1983").sameYear()
+
+describe "sameDay()", ->
+
+  it "returns true if they're the same day", ->
+    assertEqual true, new Twix("5/25/1982 5:30 AM", "5/25/1982 7:30 PM").sameDay()
+
+  it "returns false if they're different days day", ->
+    assertEqual false, new Twix("5/25/1982 5:30 AM", "5/26/1982 7:30 PM").sameDay()
+
+  it "returns true they're in different UTC days but the same local days", ->
+    assertEqual true, new Twix("5/25/1982 5:30 AM", "5/25/1982 11:30 PM").sameDay()
+
+describe "countDays()", ->    
+
+  it "inside one day returns 1", -> 
+    start = thisYear "5/25", "3:00"
+    end = thisYear "5/25", "14:00"
+    range = new Twix start, end
+    assertEqual 1, range.countDays()
+
+  it "returns 2 if the range crosses midnight", ->
+    start = thisYear "5/25", "16:00"
+    end = thisYear "5/26", "3:00"
+    range = new Twix start, end
+    assertEqual 2, range.countDays()
+
+  it "works fine for all-day events", ->
+    start = thisYear "5/25"
+    end = thisYear "5/26"
+    range = new Twix start, end, true
+    assertEqual 2, range.countDays()
+
+describe "daysIn()", ->
+
+  assertSameDay = (first, second) ->
+    assertEqual first.year(), second.year()
+    assertEqual first.month(), second.month()
+    assertEqual first.date(), second.date()
+
+  it "provides 1 day if the range includes 1 day", ->
+    start = thisYear "5/25", "3:00"
+    end = thisYear "5/25", "14:00"
+    range = new Twix start, end
+
+    iter = range.daysIn()
+    assertSameDay thisYear("5/25"), iter.next()
+    assertEqual null, iter.next()
+
+  it "provides 2 days if the range crosses midnight", ->
+    start = thisYear "5/25", "16:00"
+    end = thisYear "5/26", "3:00"
+    range = new Twix start, end
+
+    iter = range.daysIn()
+    assertSameDay thisYear("5/25"), iter.next()
+    assertSameDay thisYear("5/26"), iter.next()
+    assertEqual null, iter.next()
+
+  it "provides 366 days if the range is a year", ->
+    start = thisYear "5/25", "16:00"
+    end = thisYear("5/25", "3:00").add('years', 1)
+    iter = new Twix(start, end).daysIn()
+    results = while iter.hasNext()
+      iter.next() 
+    assertEqual(366, results.length)
+
+describe "duration()", ->
+  describe "all-day events", -> 
+    it "formats single-day correctly", ->
+      assertEqual(new Twix("5/25/1982", "5.25/1982", true).duration(), "all day")
+
+    it "formats multiday correctly", ->
+      assertEqual(new Twix("5/25/1982", "5/27/1982", true).duration(), "3 days")
+  
+  describe "non-all-day events", ->
+    it "formats single-day correctly", ->
+      assertEqual(new Twix("5/25/1982 12:00", "5/25/1982 16:00").duration(), "4 hours")
+
+    it "formats multiday correctly", ->
+      assertEqual(new Twix("5/25/1982", "5/27/1982").duration(), "2 days")
+
 describe "format()", ->
 
   test = (name, t) -> it name, ->
@@ -168,91 +256,3 @@ describe "format()", ->
       allDay: true
       options: {showDayOfWeek: true},
       result: "Fri May 25 - Fri Jun 1"
-
-describe "sameYear()", ->
-
-  it "returns true if they're the same year", ->
-    assertEqual true, new Twix("5/25/1982", "10/14/1982").sameYear()
-
-  it "returns false if they're different years", ->
-    assertEqual false, new Twix("5/25/1982", "10/14/1983").sameYear()
-
-describe "sameDay()", ->
-
-  it "returns true if they're the same day", ->
-    assertEqual true, new Twix("5/25/1982 5:30 AM", "5/25/1982 7:30 PM").sameDay()
-
-  it "returns false if they're different days day", ->
-    assertEqual false, new Twix("5/25/1982 5:30 AM", "5/26/1982 7:30 PM").sameDay()
-
-  it "returns true they're in different UTC days but the same local days", ->
-    assertEqual true, new Twix("5/25/1982 5:30 AM", "5/25/1982 11:30 PM").sameDay()
-
-describe "countDays()", ->    
-
-  it "inside one day returns 1", -> 
-    start = thisYear "5/25", "3:00"
-    end = thisYear "5/25", "14:00"
-    range = new Twix start, end
-    assertEqual 1, range.countDays()
-
-  it "returns 2 if the range crosses midnight", ->
-    start = thisYear "5/25", "16:00"
-    end = thisYear "5/26", "3:00"
-    range = new Twix start, end
-    assertEqual 2, range.countDays()
-
-  it "works fine for all-day events", ->
-    start = thisYear "5/25"
-    end = thisYear "5/26"
-    range = new Twix start, end, true
-    assertEqual 2, range.countDays()
-
-describe "daysIn()", ->
-
-  assertSameDay = (first, second) ->
-    assertEqual first.year(), second.year()
-    assertEqual first.month(), second.month()
-    assertEqual first.date(), second.date()
-
-  it "provides 1 day if the range includes 1 day", ->
-    start = thisYear "5/25", "3:00"
-    end = thisYear "5/25", "14:00"
-    range = new Twix start, end
-
-    iter = range.daysIn()
-    assertSameDay thisYear("5/25"), iter.next()
-    assertEqual null, iter.next()
-
-  it "provides 2 days if the range crosses midnight", ->
-    start = thisYear "5/25", "16:00"
-    end = thisYear "5/26", "3:00"
-    range = new Twix start, end
-
-    iter = range.daysIn()
-    assertSameDay thisYear("5/25"), iter.next()
-    assertSameDay thisYear("5/26"), iter.next()
-    assertEqual null, iter.next()
-
-  it "provides 366 days if the range is a year", ->
-    start = thisYear "5/25", "16:00"
-    end = thisYear("5/25", "3:00").add('years', 1)
-    iter = new Twix(start, end).daysIn()
-    results = while iter.hasNext()
-      iter.next() 
-    assertEqual(366, results.length)
-
-describe "duration()", ->
-  describe "all-day events", -> 
-    it "formats single-day correctly", ->
-      assertEqual(new Twix("5/25/1982", "5.25/1982", true).duration(), "all day")
-
-    it "formats multiday correctly", ->
-      assertEqual(new Twix("5/25/1982", "5/27/1982", true).duration(), "3 days")
-  
-  describe "non-all-day events", ->
-    it "formats single-day correctly", ->
-      assertEqual(new Twix("5/25/1982 12:00", "5/25/1982 16:00").duration(), "4 hours")
-
-    it "formats multiday correctly", ->
-      assertEqual(new Twix("5/25/1982", "5/27/1982").duration(), "2 days")
