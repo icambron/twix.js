@@ -44,6 +44,7 @@ new Twix("1/25/1982", new Date(), true).format();   //=> Jan 25, 1982 - Jan 9, 2
 ```
 
 Notice the various the different kinds of groupings and abbreviations:
+
  * If the entire range occurs within the current year, Twix doesn't show the year.
  * Twix only shows the year and month once if they're consistent across the range.
  * If it's all the same day, Twix doesn't show a range at all.
