@@ -26,21 +26,26 @@ class Twix
     endDate.diff(startDate, 'days') + 1
 
   daysIn: (each) ->
-    startDate = datePart @start
+    iter = datePart @start
     endDate = datePart @end
 
-    iter = startDate
+    next: ->
+      if iter > endDate
+        null
+      else
+        val = iter.clone()
+        iter.add('days', 1)
+        val
+    hasNext: -> iter <= endDate
 
-    {
-      next: ->
-        if iter > endDate
-          null
-        else
-          val = iter.clone()
-          iter.add('days', 1)
-          val
-      hasNext: -> iter <= endDate
-    }
+  duration: -> 
+    if @allDay
+      if @sameDay() 
+        "all day"
+      else 
+        @start.from(@end.clone().add('days', 1), true)
+    else 
+      @start.from(@end, true)
     
   format: (inopts) ->
     options =
@@ -57,7 +62,7 @@ class Twix
       meridiemFormat: "A"
       hourFormat: "h"
       minuteFormat: "mm"
-      allDay: "All day"
+      allDay: "all day"
 
     extend options, (inopts || {})
 

@@ -1,5 +1,5 @@
 build:
-	@rm bin/*
+	@rm -f bin/*
 	@find src -name '*.coffee' | xargs coffee -c -o bin
 	@find test -name '*.coffee' | xargs coffee -c -o test/bin
 	@cp lib/*.js bin/

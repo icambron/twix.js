@@ -33,10 +33,9 @@
     };
 
     Twix.prototype.daysIn = function(each) {
-      var endDate, iter, startDate;
-      startDate = datePart(this.start);
+      var endDate, iter;
+      iter = datePart(this.start);
       endDate = datePart(this.end);
-      iter = startDate;
       return {
         next: function() {
           var val;
@@ -52,6 +51,18 @@
           return iter <= endDate;
         }
       };
+    };
+
+    Twix.prototype.duration = function() {
+      if (this.allDay) {
+        if (this.sameDay()) {
+          return "all day";
+        } else {
+          return this.start.from(this.end.clone().add('days', 1), true);
+        }
+      } else {
+        return this.start.from(this.end, true);
+      }
     };
 
     Twix.prototype.format = function(inopts) {
@@ -71,7 +82,7 @@
         meridiemFormat: "A",
         hourFormat: "h",
         minuteFormat: "mm",
-        allDay: "All day"
+        allDay: "all day"
       };
       extend(options, inopts || {});
       fs = [];

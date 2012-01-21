@@ -135,7 +135,7 @@
           showDate: false
         },
         allDay: true,
-        result: "All day"
+        result: "all day"
       });
     });
     describe("ungroup meridiems", function() {
@@ -299,6 +299,25 @@
         return _results;
       })();
       return assertEqual(366, results.length);
+    });
+  });
+
+  describe("duration()", function() {
+    describe("all-day events", function() {
+      it("formats single-day correctly", function() {
+        return assertEqual(new Twix("5/25/1982", "5.25/1982", true).duration(), "all day");
+      });
+      return it("formats multiday correctly", function() {
+        return assertEqual(new Twix("5/25/1982", "5/27/1982", true).duration(), "3 days");
+      });
+    });
+    return describe("non-all-day events", function() {
+      it("formats single-day correctly", function() {
+        return assertEqual(new Twix("5/25/1982 12:00", "5/25/1982 16:00").duration(), "4 hours");
+      });
+      return it("formats multiday correctly", function() {
+        return assertEqual(new Twix("5/25/1982", "5/27/1982").duration(), "2 days");
+      });
     });
   });
 

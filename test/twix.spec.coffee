@@ -113,7 +113,7 @@ describe "format()", ->
       end: thisYear("5/25")
       options: {showDate : false}
       allDay: true
-      result: "All day"
+      result: "all day"
 
   describe "ungroup meridiems", ->
     test "should put meridiems on both sides",
@@ -241,3 +241,18 @@ describe "daysIn()", ->
     results = while iter.hasNext()
       iter.next() 
     assertEqual(366, results.length)
+
+describe "duration()", ->
+  describe "all-day events", -> 
+    it "formats single-day correctly", ->
+      assertEqual(new Twix("5/25/1982", "5.25/1982", true).duration(), "all day")
+
+    it "formats multiday correctly", ->
+      assertEqual(new Twix("5/25/1982", "5/27/1982", true).duration(), "3 days")
+  
+  describe "non-all-day events", ->
+    it "formats single-day correctly", ->
+      assertEqual(new Twix("5/25/1982 12:00", "5/25/1982 16:00").duration(), "4 hours")
+
+    it "formats multiday correctly", ->
+      assertEqual(new Twix("5/25/1982", "5/27/1982").duration(), "2 days")
