@@ -82,7 +82,8 @@
         meridiemFormat: "A",
         hourFormat: "h",
         minuteFormat: "mm",
-        allDay: "all day"
+        allDay: "all day",
+        explicitAllDay: false
       };
       extend(options, inopts || {});
       fs = [];
@@ -90,7 +91,7 @@
         options.hourFormat = options.hourFormat.replace("h", "H");
       }
       needDate = options.showDate || !this.sameDay();
-      if (this.allDay && this.sameDay() && !options.showDate) {
+      if (this.allDay && this.sameDay() && (!options.showDate || options.explicitAllDay)) {
         fs.push({
           name: "all day simple",
           fn: function() {

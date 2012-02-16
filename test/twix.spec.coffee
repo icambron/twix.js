@@ -183,6 +183,13 @@ describe "format()", ->
       allDay: true
       result: "May 25, 1982 - Jun 1, 1983"
 
+    test "explicit allDay",
+      start: "5/25/1982"
+      end: "5/25/1982"
+      allDay: true
+      options: {explicitAllDay: true}
+      result: "all day May 25, 1982"
+
   describe "no single dates", ->
     test "shouldn't show dates for intraday", 
       start: "5/25/2010 5:30 AM"
