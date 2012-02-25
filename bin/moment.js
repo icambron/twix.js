@@ -3,7 +3,9 @@
 // (c) 2011 Tim Wood
 // Moment.js is freely distributable under the terms of the MIT license.
 //
-// Version 1.3.0
+// Version 1.4.0
+
+/*global define:false */
 
 (function (Date, undefined) {
 
@@ -13,13 +15,14 @@
         hasModule = (typeof module !== 'undefined'),
         paramsToParse = 'months|monthsShort|monthsParse|weekdays|weekdaysShort|longDateFormat|calendar|relativeTime|ordinal|meridiem'.split('|'),
         i,
+        jsonRegex = /^\/?Date\((\d+)/i,
         charactersToReplace = /(\[[^\[]*\])|(\\)?(Mo|MM?M?M?|Do|DDDo|DD?D?D?|dddd?|do?|w[o|w]?|YYYY|YY|a|A|hh?|HH?|mm?|ss?|zz?|ZZ?|LT|LL?L?L?)/g,
         nonuppercaseLetters = /[^A-Z]/g,
         timezoneRegex = /\([A-Za-z ]+\)|:[0-9]{2} [A-Z]{3} /g,
         tokenCharacters = /(\\)?(MM?M?M?|dd?d?d|DD?D?D?|YYYY|YY|a|A|hh?|HH?|mm?|ss?|ZZ?|T)/g,
         inputCharacters = /(\\)?([0-9]+|([a-zA-Z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+|([\+\-]\d\d:?\d\d))/gi,
         timezoneParseRegex = /([\+\-]|\d\d)/gi,
-        VERSION = "1.3.0",
+        VERSION = "1.4.0",
         shortcuts = 'Month|Date|Hours|Minutes|Seconds|Milliseconds'.split('|');
 
     // Moment prototype object
@@ -43,7 +46,7 @@
             input = isString ? {} : _input,
             ms, d, M, currentDate;
         if (isString && val) {
-            input[_input] = val;
+            input[_input] = +val;
         }
         ms = (input.ms || input.milliseconds || 0) +
             (input.s || input.seconds || 0) * 1e3 + // 1000
@@ -91,7 +94,7 @@
             currentHours = m.hours(),
             currentMinutes = m.minutes(),
             currentSeconds = m.seconds(),
-            currentZone = m.zone(),
+            currentZone = -m.zone(),
             ordinal = moment.ordinal,
             meridiem = moment.meridiem;
         // check if the character is a format
@@ -287,15 +290,15 @@
                 // fall through to ZZ
             case 'ZZ' :
                 isUsingUTC = true;
-                a = input.match(timezoneParseRegex);
-                if (a[1]) {
+                a = (input || '').match(timezoneParseRegex);
+                if (a && a[1]) {
                     timezoneHours = ~~a[1];
                 }
-                if (a[2]) {
+                if (a && a[2]) {
                     timezoneMinutes = ~~a[2];
                 }
                 // reverse offsets
-                if (a[0] === '-') {
+                if (a && a[0] === '+') {
                     timezoneHours = -timezoneHours;
                     timezoneMinutes = -timezoneMinutes;
                 }
@@ -358,8 +361,9 @@
         if (input === null) {
             return null;
         }
-        var date;
-        // parse UnderscoreDate object
+        var date,
+            matched;
+        // parse Moment object
         if (input && input._d instanceof Date) {
             date = new Date(+input._d);
         // parse string and format
@@ -369,9 +373,11 @@
             } else {
                 date = makeDateFromStringAndFormat(input, format);
             }
-        // parse everything else
+        // evaluate it as a JSON-encoded date
         } else {
+            matched = jsonRegex.exec(input);
             date = input === undefined ? new Date() :
+                matched ? new Date(+matched[1]) :
                 input instanceof Date ? input :
                 isArray(input) ? dateFromArray(input) :
                 new Date(input);
@@ -526,13 +532,14 @@
 
         diff : function (input, val, asFloat) {
             var inputMoment = moment(input),
-                diff = this._d - inputMoment._d,
+                zoneDiff = (this.zone() - inputMoment.zone()) * 6e4,
+                diff = this._d - inputMoment._d - zoneDiff,
                 year = this.year() - inputMoment.year(),
                 month = this.month() - inputMoment.month(),
-                day = this.day() - inputMoment.day(),
+                date = this.date() - inputMoment.date(),
                 output;
             if (val === 'months') {
-                output = year * 12 + month + day / 30;
+                output = year * 12 + month + date / 30;
             } else if (val === 'years') {
                 output = year + month / 12;
             } else {
@@ -541,7 +548,7 @@
                     val === 'hours' ? diff / 36e5 : // 1000 * 60 * 60
                     val === 'days' ? diff / 864e5 : // 1000 * 60 * 60 * 24
                     val === 'weeks' ? diff / 6048e5 : // 1000 * 60 * 60 * 24 * 7
-                    val === 'days' ? diff / 3600 : diff;
+                    diff;
             }
             return asFloat ? output : round(output);
         },
@@ -558,9 +565,7 @@
         },
 
         calendar : function () {
-            var today = moment(),
-                todayAtZeroHour = moment([today.year(), today.month(), today.date()]),
-                diff = this.diff(todayAtZeroHour, 'days', true),
+            var diff = this.diff(moment().sod(), 'days', true),
                 calendar = moment.calendar,
                 allElse = calendar.sameElse,
                 format = diff < -6 ? allElse :
@@ -578,13 +583,30 @@
         },
 
         isDST : function () {
-            return this.zone() !== moment([this.year()]).zone();
+            return (this.zone() < moment([this.year()]).zone() || 
+                this.zone() < moment([this.year(), 5]).zone());
         },
 
         day : function (input) {
             var day = this._d.getDay();
             return input == null ? day :
                 this.add({ d : input - day });
+        },
+
+        sod: function () {
+            return this.clone()
+                .hours(0)
+                .minutes(0)
+                .seconds(0)
+                .milliseconds(0);
+        },
+
+        eod: function () {
+            // end of day = start of day plus 1 day, minus 1 millisecond
+            return this.sod().add({
+                d : 1,
+                ms : -1
+            });
         }
     };
 
@@ -620,5 +642,9 @@
     if (typeof window !== 'undefined') {
         window.moment = moment;
     }
-
+    if (typeof define === "function" && define.amd) {
+        define("moment", [], function () {
+            return moment;
+        });
+    }
 })(Date);

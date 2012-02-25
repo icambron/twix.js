@@ -12,6 +12,9 @@ thisYear = (partial, time) ->
   fullDate += " #{time}" if time
   moment fullDate
 
+yesterday = -> moment().subtract('days', 1).sod()
+tomorrow = -> moment().add('days', 1).sod()
+
 describe "sameYear()", ->
 
   it "returns true if they're the same year", ->
@@ -88,17 +91,35 @@ describe "daysIn()", ->
 describe "duration()", ->
   describe "all-day events", -> 
     it "formats single-day correctly", ->
-      assertEqual(new Twix("5/25/1982", "5.25/1982", true).duration(), "all day")
+      assertEqual("all day", new Twix("5/25/1982", "5.25/1982", true).duration())
 
     it "formats multiday correctly", ->
-      assertEqual(new Twix("5/25/1982", "5/27/1982", true).duration(), "3 days")
+      assertEqual("3 days", new Twix("5/25/1982", "5/27/1982", true).duration())
   
   describe "non-all-day events", ->
     it "formats single-day correctly", ->
-      assertEqual(new Twix("5/25/1982 12:00", "5/25/1982 16:00").duration(), "4 hours")
+      assertEqual("4 hours", new Twix("5/25/1982 12:00", "5/25/1982 16:00").duration())
 
     it "formats multiday correctly", ->
-      assertEqual(new Twix("5/25/1982", "5/27/1982").duration(), "2 days")
+      assertEqual("2 days", new Twix("5/25/1982", "5/27/1982").duration())
+
+describe "past()", ->
+  describe "all-day events", ->
+    it "returns true for days in the past", ->
+      assertEqual(true, new Twix(yesterday(), yesterday(), true).past())
+
+    it "returns false for today", ->
+      assertEqual(false, new Twix(moment().sod(), moment().sod(), true).past())
+
+    it "returns false for days in the future", ->
+      assertEqual(false, new Twix(tomorrow(), tomorrow(), true).past())
+
+  describe "non-all-day events", ->
+    it "returns true for the past", ->
+      assertEqual(true, new Twix(moment().subtract('hours', 3), moment().subtract('hours', 2)).past())
+
+    it "returns false for the future", ->
+      assertEqual(false, new Twix(moment().add('hours', 2), moment().add('hours', 3)).past())
 
 describe "format()", ->
 

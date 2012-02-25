@@ -1,5 +1,5 @@
 (function() {
-  var Twix, datePart, extend, moment;
+  var Twix, extend, moment;
 
   if (typeof module !== "undefined") {
     moment = require('moment');
@@ -27,15 +27,15 @@
 
     Twix.prototype.countDays = function() {
       var endDate, startDate;
-      startDate = datePart(this.start);
-      endDate = datePart(this.end);
+      startDate = this.start.sod();
+      endDate = this.end.sod();
       return endDate.diff(startDate, 'days') + 1;
     };
 
     Twix.prototype.daysIn = function(each) {
       var endDate, iter;
-      iter = datePart(this.start);
-      endDate = datePart(this.end);
+      iter = this.start.sod();
+      endDate = this.end.sod();
       return {
         next: function() {
           var val;
@@ -62,6 +62,14 @@
         }
       } else {
         return this.start.from(this.end, true);
+      }
+    };
+
+    Twix.prototype.past = function() {
+      if (this.allDay) {
+        return this.end.eod()["native"]() < moment()["native"]();
+      } else {
+        return this.end["native"]() < moment()["native"]();
       }
     };
 
@@ -259,10 +267,6 @@
       }
     }
     return _results;
-  };
-
-  datePart = function(moment) {
-    return moment.clone().hours(0).minutes(0).seconds(0).milliseconds(0);
   };
 
   if (typeof module !== "undefined") {

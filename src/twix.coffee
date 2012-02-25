@@ -21,13 +21,13 @@ class Twix
     @start.year() == @end.year()
 
   countDays: ->
-    startDate = datePart @start
-    endDate = datePart @end
+    startDate = @start.sod()
+    endDate = @end.sod()
     endDate.diff(startDate, 'days') + 1
 
   daysIn: (each) ->
-    iter = datePart @start
-    endDate = datePart @end
+    iter = @start.sod()
+    endDate = @end.sod()
 
     next: ->
       if iter > endDate
@@ -46,6 +46,12 @@ class Twix
         @start.from(@end.clone().add('days', 1), true)
     else 
       @start.from(@end, true)
+
+  past: -> 
+    if @allDay
+      @end.eod().native() < moment().native()
+    else
+      @end.native() < moment().native()
     
   format: (inopts) ->
     options =
@@ -182,14 +188,6 @@ class Twix
 extend = (first, second) ->
   for attr of second
     first[attr] = second[attr] unless typeof second[attr] == "undefined"
-
-#until it makes it into moment
-datePart = (moment) ->
-  moment.clone()
-    .hours(0)
-    .minutes(0)
-    .seconds(0)
-    .milliseconds(0)
   
 if typeof module != "undefined"
   module.exports = Twix

@@ -1,5 +1,5 @@
 (function() {
-  var Twix, assertEqual, moment, thisYear;
+  var Twix, assertEqual, moment, thisYear, tomorrow, yesterday;
 
   if (typeof module !== "undefined") {
     moment = require("moment");
@@ -18,6 +18,14 @@
     fullDate = "" + partial + "/" + (moment().year());
     if (time) fullDate += " " + time;
     return moment(fullDate);
+  };
+
+  yesterday = function() {
+    return moment().subtract('days', 1).sod();
+  };
+
+  tomorrow = function() {
+    return moment().add('days', 1).sod();
   };
 
   describe("sameYear()", function() {
@@ -111,18 +119,40 @@
   describe("duration()", function() {
     describe("all-day events", function() {
       it("formats single-day correctly", function() {
-        return assertEqual(new Twix("5/25/1982", "5.25/1982", true).duration(), "all day");
+        return assertEqual("all day", new Twix("5/25/1982", "5.25/1982", true).duration());
       });
       return it("formats multiday correctly", function() {
-        return assertEqual(new Twix("5/25/1982", "5/27/1982", true).duration(), "3 days");
+        return assertEqual("3 days", new Twix("5/25/1982", "5/27/1982", true).duration());
       });
     });
     return describe("non-all-day events", function() {
       it("formats single-day correctly", function() {
-        return assertEqual(new Twix("5/25/1982 12:00", "5/25/1982 16:00").duration(), "4 hours");
+        return assertEqual("4 hours", new Twix("5/25/1982 12:00", "5/25/1982 16:00").duration());
       });
       return it("formats multiday correctly", function() {
-        return assertEqual(new Twix("5/25/1982", "5/27/1982").duration(), "2 days");
+        return assertEqual("2 days", new Twix("5/25/1982", "5/27/1982").duration());
+      });
+    });
+  });
+
+  describe("past()", function() {
+    describe("all-day events", function() {
+      it("returns true for days in the past", function() {
+        return assertEqual(true, new Twix(yesterday(), yesterday(), true).past());
+      });
+      it("returns false for today", function() {
+        return assertEqual(false, new Twix(moment().sod(), moment().sod(), true).past());
+      });
+      return it("returns false for days in the future", function() {
+        return assertEqual(false, new Twix(tomorrow(), tomorrow(), true).past());
+      });
+    });
+    return describe("non-all-day events", function() {
+      it("returns true for the past", function() {
+        return assertEqual(true, new Twix(moment().subtract('hours', 3), moment().subtract('hours', 2)).past());
+      });
+      return it("returns false for the future", function() {
+        return assertEqual(false, new Twix(moment().add('hours', 2), moment().add('hours', 3)).past());
       });
     });
   });
