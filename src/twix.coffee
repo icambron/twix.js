@@ -69,6 +69,7 @@ class Twix
       hourFormat: "h"
       minuteFormat: "mm"
       allDay: "all day"
+      explicitAllDay: false
 
     extend options, (inopts || {})
 
@@ -77,7 +78,7 @@ class Twix
     options.hourFormat = options.hourFormat.replace("h", "H") if options.twentyFourHour
     needDate = options.showDate || !@sameDay()
 
-    if @allDay && @sameDay() && !options.showDate
+    if @allDay && @sameDay() && (!options.showDate || options.explicitAllDay)
       fs.push
         name: "all day simple"
         fn: -> options.allDay

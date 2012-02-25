@@ -3,7 +3,7 @@ Twix is a simple but opinionated JS library for formatting date ranges. It's wri
 It allows you to do, among other things, this:
 
 ```js
-new Twix("1/25/1982 9:30 AM", "1/25/1982 1:30 PM");
+var t = new Twix("1/25/1982 9:30 AM", "1/25/1982 1:30 PM");
 
 t.format();  //=> Jan 25, 1982, 9:30 AM - 1:30 PM
 

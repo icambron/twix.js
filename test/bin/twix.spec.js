@@ -241,11 +241,20 @@
         allDay: true,
         result: "May 25, 1982 - May 25, 1983"
       });
-      return test("different year different month shows the month at the end", {
+      test("different year different month shows the month at the end", {
         start: "5/25/1982",
         end: "6/1/1983",
         allDay: true,
         result: "May 25, 1982 - Jun 1, 1983"
+      });
+      return test("explicit allDay", {
+        start: "5/25/1982",
+        end: "5/25/1982",
+        allDay: true,
+        options: {
+          explicitAllDay: true
+        },
+        result: "all day May 25, 1982"
       });
     });
     describe("no single dates", function() {
