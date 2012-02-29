@@ -331,7 +331,7 @@
         result: "May 25, 12:00 - 15:00"
       });
     });
-    return describe("show day of week", function() {
+    describe("show day of week", function() {
       test("should show day of week", {
         start: thisYear("5/25", "5:30 AM"),
         end: thisYear("5/28", "7:30 PM"),
@@ -356,6 +356,59 @@
           showDayOfWeek: true
         },
         result: "Fri May 25 - Fri Jun 1"
+      });
+    });
+    return describe("goes into the morning", function() {
+      test("elides late nights", {
+        start: "5/25/1982 5:00 PM",
+        end: "5/26/1982 2:00 AM",
+        options: {
+          lastNightEndsAt: 5
+        },
+        result: "May 25, 1982, 5 PM - 2 AM"
+      });
+      test("keeps late mornings", {
+        start: "5/25/1982 5:00 PM",
+        end: "5/26/1982 10:00 AM",
+        options: {
+          lastNightEndsAt: 5
+        },
+        result: "May 25, 5 PM - May 26, 10 AM, 1982"
+      });
+      test("morning start is adjustable", {
+        start: "5/25/1982 5:00 PM",
+        end: "5/26/1982 10:00 AM",
+        options: {
+          lastNightEndsAt: 11
+        },
+        result: "May 25, 1982, 5 PM - 10 AM"
+      });
+      test("doesn't elide if you start in the AM", {
+        start: "5/25/1982 5:00 AM",
+        end: "5/26/1982 4:00 AM",
+        options: {
+          lastNightEndsAt: 5
+        },
+        result: "May 25, 5 AM - May 26, 4 AM, 1982"
+      });
+      return describe("and we're trying to hide the date", function() {
+        test("elides the date too for early mornings", {
+          start: "5/25/1982 5:00 PM",
+          end: "5/26/1982 2:00 AM",
+          options: {
+            lastNightEndsAt: 5,
+            showDate: false
+          },
+          result: "5 PM - 2 AM"
+        });
+        return test("doesn't elide if the morning ends late", {
+          start: "5/25/1982 5:00 PM",
+          end: "5/26/1982 10:00 AM",
+          options: {
+            lastNightEndsAt: 5
+          },
+          result: "May 25, 5 PM - May 26, 10 AM, 1982"
+        });
       });
     });
   });

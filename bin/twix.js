@@ -74,7 +74,7 @@
     };
 
     Twix.prototype.format = function(inopts) {
-      var common_bucket, end_bucket, fold, format, fs, global_first, needDate, options, process, start_bucket, together, _i, _len,
+      var common_bucket, end_bucket, fold, format, fs, global_first, goesIntoTheMorning, needDate, options, process, start_bucket, together, _i, _len,
         _this = this;
       options = {
         groupMeridiems: true,
@@ -91,14 +91,16 @@
         hourFormat: "h",
         minuteFormat: "mm",
         allDay: "all day",
-        explicitAllDay: false
+        explicitAllDay: false,
+        lastNightEndsAt: 0
       };
       extend(options, inopts || {});
       fs = [];
       if (options.twentyFourHour) {
         options.hourFormat = options.hourFormat.replace("h", "H");
       }
-      needDate = options.showDate || !this.sameDay();
+      goesIntoTheMorning = options.lastNightEndsAt > 0 && !this.allDay && this.end.day() === this.start.day() + 1 && this.start.hours() > 12 && this.end.hours() < options.lastNightEndsAt;
+      needDate = options.showDate || (!this.sameDay() && !goesIntoTheMorning);
       if (this.allDay && this.sameDay() && (!options.showDate || options.explicitAllDay)) {
         fs.push({
           name: "all day simple",
@@ -124,6 +126,9 @@
           name: "all day month",
           fn: function(date) {
             return date.format("" + options.monthFormat + " " + options.dayFormat);
+          },
+          ignoreEnd: function() {
+            return goesIntoTheMorning;
           },
           slot: 2,
           pre: " "
@@ -192,7 +197,7 @@
       process = function(format) {
         var end_str, start_group, start_str;
         start_str = format.fn(_this.start);
-        end_str = format.fn(_this.end);
+        end_str = format.ignoreEnd && format.ignoreEnd() ? start_str : format.fn(_this.end);
         start_group = {
           format: format,
           value: function() {
@@ -225,7 +230,7 @@
       };
       for (_i = 0, _len = fs.length; _i < _len; _i++) {
         format = fs[_i];
-        if (format.skip !== true) process(format);
+        process(format);
       }
       global_first = true;
       fold = function(array, skip_pre) {

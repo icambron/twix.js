@@ -70,13 +70,22 @@ class Twix
       minuteFormat: "mm"
       allDay: "all day"
       explicitAllDay: false
+      lastNightEndsAt: 0
 
     extend options, (inopts || {})
 
     fs = []
 
     options.hourFormat = options.hourFormat.replace("h", "H") if options.twentyFourHour
-    needDate = options.showDate || !@sameDay()
+
+    goesIntoTheMorning =
+      options.lastNightEndsAt > 0 &&
+      !@allDay &&
+      @end.day() == @start.day() + 1 &&
+      @start.hours() > 12 &&
+      @end.hours() < options.lastNightEndsAt
+
+    needDate = options.showDate || (!@sameDay() && !goesIntoTheMorning)
 
     if @allDay && @sameDay() && (!options.showDate || options.explicitAllDay)
       fs.push
@@ -96,6 +105,7 @@ class Twix
       fs.push
         name: "all day month"
         fn: (date) -> date.format "#{options.monthFormat} #{options.dayFormat}"
+        ignoreEnd: -> goesIntoTheMorning
         slot: 2
         pre: " "
         
@@ -150,7 +160,10 @@ class Twix
 
     process = (format) =>
       start_str = format.fn @start
-      end_str = format.fn @end
+
+      end_str = if format.ignoreEnd && format.ignoreEnd()
+                  start_str
+                else format.fn @end
 
       start_group = {format: format, value: -> start_str}
      
@@ -164,7 +177,7 @@ class Twix
         start_bucket.push start_group
         end_bucket.push {format: format, value: -> end_str}
 
-    process format for format in fs when format.skip isnt true
+    process format for format in fs
 
     global_first = true
     fold = (array, skip_pre) =>
