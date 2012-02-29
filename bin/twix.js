@@ -12,8 +12,11 @@
   Twix = (function() {
 
     function Twix(start, end, allDay) {
-      this.start = moment(start);
-      this.end = moment(end);
+      var endM, startM;
+      startM = moment(start);
+      endM = moment(end);
+      this.start = startM.zone() === moment().zone ? startM : moment(startM.valueOf());
+      this.end = endM.zone() === moment().zone ? endM : moment(endM.valueOf());
       this.allDay = allDay;
     }
 
@@ -32,14 +35,15 @@
       return endDate.diff(startDate, 'days') + 1;
     };
 
-    Twix.prototype.daysIn = function(each) {
-      var endDate, iter;
+    Twix.prototype.daysIn = function(minHours) {
+      var endDate, iter,
+        _this = this;
       iter = this.start.sod();
       endDate = this.end.sod();
       return {
         next: function() {
           var val;
-          if (iter > endDate) {
+          if (iter > endDate || (minHours && iter.valueOf() === endDate.valueOf() && _this.end.hours() < minHours)) {
             return null;
           } else {
             val = iter.clone();
@@ -48,7 +52,7 @@
           }
         },
         hasNext: function() {
-          return iter <= endDate;
+          return iter <= endDate && (!minHours || iter.valueOf() !== endDate.valueOf() || _this.end.hours() > minHours);
         }
       };
     };
@@ -99,7 +103,7 @@
       if (options.twentyFourHour) {
         options.hourFormat = options.hourFormat.replace("h", "H");
       }
-      goesIntoTheMorning = options.lastNightEndsAt > 0 && !this.allDay && this.end.day() === this.start.day() + 1 && this.start.hours() > 12 && this.end.hours() < options.lastNightEndsAt;
+      goesIntoTheMorning = options.lastNightEndsAt > 0 && !this.allDay && this.end.sod().valueOf() === this.start.clone().add('days', 1).sod().valueOf() && this.start.hours() > 12 && this.end.hours() < options.lastNightEndsAt;
       needDate = options.showDate || (!this.sameDay() && !goesIntoTheMorning);
       if (this.allDay && this.sameDay() && (!options.showDate || options.explicitAllDay)) {
         fs.push({

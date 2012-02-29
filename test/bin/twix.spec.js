@@ -99,7 +99,7 @@
       assertSameDay(thisYear("5/26"), iter.next());
       return assertEqual(null, iter.next());
     });
-    return it("provides 366 days if the range is a year", function() {
+    it("provides 366 days if the range is a year", function() {
       var end, iter, results, start;
       start = thisYear("5/25", "16:00");
       end = thisYear("5/25", "3:00").add('years', 1);
@@ -113,6 +113,15 @@
         return _results;
       })();
       return assertEqual(366, results.length);
+    });
+    return describe("with a minimum time", function() {
+      var end, iter, range, start;
+      start = thisYear("5/25", "16:00");
+      end = thisYear("5/26", "3:00");
+      range = new Twix(start, end);
+      iter = range.daysIn(4);
+      assertSameDay(thisYear("5/25"), iter.next());
+      return assertEqual(null, iter.next());
     });
   });
 

@@ -88,6 +88,15 @@ describe "daysIn()", ->
       iter.next() 
     assertEqual(366, results.length)
 
+  describe "with a minimum time", ->
+    start = thisYear "5/25", "16:00"
+    end = thisYear "5/26", "3:00"
+    range = new Twix start, end
+
+    iter = range.daysIn(4)
+    assertSameDay thisYear("5/25"), iter.next()
+    assertEqual null, iter.next()
+
 describe "duration()", ->
   describe "all-day events", -> 
     it "formats single-day correctly", ->

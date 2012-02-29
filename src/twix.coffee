@@ -7,9 +7,14 @@ if typeof moment == "undefined"
   throw "Can't find moment"
 
 class Twix
-  constructor: (start, end, allDay) -> 
-    @start = moment start
-    @end = moment end
+  constructor: (start, end, allDay) ->
+
+    startM = moment start
+    endM = moment end
+
+    @start = if startM.zone() == moment().zone then startM else moment(startM.valueOf())
+    @end = if endM.zone() == moment().zone then endM else moment(endM.valueOf())
+
     @allDay = allDay
 
   sameDay: ->
@@ -25,18 +30,18 @@ class Twix
     endDate = @end.sod()
     endDate.diff(startDate, 'days') + 1
 
-  daysIn: (each) ->
+  daysIn: (minHours) ->
     iter = @start.sod()
     endDate = @end.sod()
 
-    next: ->
-      if iter > endDate
+    next: =>
+      if iter > endDate || (minHours && iter.valueOf() == endDate.valueOf() && @end.hours() < minHours)
         null
       else
         val = iter.clone()
         iter.add('days', 1)
         val
-    hasNext: -> iter <= endDate
+    hasNext: => iter <= endDate && (!minHours || iter.valueOf() != endDate.valueOf() || @end.hours() > minHours)
 
   duration: -> 
     if @allDay
@@ -81,7 +86,7 @@ class Twix
     goesIntoTheMorning =
       options.lastNightEndsAt > 0 &&
       !@allDay &&
-      @end.day() == @start.day() + 1 &&
+      @end.sod().valueOf() == @start.clone().add('days', 1).sod().valueOf() &&
       @start.hours() > 12 &&
       @end.hours() < options.lastNightEndsAt
 

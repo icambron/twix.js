@@ -6,7 +6,7 @@
   "author": "Isaac Cambron",
   "keywords": ["twix", "date", "date range"],
   "dependencies": {
-    "moment": ">= 1.4"
+    "moment": ">=1.4"
   },
   "devDependencies": {
     "mocha" : "0.8.x",
