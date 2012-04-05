@@ -1,15 +1,19 @@
 (function() {
-  var Twix, assertEqual, moment, thatDay, thisYear, tomorrow, yesterday;
+  var Twix, assertDeepEqual, assertEqual, moment, thatDay, thisYear, tomorrow, yesterday;
 
   if (typeof module !== "undefined") {
     moment = require("moment");
     assertEqual = require('assert').equal;
+    assertDeepEqual = require('assert').deepEqual;
     Twix = require("../../bin/twix");
   } else {
     moment = window.moment;
     Twix = window.Twix;
     assertEqual = function(a, b) {
       if (a !== b) throw new Error("Found " + b + ", expected " + a);
+    };
+    assertDeepEqual = function(a, b) {
+      if (!a.equals(b)) throw new Error("Found " + b + ", expected " + a);
     };
   }
 
@@ -89,12 +93,14 @@
       return assertEqual(first.date(), second.date());
     };
     it("provides 1 day if the range includes 1 day", function() {
-      var end, iter, range, start;
+      var end, iter, next, range, start;
       start = thisYear("5/25", "3:00");
       end = thisYear("5/25", "14:00");
       range = new Twix(start, end);
       iter = range.daysIn();
-      assertSameDay(thisYear("5/25"), iter.next());
+      next = iter.next();
+      console.log(next);
+      assertSameDay(thisYear("5/25"), next);
       return assertEqual(null, iter.next());
     });
     it("provides 2 days if the range crosses midnight", function() {
@@ -122,7 +128,7 @@
       })();
       return assertEqual(366, results.length);
     });
-    return describe("with a minimum time", function() {
+    return it("doesn't generate extra days when there's a min time", function() {
       var end, iter, range, start;
       start = thisYear("5/25", "16:00");
       end = thisYear("5/26", "3:00");
@@ -198,10 +204,10 @@
         return assertNoOverlap(someTime, thatDay("3:30", "4:30"));
       });
       it("returns true for a partially later event", function() {
-        return assertOverlap(someTime, thatDay("4:30", "6:30"));
+        return assertOverlap(someTime, thatDay("8:00", "11:30"));
       });
       it("returns true for a partially earlier event", function() {
-        return assertOverlap(someTime, thatDay("8:00", "11:30"));
+        return assertOverlap(someTime, thatDay("4:30", "6:30"));
       });
       it("returns true for an engulfed event", function() {
         return assertOverlap(someTime, thatDay("6:30", "7:30"));
@@ -264,10 +270,10 @@
         return assertNotEngulfing(someTime, thatDay("3:30", "4:30"));
       });
       it("returns true for a partially later event", function() {
-        return assertNotEngulfing(someTime, thatDay("4:30", "6:30"));
+        return assertNotEngulfing(someTime, thatDay("8:00", "11:30"));
       });
       it("returns true for a partially earlier event", function() {
-        return assertNotEngulfing(someTime, thatDay("8:00", "11:30"));
+        return assertNotEngulfing(someTime, thatDay("4:30", "6:30"));
       });
       it("returns true for an engulfed event", function() {
         return assertEngulfing(someTime, thatDay("6:30", "7:30"));
@@ -308,6 +314,67 @@
       });
       return it("returns true for an engulfing event", function() {
         return assertNotEngulfing(someDays, new Twix("5/22/1982", "5/28/1982", true));
+      });
+    });
+  });
+
+  describe("merge()", function() {
+    var someDays, someTime;
+    someTime = thatDay("5:30", "8:30");
+    someDays = new Twix("5/24/1982", "5/25/1982", true);
+    describe("non-all-day events", function() {
+      it("spans a later time", function() {
+        return assertDeepEqual(thatDay("5:30", "11:30"), someTime.merge(thatDay("9:30", "11:30")));
+      });
+      it("spans an earlier time", function() {
+        return assertDeepEqual(thatDay("3:30", "8:30"), someTime.merge(thatDay("3:30", "4:30")));
+      });
+      it("spans a partially later event", function() {
+        return assertDeepEqual(thatDay("5:30", "11:30"), someTime.merge(thatDay("8:00", "11:30")));
+      });
+      it("spans a partially earlier event", function() {
+        return assertDeepEqual(thatDay("4:30", "8:30"), someTime.merge(thatDay("4:30", "6:30")));
+      });
+      it("isn't affected by engulfed events", function() {
+        return assertDeepEqual(someTime, someTime.merge(thatDay("6:30", "7:30")));
+      });
+      return it("becomes an engulfing event", function() {
+        return assertDeepEqual(thatDay("4:30", "9:30"), someTime.merge(thatDay("4:30", "9:30")));
+      });
+    });
+    describe("one all-day event", function() {
+      it("spans a later time", function() {
+        console.log(someDays.trueEnd());
+        return assertDeepEqual(new Twix("5/24/1982 00:00", "5/26/1982 7:00"), someDays.merge(new Twix("5/24/1982 20:00", "5/26/1982 7:00")));
+      });
+      it("spans an earlier time", function() {
+        return assertDeepEqual(new Twix("5/23/1982 8:00", moment("5/25/1982").eod()), someDays.merge(new Twix("5/23/1982 8:00", "5/25/1982 7:00")));
+      });
+      it("isn't affected by engulfing events", function() {
+        return assertDeepEqual(new Twix("5/24/1982 00:00", moment("5/25/1982").eod()), someDays.merge(someTime));
+      });
+      return it("becomes an engulfing event", function() {
+        return assertDeepEqual(new Twix("5/23/1982 20:00", "5/26/1982 8:30"), someDays.merge(new Twix("5/23/1982 20:00", "5/26/1982 8:30")));
+      });
+    });
+    return describe("two all-day events", function() {
+      it("spans a later time", function() {
+        return assertDeepEqual(new Twix("5/24/1982", "5/28/1982", true), someDays.merge(new Twix("5/27/1982", "5/28/1982", true)));
+      });
+      it("spans an earlier time", function() {
+        return assertDeepEqual(new Twix("5/21/1982", "5/25/1982", true), someDays.merge(new Twix("5/21/1982", "5/22/1982", true)));
+      });
+      it("spans a partially later time", function() {
+        return assertDeepEqual(new Twix("5/24/1982", "5/26/1982", true), someDays.merge(new Twix("5/25/1982", "5/26/1982", true)));
+      });
+      it("spans a partially earlier time", function() {
+        return assertDeepEqual(new Twix("5/23/1982", "5/25/1982", true), someDays.merge(new Twix("5/23/1982", "5/25/1982", true)));
+      });
+      it("isn't affected by engulfing events", function() {
+        return assertDeepEqual(someDays, someDays.merge(thatDay()));
+      });
+      return it("becomes an engulfing event", function() {
+        return assertDeepEqual(someDays, thatDay().merge(someDays));
       });
     });
   });

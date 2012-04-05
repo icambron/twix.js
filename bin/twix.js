@@ -17,7 +17,7 @@
       endM = moment(end);
       this.start = startM.zone() === moment().zone ? startM : moment(startM.valueOf());
       this.end = endM.zone() === moment().zone ? endM : moment(endM.valueOf());
-      this.allDay = allDay;
+      this.allDay = allDay || false;
     }
 
     Twix.prototype.sameDay = function() {
@@ -32,6 +32,8 @@
       var endDate, startDate;
       startDate = this.start.sod();
       endDate = this.end.sod();
+      console.log("start: " + (startDate.toString()));
+      console.log("end: " + (endDate.toString()));
       return endDate.diff(startDate, 'days') + 1;
     };
 
@@ -85,6 +87,19 @@
       return this.trueStart() <= other.trueStart() && this.trueEnd() >= other.trueEnd();
     };
 
+    Twix.prototype.merge = function(other) {
+      var allDay, newEnd, newStart;
+      allDay = this.allDay && other.allDay;
+      if (allDay) {
+        newStart = this.start < other.start ? this.start : other.start;
+        newEnd = this.end > other.end ? this.end : other.end;
+      } else {
+        newStart = this.trueStart() < other.trueStart() ? this.trueStart() : other.trueStart();
+        newEnd = this.trueEnd() > other.trueEnd() ? this.trueEnd() : other.trueEnd();
+      }
+      return new Twix(newStart, newEnd, allDay);
+    };
+
     Twix.prototype.trueStart = function() {
       if (this.allDay) {
         return this.start.sod();
@@ -99,6 +114,10 @@
       } else {
         return this.end;
       }
+    };
+
+    Twix.prototype.equals = function(other) {
+      return (other instanceof Twix) && this.allDay === other.allDay && this.start.valueOf() === other.start.valueOf() && this.end.valueOf() === other.end.valueOf();
     };
 
     Twix.prototype.format = function(inopts) {

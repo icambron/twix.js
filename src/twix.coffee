@@ -8,14 +8,15 @@ if typeof moment == "undefined"
 
 class Twix
   constructor: (start, end, allDay) ->
-
     startM = moment start
     endM = moment end
-
     @start = if startM.zone() == moment().zone then startM else moment(startM.valueOf())
     @end = if endM.zone() == moment().zone then endM else moment(endM.valueOf())
 
-    @allDay = allDay
+    #@start = moment start
+    #@end = moment end
+
+    @allDay = allDay || false
 
   sameDay: ->
     @start.year() == @end.year() &&
@@ -28,6 +29,8 @@ class Twix
   countDays: ->
     startDate = @start.sod()
     endDate = @end.sod()
+    console.log "start: #{startDate.toString()}"
+    console.log "end: #{endDate.toString()}"
     endDate.diff(startDate, 'days') + 1
 
   daysIn: (minHours) ->
@@ -62,10 +65,26 @@ class Twix
 
   engulfs: (other) -> @trueStart() <= other.trueStart() && @trueEnd() >= other.trueEnd()
 
-  trueStart: -> if @allDay then @start.sod() else @start
+  merge: (other) ->
+    allDay = @allDay && other.allDay
+    if allDay
+      newStart = if @start < other.start then @start else other.start
+      newEnd = if @end > other.end then @end else other.end
+    else
+      newStart = if @trueStart() < other.trueStart() then @trueStart() else other.trueStart()
+      newEnd = if @trueEnd() > other.trueEnd() then @trueEnd() else other.trueEnd()
 
+    new Twix(newStart, newEnd, allDay)
+
+  trueStart: -> if @allDay then @start.sod() else @start
   trueEnd: -> if @allDay then @end.eod() else @end
-    
+
+  equals: (other) ->
+    (other instanceof Twix) &&
+      @allDay == other.allDay &&
+      @start.valueOf() == other.start.valueOf() &&
+      @end.valueOf() == other.end.valueOf()
+
   format: (inopts) ->
     options =
       groupMeridiems: true
