@@ -54,9 +54,17 @@ class Twix
 
   past: -> 
     if @allDay
-      @end.eod().native() < moment().native()
+      @end.eod() < moment()
     else
-      @end.native() < moment().native()
+      @end < moment()
+
+  overlaps: (other) -> !(@trueEnd() < other.trueStart() || @trueStart() > other.trueEnd())
+
+  engulfs: (other) -> @trueStart() <= other.trueStart() && @trueEnd() >= other.trueEnd()
+
+  trueStart: -> if @allDay then @start.sod() else @start
+
+  trueEnd: -> if @allDay then @end.eod() else @end
     
   format: (inopts) ->
     options =

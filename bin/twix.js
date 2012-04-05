@@ -71,9 +71,33 @@
 
     Twix.prototype.past = function() {
       if (this.allDay) {
-        return this.end.eod()["native"]() < moment()["native"]();
+        return this.end.eod() < moment();
       } else {
-        return this.end["native"]() < moment()["native"]();
+        return this.end < moment();
+      }
+    };
+
+    Twix.prototype.overlaps = function(other) {
+      return !(this.trueEnd() < other.trueStart() || this.trueStart() > other.trueEnd());
+    };
+
+    Twix.prototype.engulfs = function(other) {
+      return this.trueStart() <= other.trueStart() && this.trueEnd() >= other.trueEnd();
+    };
+
+    Twix.prototype.trueStart = function() {
+      if (this.allDay) {
+        return this.start.sod();
+      } else {
+        return this.start;
+      }
+    };
+
+    Twix.prototype.trueEnd = function() {
+      if (this.allDay) {
+        return this.end.eod();
+      } else {
+        return this.end;
       }
     };
 

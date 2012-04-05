@@ -1,5 +1,5 @@
 (function() {
-  var Twix, assertEqual, moment, thisYear, tomorrow, yesterday;
+  var Twix, assertEqual, moment, thatDay, thisYear, tomorrow, yesterday;
 
   if (typeof module !== "undefined") {
     moment = require("moment");
@@ -26,6 +26,14 @@
 
   tomorrow = function() {
     return moment().add('days', 1).sod();
+  };
+
+  thatDay = function(start, end) {
+    if (start) {
+      return new Twix("5/25/1982 " + start, "5/25/1982 " + end);
+    } else {
+      return new Twix("5/25/1982", "5/25/1982", true);
+    }
   };
 
   describe("sameYear()", function() {
@@ -128,7 +136,7 @@
   describe("duration()", function() {
     describe("all-day events", function() {
       it("formats single-day correctly", function() {
-        return assertEqual("all day", new Twix("5/25/1982", "5.25/1982", true).duration());
+        return assertEqual("all day", new Twix("5/25/1982", "5/25/1982", true).duration());
       });
       return it("formats multiday correctly", function() {
         return assertEqual("3 days", new Twix("5/25/1982", "5/27/1982", true).duration());
@@ -136,7 +144,7 @@
     });
     return describe("non-all-day events", function() {
       it("formats single-day correctly", function() {
-        return assertEqual("4 hours", new Twix("5/25/1982 12:00", "5/25/1982 16:00").duration());
+        return assertEqual("4 hours", thatDay("12:00", "16:00").duration());
       });
       return it("formats multiday correctly", function() {
         return assertEqual("2 days", new Twix("5/25/1982", "5/27/1982").duration());
@@ -162,6 +170,144 @@
       });
       return it("returns false for the future", function() {
         return assertEqual(false, new Twix(moment().add('hours', 2), moment().add('hours', 3)).past());
+      });
+    });
+  });
+
+  describe("overlaps", function() {
+    var assertNoOverlap, assertOverlap, assertOverlapness, someDays, someTime;
+    assertOverlap = function(first, second) {
+      return assertOverlapness(true)(first, second);
+    };
+    assertNoOverlap = function(first, second) {
+      return assertOverlapness(false)(first, second);
+    };
+    assertOverlapness = function(shouldOverlap) {
+      return function(first, second) {
+        assertEqual(shouldOverlap, first.overlaps(second));
+        return assertEqual(shouldOverlap, second.overlaps(first));
+      };
+    };
+    someTime = thatDay("5:30", "8:30");
+    someDays = new Twix("5/24/1982", "5/25/1982", true);
+    describe("non-all-day events", function() {
+      it("returns false for a later event", function() {
+        return assertNoOverlap(someTime, thatDay("9:30", "11:30"));
+      });
+      it("returns false for an earlier event", function() {
+        return assertNoOverlap(someTime, thatDay("3:30", "4:30"));
+      });
+      it("returns true for a partially later event", function() {
+        return assertOverlap(someTime, thatDay("4:30", "6:30"));
+      });
+      it("returns true for a partially earlier event", function() {
+        return assertOverlap(someTime, thatDay("8:00", "11:30"));
+      });
+      it("returns true for an engulfed event", function() {
+        return assertOverlap(someTime, thatDay("6:30", "7:30"));
+      });
+      return it("returns true for an engulfing event", function() {
+        return assertOverlap(someTime, thatDay("4:30", "9:30"));
+      });
+    });
+    describe("one all-day event", function() {
+      it("returns true for a partially later event", function() {
+        return assertOverlap(thatDay(), new Twix("5/25/1982 20:00", "5/26/1982 5:00"));
+      });
+      it("returns true for a partially earlier event", function() {
+        return assertOverlap(thatDay(), new Twix("5/24/1982", "20:00", "5/25/1982 7:00"));
+      });
+      it("returns true for an engulfed event", function() {
+        return assertOverlap(thatDay(), someTime);
+      });
+      return it("returns true for an engulfing event", function() {
+        return assertOverlap(thatDay(), new Twix("5/24/1982 20:00", "5/26/1982 5:00"));
+      });
+    });
+    return describe("two all-day events", function() {
+      it("returns false for a later event", function() {
+        return assertNoOverlap(someDays, new Twix("5/26/1982", "5/27/1982", true));
+      });
+      it("returns false for an earlier event", function() {
+        return assertNoOverlap(someDays, new Twix("5/22/1982", "5/23/1982", true));
+      });
+      it("returns true for a partially later event", function() {
+        return assertOverlap(someDays, new Twix("5/24/1982", "5/26/1982", true));
+      });
+      it("returns true for a partially earlier event", function() {
+        return assertOverlap(someDays, new Twix("5/22/1982", "5/24/1982", true));
+      });
+      it("returns true for an engulfed event", function() {
+        return assertOverlap(someDays, new Twix("5/25/1982", "5/25/1982", true));
+      });
+      return it("returns true for an engulfing event", function() {
+        return assertOverlap(someDays, new Twix("5/22/1982", "5/28/1982", true));
+      });
+    });
+  });
+
+  describe("engulfs", function() {
+    var assertEngulfing, assertNotEngulfing, someDays, someTime;
+    assertEngulfing = function(first, second) {
+      return assertEqual(true, first.engulfs(second));
+    };
+    assertNotEngulfing = function(first, second) {
+      return assertEqual(false, first.engulfs(second));
+    };
+    someTime = thatDay("5:30", "8:30");
+    someDays = new Twix("5/24/1982", "5/25/1982", true);
+    describe("non-all-day events", function() {
+      it("returns false for a later event", function() {
+        return assertNotEngulfing(someTime, thatDay("9:30", "11:30"));
+      });
+      it("returns false for an earlier event", function() {
+        return assertNotEngulfing(someTime, thatDay("3:30", "4:30"));
+      });
+      it("returns true for a partially later event", function() {
+        return assertNotEngulfing(someTime, thatDay("4:30", "6:30"));
+      });
+      it("returns true for a partially earlier event", function() {
+        return assertNotEngulfing(someTime, thatDay("8:00", "11:30"));
+      });
+      it("returns true for an engulfed event", function() {
+        return assertEngulfing(someTime, thatDay("6:30", "7:30"));
+      });
+      return it("returns true for an engulfing event", function() {
+        return assertNotEngulfing(someTime, thatDay("4:30", "9:30"));
+      });
+    });
+    describe("one all-day event", function() {
+      it("returns true for a partially later event", function() {
+        return assertNotEngulfing(thatDay(), new Twix("5/25/1982 20:00", "5/26/1982 5:00"));
+      });
+      it("returns true for a partially earlier event", function() {
+        return assertNotEngulfing(thatDay(), new Twix("5/24/1982", "20:00", "5/25/1982 7:00"));
+      });
+      it("returns true for an engulfed event", function() {
+        return assertEngulfing(thatDay(), someTime);
+      });
+      return it("returns true for an engulfing event", function() {
+        return assertNotEngulfing(thatDay(), new Twix("5/24/1982 20:00", "5/26/1982 5:00"));
+      });
+    });
+    return describe("two all-day events", function() {
+      it("returns false for a later event", function() {
+        return assertNotEngulfing(someDays, new Twix("5/26/1982", "5/27/1982", true));
+      });
+      it("returns false for an earlier event", function() {
+        return assertNotEngulfing(someDays, new Twix("5/22/1982", "5/23/1982", true));
+      });
+      it("returns true for a partially later event", function() {
+        return assertNotEngulfing(someDays, new Twix("5/24/1982", "5/26/1982", true));
+      });
+      it("returns true for a partially earlier event", function() {
+        return assertNotEngulfing(someDays, new Twix("5/22/1982", "5/24/1982", true));
+      });
+      it("returns true for an engulfed event", function() {
+        return assertEngulfing(someDays, new Twix("5/25/1982", "5/25/1982", true));
+      });
+      return it("returns true for an engulfing event", function() {
+        return assertNotEngulfing(someDays, new Twix("5/22/1982", "5/28/1982", true));
       });
     });
   });

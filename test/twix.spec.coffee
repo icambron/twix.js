@@ -15,6 +15,12 @@ thisYear = (partial, time) ->
 yesterday = -> moment().subtract('days', 1).sod()
 tomorrow = -> moment().add('days', 1).sod()
 
+thatDay = (start, end) -> 
+  if start
+    new Twix "5/25/1982 #{start}", "5/25/1982 #{end}"
+  else
+    new Twix "5/25/1982", "5/25/1982", true
+
 describe "sameYear()", ->
 
   it "returns true if they're the same year", ->
@@ -100,14 +106,14 @@ describe "daysIn()", ->
 describe "duration()", ->
   describe "all-day events", -> 
     it "formats single-day correctly", ->
-      assertEqual("all day", new Twix("5/25/1982", "5.25/1982", true).duration())
+      assertEqual("all day", new Twix("5/25/1982", "5/25/1982", true).duration())
 
     it "formats multiday correctly", ->
       assertEqual("3 days", new Twix("5/25/1982", "5/27/1982", true).duration())
   
   describe "non-all-day events", ->
     it "formats single-day correctly", ->
-      assertEqual("4 hours", new Twix("5/25/1982 12:00", "5/25/1982 16:00").duration())
+      assertEqual("4 hours", thatDay("12:00", "16:00").duration())
 
     it "formats multiday correctly", ->
       assertEqual("2 days", new Twix("5/25/1982", "5/27/1982").duration())
@@ -129,6 +135,131 @@ describe "past()", ->
 
     it "returns false for the future", ->
       assertEqual(false, new Twix(moment().add('hours', 2), moment().add('hours', 3)).past())
+
+describe "overlaps", ->
+  
+  assertOverlap = (first, second) -> assertOverlapness(true)(first, second)
+  assertNoOverlap = (first, second) -> assertOverlapness(false)(first, second)
+
+  assertOverlapness = (shouldOverlap) -> 
+    (first, second) ->
+      assertEqual shouldOverlap, first.overlaps(second)
+      assertEqual shouldOverlap, second.overlaps(first)
+
+  someTime = thatDay "5:30", "8:30"
+  someDays = new Twix("5/24/1982", "5/25/1982", true)
+
+  describe "non-all-day events", ->
+
+    it "returns false for a later event", ->
+      assertNoOverlap someTime, thatDay "9:30", "11:30"
+
+    it "returns false for an earlier event", ->
+      assertNoOverlap someTime, thatDay "3:30", "4:30"
+
+    it "returns true for a partially later event", ->
+      assertOverlap someTime, thatDay "4:30", "6:30"
+
+    it "returns true for a partially earlier event", ->
+      assertOverlap someTime, thatDay "8:00", "11:30"
+
+    it "returns true for an engulfed event", ->
+      assertOverlap someTime, thatDay "6:30", "7:30"
+
+    it "returns true for an engulfing event", ->
+      assertOverlap someTime, thatDay "4:30", "9:30"
+
+  describe "one all-day event", ->
+    it "returns true for a partially later event", ->
+      assertOverlap thatDay(), new Twix("5/25/1982 20:00", "5/26/1982 5:00")
+
+    it "returns true for a partially earlier event", ->
+      assertOverlap thatDay(), new Twix("5/24/1982", "20:00", "5/25/1982 7:00")
+
+    it "returns true for an engulfed event", ->
+      assertOverlap thatDay(), someTime
+
+    it "returns true for an engulfing event", ->
+      assertOverlap thatDay(), new Twix("5/24/1982 20:00", "5/26/1982 5:00")
+
+  describe "two all-day events", ->
+    it "returns false for a later event", ->
+      assertNoOverlap someDays, new Twix("5/26/1982", "5/27/1982", true)
+
+    it "returns false for an earlier event", ->
+      assertNoOverlap someDays, new Twix("5/22/1982", "5/23/1982", true)
+
+    it "returns true for a partially later event", ->
+      assertOverlap someDays, new Twix("5/24/1982", "5/26/1982", true)
+
+    it "returns true for a partially earlier event", ->
+      assertOverlap someDays, new Twix("5/22/1982", "5/24/1982", true)
+
+    it "returns true for an engulfed event", ->
+      assertOverlap someDays, new Twix("5/25/1982", "5/25/1982", true)
+
+    it "returns true for an engulfing event", ->
+      assertOverlap someDays, new Twix("5/22/1982", "5/28/1982", true)
+
+describe "engulfs", ->
+
+  assertEngulfing = (first, second) -> assertEqual true, first.engulfs(second)
+  assertNotEngulfing = (first, second) -> assertEqual false, first.engulfs(second)
+
+  someTime = thatDay "5:30", "8:30"
+  someDays = new Twix("5/24/1982", "5/25/1982", true)
+
+  describe "non-all-day events", ->
+
+    it "returns false for a later event", ->
+      assertNotEngulfing someTime, thatDay "9:30", "11:30"
+
+    it "returns false for an earlier event", ->
+      assertNotEngulfing someTime, thatDay "3:30", "4:30"
+
+    it "returns true for a partially later event", ->
+      assertNotEngulfing someTime, thatDay "4:30", "6:30"
+
+    it "returns true for a partially earlier event", ->
+      assertNotEngulfing someTime, thatDay "8:00", "11:30"
+
+    it "returns true for an engulfed event", ->
+      assertEngulfing someTime, thatDay "6:30", "7:30"
+
+    it "returns true for an engulfing event", ->
+      assertNotEngulfing someTime, thatDay "4:30", "9:30"
+
+  describe "one all-day event", ->
+    it "returns true for a partially later event", ->
+      assertNotEngulfing thatDay(), new Twix("5/25/1982 20:00", "5/26/1982 5:00")
+
+    it "returns true for a partially earlier event", ->
+      assertNotEngulfing thatDay(), new Twix("5/24/1982", "20:00", "5/25/1982 7:00")
+
+    it "returns true for an engulfed event", ->
+      assertEngulfing thatDay(), someTime
+
+    it "returns true for an engulfing event", ->
+      assertNotEngulfing thatDay(), new Twix("5/24/1982 20:00", "5/26/1982 5:00")
+
+  describe "two all-day events", ->
+    it "returns false for a later event", ->
+      assertNotEngulfing someDays, new Twix("5/26/1982", "5/27/1982", true)
+
+    it "returns false for an earlier event", ->
+      assertNotEngulfing someDays, new Twix("5/22/1982", "5/23/1982", true)
+
+    it "returns true for a partially later event", ->
+      assertNotEngulfing someDays, new Twix("5/24/1982", "5/26/1982", true)
+
+    it "returns true for a partially earlier event", ->
+      assertNotEngulfing someDays, new Twix("5/22/1982", "5/24/1982", true)
+
+    it "returns true for an engulfed event", ->
+      assertEngulfing someDays, new Twix("5/25/1982", "5/25/1982", true)
+
+    it "returns true for an engulfing event", ->
+      assertNotEngulfing someDays, new Twix("5/22/1982", "5/28/1982", true)
 
 describe "format()", ->
 
