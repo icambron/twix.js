@@ -29,8 +29,6 @@ class Twix
   countDays: ->
     startDate = @start.sod()
     endDate = @end.sod()
-    console.log "start: #{startDate.toString()}"
-    console.log "end: #{endDate.toString()}"
     endDate.diff(startDate, 'days') + 1
 
   daysIn: (minHours) ->
