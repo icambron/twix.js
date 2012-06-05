@@ -15,11 +15,8 @@
   Twix = (function() {
 
     function Twix(start, end, allDay) {
-      var endM, startM;
-      startM = moment(start);
-      endM = moment(end);
-      this.start = startM.zone() === moment().zone ? startM : moment(startM.valueOf());
-      this.end = endM.zone() === moment().zone ? endM : moment(endM.valueOf());
+      this.start = moment(start);
+      this.end = moment(end);
       this.allDay = allDay || false;
     }
 

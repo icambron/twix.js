@@ -8,14 +8,8 @@ if typeof moment == "undefined"
 
 class Twix
   constructor: (start, end, allDay) ->
-    startM = moment start
-    endM = moment end
-    @start = if startM.zone() == moment().zone then startM else moment(startM.valueOf())
-    @end = if endM.zone() == moment().zone then endM else moment(endM.valueOf())
-
-    #@start = moment start
-    #@end = moment end
-
+    @start = moment start
+    @end = moment end
     @allDay = allDay || false
 
   sameDay: ->
