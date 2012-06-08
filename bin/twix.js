@@ -36,14 +36,17 @@
     };
 
     Twix.prototype.daysIn = function(minHours) {
-      var endDate, iter,
+      var endDate, hasNext, iter,
         _this = this;
       iter = this.start.sod();
       endDate = this.end.sod();
+      hasNext = function() {
+        return iter <= endDate && (!minHours || iter.valueOf() !== endDate.valueOf() || _this.end.hours() > minHours || _this.allDay);
+      };
       return {
         next: function() {
           var val;
-          if (iter > endDate || (minHours && iter.valueOf() === endDate.valueOf() && _this.end.hours() < minHours && !_this.allDay)) {
+          if (!hasNext()) {
             return null;
           } else {
             val = iter.clone();
@@ -51,9 +54,7 @@
             return val;
           }
         },
-        hasNext: function() {
-          return iter <= endDate && (!minHours || iter.valueOf() !== endDate.valueOf() || _this.end.hours() > minHours);
-        }
+        hasNext: hasNext
       };
     };
 

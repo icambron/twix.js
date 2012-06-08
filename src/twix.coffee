@@ -29,14 +29,16 @@ class Twix
     iter = @start.sod()
     endDate = @end.sod()
 
+    hasNext = => iter <= endDate && (!minHours || iter.valueOf() != endDate.valueOf() || @end.hours() > minHours || @allDay)
+
     next: =>
-      if iter > endDate || (minHours && iter.valueOf() == endDate.valueOf() && @end.hours() < minHours && !@allDay)
+      unless hasNext()
         null
       else
         val = iter.clone()
         iter.add('days', 1)
         val
-    hasNext: => iter <= endDate && (!minHours || iter.valueOf() != endDate.valueOf() || @end.hours() > minHours)
+    hasNext: hasNext
 
   duration: -> 
     if @allDay

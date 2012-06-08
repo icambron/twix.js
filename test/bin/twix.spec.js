@@ -157,7 +157,9 @@
       start = thisYear("5/25");
       end = thisYear("5/25");
       iter = new Twix(start, end, true).daysIn(4);
+      assertEqual(true, iter.hasNext());
       assertSameDay(thisYear("5/25"), iter.next());
+      assertEqual(false, iter.hasNext());
       return assertEqual(null, iter.next());
     });
   });
