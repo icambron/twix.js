@@ -43,7 +43,7 @@
       return {
         next: function() {
           var val;
-          if (iter > endDate || (minHours && iter.valueOf() === endDate.valueOf() && _this.end.hours() < minHours)) {
+          if (iter > endDate || (minHours && iter.valueOf() === endDate.valueOf() && _this.end.hours() < minHours && !_this.allDay)) {
             return null;
           } else {
             val = iter.clone();

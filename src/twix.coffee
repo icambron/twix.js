@@ -30,7 +30,7 @@ class Twix
     endDate = @end.sod()
 
     next: =>
-      if iter > endDate || (minHours && iter.valueOf() == endDate.valueOf() && @end.hours() < minHours)
+      if iter > endDate || (minHours && iter.valueOf() == endDate.valueOf() && @end.hours() < minHours && !@allDay)
         null
       else
         val = iter.clone()

@@ -135,12 +135,28 @@
       })();
       return assertEqual(366, results.length);
     });
-    return it("doesn't generate extra days when there's a min time", function() {
+    it("provides 1 day for an all-day event", function() {
+      var end, iter, start;
+      start = thisYear("5/25");
+      end = thisYear("5/25");
+      iter = new Twix(start, end, true).daysIn();
+      assertSameDay(thisYear("5/25"), iter.next());
+      return assertEqual(null, iter.next());
+    });
+    it("doesn't generate extra days when there's a min time", function() {
       var end, iter, range, start;
       start = thisYear("5/25", "16:00");
       end = thisYear("5/26", "3:00");
       range = new Twix(start, end);
       iter = range.daysIn(4);
+      assertSameDay(thisYear("5/25"), iter.next());
+      return assertEqual(null, iter.next());
+    });
+    return it("provides 1 day for all-day events when there's a min time", function() {
+      var end, iter, start;
+      start = thisYear("5/25");
+      end = thisYear("5/25");
+      iter = new Twix(start, end, true).daysIn(4);
       assertSameDay(thisYear("5/25"), iter.next());
       return assertEqual(null, iter.next());
     });
