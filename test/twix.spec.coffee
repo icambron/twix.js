@@ -9,7 +9,7 @@ else
   assertEqual = (a, b) -> throw new Error("Found #{b}, expected #{a}") unless a == b
   assertDeepEqual = (a, b) -> throw new Error("Found #{b}, expected #{a}") unless a.equals(b)
 
-thisYear = (partial, time) -> 
+thisYear = (partial, time) ->
   fullDate = "#{partial}/#{moment().year()}"
   fullDate += " #{time}" if time
   moment fullDate
@@ -17,7 +17,7 @@ thisYear = (partial, time) ->
 yesterday = -> moment().subtract('days', 1).sod()
 tomorrow = -> moment().add('days', 1).sod()
 
-thatDay = (start, end) -> 
+thatDay = (start, end) ->
   if start
     new Twix "5/25/1982 #{start}", "5/25/1982 #{end}"
   else
@@ -42,9 +42,9 @@ describe "sameDay()", ->
   it "returns true they're in different UTC days but the same local days", ->
     assertEqual true, new Twix("5/25/1982 5:30 AM", "5/25/1982 11:30 PM").sameDay()
 
-describe "countDays()", ->    
+describe "countDays()", ->
 
-  it "inside one day returns 1", -> 
+  it "inside one day returns 1", ->
     start = thisYear "5/25", "3:00"
     end = thisYear "5/25", "14:00"
     range = new Twix start, end
@@ -95,7 +95,7 @@ describe "daysIn()", ->
     end = thisYear("5/25", "3:00").add('years', 1)
     iter = new Twix(start, end).daysIn()
     results = while iter.hasNext()
-      iter.next() 
+      iter.next()
     assertEqual(366, results.length)
 
   it "provides 1 day for an all-day event", ->
@@ -124,13 +124,13 @@ describe "daysIn()", ->
     assertEqual null, iter.next()
 
 describe "duration()", ->
-  describe "all-day events", -> 
+  describe "all-day events", ->
     it "formats single-day correctly", ->
       assertEqual("all day", new Twix("5/25/1982", "5/25/1982", true).duration())
 
     it "formats multiday correctly", ->
       assertEqual("3 days", new Twix("5/25/1982", "5/27/1982", true).duration())
-  
+
   describe "non-all-day events", ->
     it "formats single-day correctly", ->
       assertEqual("4 hours", thatDay("12:00", "16:00").duration())
@@ -157,11 +157,11 @@ describe "past()", ->
       assertEqual(false, new Twix(moment().add('hours', 2), moment().add('hours', 3)).past())
 
 describe "overlaps", ->
-  
+
   assertOverlap = (first, second) -> assertOverlapness(true)(first, second)
   assertNoOverlap = (first, second) -> assertOverlapness(false)(first, second)
 
-  assertOverlapness = (shouldOverlap) -> 
+  assertOverlapness = (shouldOverlap) ->
     (first, second) ->
       assertEqual shouldOverlap, first.overlaps(second)
       assertEqual shouldOverlap, second.overlaps(first)
@@ -284,7 +284,9 @@ describe "engulfs", ->
 describe "merge()", ->
 
   someTime = thatDay "5:30", "8:30"
-  someDays = new Twix("5/24/1982", "5/25/1982", true)
+  someDays = new Twix "5/24/1982", "5/25/1982", true
+
+  console.log someDays.end
 
   describe "non-all-day events", ->
 
@@ -308,7 +310,6 @@ describe "merge()", ->
 
   describe "one all-day event", ->
     it "spans a later time", ->
-      console.log(someDays.trueEnd())
       assertDeepEqual new Twix("5/24/1982 00:00", "5/26/1982 7:00"), someDays.merge(new Twix("5/24/1982 20:00", "5/26/1982 7:00"))
 
     it "spans an earlier time", ->
@@ -392,27 +393,27 @@ describe "format()", ->
       start: "5/25/2010"
       end: "5/25/2010"
       allDay: true
-      result: "May 25, 2010"  
+      result: "May 25, 2010"
 
     test "same month says month on one side",
       start: thisYear("5/25")
       end: thisYear("5/26")
       allDay: true
       result: "May 25 - 26"
-    
+
     test "different month shows both",
       start: thisYear("5/25")
       end: thisYear("6/1")
       allDay: true
       result: "May 25 - Jun 1"
 
-    test "explicit year shows the year once", 
+    test "explicit year shows the year once",
       start: "5/25/1982"
       end: "5/26/1982"
-      allDay: true, 
+      allDay: true,
       result: "May 25 - 26, 1982"
 
-    test "different year shows the year twice", 
+    test "different year shows the year twice",
       start: "5/25/1982"
       end: "5/25/1983"
       allDay: true
@@ -432,7 +433,7 @@ describe "format()", ->
       result: "all day May 25, 1982"
 
   describe "no single dates", ->
-    test "shouldn't show dates for intraday", 
+    test "shouldn't show dates for intraday",
       start: "5/25/2010 5:30 AM"
       end: "5/25/2010 6:30 AM"
       options: {showDate: false}

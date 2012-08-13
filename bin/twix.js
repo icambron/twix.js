@@ -30,16 +30,16 @@
 
     Twix.prototype.countDays = function() {
       var endDate, startDate;
-      startDate = this.start.sod();
-      endDate = this.end.sod();
+      startDate = this.start.clone().startOf("day");
+      endDate = this.end.clone().startOf("day");
       return endDate.diff(startDate, 'days') + 1;
     };
 
     Twix.prototype.daysIn = function(minHours) {
       var endDate, hasNext, iter,
         _this = this;
-      iter = this.start.sod();
-      endDate = this.end.sod();
+      iter = this.start.clone().startOf("day");
+      endDate = this.end.clone().startOf("day");
       hasNext = function() {
         return iter <= endDate && (!minHours || iter.valueOf() !== endDate.valueOf() || _this.end.hours() > minHours || _this.allDay);
       };
@@ -72,18 +72,18 @@
 
     Twix.prototype.past = function() {
       if (this.allDay) {
-        return this.end.eod() < moment();
+        return this.end.clone().endOf("day") < moment();
       } else {
         return this.end < moment();
       }
     };
 
     Twix.prototype.overlaps = function(other) {
-      return !(this.trueEnd() < other.trueStart() || this.trueStart() > other.trueEnd());
+      return !(this._trueEnd() < other._trueStart() || this._trueStart() > other._trueEnd());
     };
 
     Twix.prototype.engulfs = function(other) {
-      return this.trueStart() <= other.trueStart() && this.trueEnd() >= other.trueEnd();
+      return this._trueStart() <= other._trueStart() && this._trueEnd() >= other._trueEnd();
     };
 
     Twix.prototype.merge = function(other) {
@@ -92,24 +92,25 @@
       if (allDay) {
         newStart = this.start < other.start ? this.start : other.start;
         newEnd = this.end > other.end ? this.end : other.end;
+        console.log("ends: " + (this.end.format()) + ", " + (other.end.format()));
       } else {
-        newStart = this.trueStart() < other.trueStart() ? this.trueStart() : other.trueStart();
-        newEnd = this.trueEnd() > other.trueEnd() ? this.trueEnd() : other.trueEnd();
+        newStart = this._trueStart() < other._trueStart() ? this._trueStart() : other._trueStart();
+        newEnd = this._trueEnd() > other._trueEnd() ? this._trueEnd() : other._trueEnd();
       }
       return new Twix(newStart, newEnd, allDay);
     };
 
-    Twix.prototype.trueStart = function() {
+    Twix.prototype._trueStart = function() {
       if (this.allDay) {
-        return this.start.sod();
+        return this.start.clone().startOf("day");
       } else {
         return this.start;
       }
     };
 
-    Twix.prototype.trueEnd = function() {
+    Twix.prototype._trueEnd = function() {
       if (this.allDay) {
-        return this.end.eod();
+        return this.end.clone().endOf("day");
       } else {
         return this.end;
       }
@@ -145,7 +146,7 @@
       if (options.twentyFourHour) {
         options.hourFormat = options.hourFormat.replace("h", "H");
       }
-      goesIntoTheMorning = options.lastNightEndsAt > 0 && !this.allDay && this.end.sod().valueOf() === this.start.clone().add('days', 1).sod().valueOf() && this.start.hours() > 12 && this.end.hours() < options.lastNightEndsAt;
+      goesIntoTheMorning = options.lastNightEndsAt > 0 && !this.allDay && this.end.clone().startOf('day').valueOf() === this.start.clone().add('days', 1).startOf("day").valueOf() && this.start.hours() > 12 && this.end.hours() < options.lastNightEndsAt;
       needDate = options.showDate || (!this.sameDay() && !goesIntoTheMorning);
       if (this.allDay && this.sameDay() && (!options.showDate || options.explicitAllDay)) {
         fs.push({

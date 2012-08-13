@@ -347,6 +347,7 @@
     var someDays, someTime;
     someTime = thatDay("5:30", "8:30");
     someDays = new Twix("5/24/1982", "5/25/1982", true);
+    console.log(someDays.end);
     describe("non-all-day events", function() {
       it("spans a later time", function() {
         return assertDeepEqual(thatDay("5:30", "11:30"), someTime.merge(thatDay("9:30", "11:30")));
@@ -369,7 +370,6 @@
     });
     describe("one all-day event", function() {
       it("spans a later time", function() {
-        console.log(someDays.trueEnd());
         return assertDeepEqual(new Twix("5/24/1982 00:00", "5/26/1982 7:00"), someDays.merge(new Twix("5/24/1982 20:00", "5/26/1982 7:00")));
       });
       it("spans an earlier time", function() {

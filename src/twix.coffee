@@ -21,13 +21,13 @@ class Twix
     @start.year() == @end.year()
 
   countDays: ->
-    startDate = @start.sod()
-    endDate = @end.sod()
+    startDate = @start.clone().startOf("day")
+    endDate = @end.clone().startOf("day")
     endDate.diff(startDate, 'days') + 1
 
   daysIn: (minHours) ->
-    iter = @start.sod()
-    endDate = @end.sod()
+    iter = @start.clone().startOf("day")
+    endDate = @end.clone().startOf("day")
 
     hasNext = => iter <= endDate && (!minHours || iter.valueOf() != endDate.valueOf() || @end.hours() > minHours || @allDay)
 
@@ -40,38 +40,40 @@ class Twix
         val
     hasNext: hasNext
 
-  duration: -> 
+  duration: ->
     if @allDay
-      if @sameDay() 
+      if @sameDay()
         "all day"
-      else 
+      else
         @start.from(@end.clone().add('days', 1), true)
-    else 
+    else
       @start.from(@end, true)
 
-  past: -> 
+  past: ->
     if @allDay
-      @end.eod() < moment()
+      @end.clone().endOf("day") < moment()
     else
       @end < moment()
 
-  overlaps: (other) -> !(@trueEnd() < other.trueStart() || @trueStart() > other.trueEnd())
+  overlaps: (other) -> !(@_trueEnd() < other._trueStart() || @_trueStart() > other._trueEnd())
 
-  engulfs: (other) -> @trueStart() <= other.trueStart() && @trueEnd() >= other.trueEnd()
+  engulfs: (other) -> @_trueStart() <= other._trueStart() && @_trueEnd() >= other._trueEnd()
 
   merge: (other) ->
     allDay = @allDay && other.allDay
     if allDay
       newStart = if @start < other.start then @start else other.start
       newEnd = if @end > other.end then @end else other.end
+#      console.log "setting end to #{newEnd.format()}"
+      console.log "ends: #{@end.format()}, #{other.end.format()}"
     else
-      newStart = if @trueStart() < other.trueStart() then @trueStart() else other.trueStart()
-      newEnd = if @trueEnd() > other.trueEnd() then @trueEnd() else other.trueEnd()
+      newStart = if @_trueStart() < other._trueStart() then @_trueStart() else other._trueStart()
+      newEnd = if @_trueEnd() > other._trueEnd() then @_trueEnd() else other._trueEnd()
 
     new Twix(newStart, newEnd, allDay)
 
-  trueStart: -> if @allDay then @start.sod() else @start
-  trueEnd: -> if @allDay then @end.eod() else @end
+  _trueStart: -> if @allDay then @start.clone().startOf("day") else @start
+  _trueEnd: -> if @allDay then @end.clone().endOf("day") else @end
 
   equals: (other) ->
     (other instanceof Twix) &&
@@ -107,7 +109,7 @@ class Twix
     goesIntoTheMorning =
       options.lastNightEndsAt > 0 &&
       !@allDay &&
-      @end.sod().valueOf() == @start.clone().add('days', 1).sod().valueOf() &&
+      @end.clone().startOf('day').valueOf() == @start.clone().add('days', 1).startOf("day").valueOf() &&
       @start.hours() > 12 &&
       @end.hours() < options.lastNightEndsAt
 
@@ -122,7 +124,7 @@ class Twix
 
     if needDate && (@start.year() != moment().year() || !@sameYear())
       fs.push
-        name: "year", 
+        name: "year",
         fn: (date) -> date.format options.yearFormat
         pre: ", "
         slot: 4
@@ -134,7 +136,7 @@ class Twix
         ignoreEnd: -> goesIntoTheMorning
         slot: 2
         pre: " "
-        
+
     if @allDay && needDate
       fs.push
         name: "month"
@@ -158,7 +160,7 @@ class Twix
 
     if options.groupMeridiems && !options.twentyFourHour && !@allDay
       fs.push
-        name: "meridiem", 
+        name: "meridiem",
         fn: (t) => t.format options.meridiemFormat
         slot: 6
         pre: if options.spaceBeforeMeridiem then " " else ""
@@ -166,12 +168,12 @@ class Twix
     if !@allDay
       fs.push
         name: "time",
-        fn: (date) -> 
+        fn: (date) ->
           str = if date.minutes() == 0 && options.implicitMinutes && !options.twentyFourHour
-                  date.format options.hourFormat 
+                  date.format options.hourFormat
                 else
                   date.format "#{options.hourFormat}:#{options.minuteFormat}"
-                  
+
           if !options.groupMeridiems && !options.twentyFourHour
             str += " " if options.spaceBeforeMeridiem
             str += date.format options.meridiemFormat
@@ -192,7 +194,7 @@ class Twix
                 else format.fn @end
 
       start_group = {format: format, value: -> start_str}
-     
+
       if end_str == start_str && together
         common_bucket.push start_group
       else
@@ -218,17 +220,17 @@ class Twix
             str += section.format.pre
 
         str += section.value()
-      
+
         global_first = false
         local_first = false
       str
 
-    fold common_bucket 
+    fold common_bucket
 
 extend = (first, second) ->
   for attr of second
     first[attr] = second[attr] unless typeof second[attr] == "undefined"
-  
+
 if typeof module != "undefined"
   module.exports = Twix
 else
