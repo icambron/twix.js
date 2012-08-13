@@ -64,8 +64,6 @@ class Twix
     if allDay
       newStart = if @start < other.start then @start else other.start
       newEnd = if @end > other.end then @end else other.end
-#      console.log "setting end to #{newEnd.format()}"
-      console.log "ends: #{@end.format()}, #{other.end.format()}"
     else
       newStart = if @_trueStart() < other._trueStart() then @_trueStart() else other._trueStart()
       newEnd = if @_trueEnd() > other._trueEnd() then @_trueEnd() else other._trueEnd()
