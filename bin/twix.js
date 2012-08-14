@@ -92,7 +92,6 @@
       if (allDay) {
         newStart = this.start < other.start ? this.start : other.start;
         newEnd = this.end > other.end ? this.end : other.end;
-        console.log("ends: " + (this.end.format()) + ", " + (other.end.format()));
       } else {
         newStart = this._trueStart() < other._trueStart() ? this._trueStart() : other._trueStart();
         newEnd = this._trueEnd() > other._trueEnd() ? this._trueEnd() : other._trueEnd();
@@ -329,5 +328,13 @@
   } else {
     window.Twix = Twix;
   }
+
+  moment.twix = function() {
+    return (function(func, args, ctor) {
+      ctor.prototype = func.prototype;
+      var child = new ctor, result = func.apply(child, args), t = typeof result;
+      return t == "object" || t == "function" ? result || child : child;
+    })(Twix, arguments, function(){});
+  };
 
 }).call(this);

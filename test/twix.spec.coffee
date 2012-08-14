@@ -23,6 +23,11 @@ thatDay = (start, end) ->
   else
     new Twix "5/25/1982", "5/25/1982", true
 
+describe "plugin", ->
+  it "works", ->
+    assertEqual "function", typeof(moment.twix)
+    assertDeepEqual new Twix("5/25/1982", "5/25/1983", true), moment.twix("5/25/1982", "5/25/1983", true)
+
 describe "sameYear()", ->
 
   it "returns true if they're the same year", ->
@@ -76,7 +81,6 @@ describe "daysIn()", ->
 
     iter = range.daysIn()
     next = iter.next()
-    console.log next
     assertSameDay thisYear("5/25"), next
     assertEqual null, iter.next()
 
@@ -285,8 +289,6 @@ describe "merge()", ->
 
   someTime = thatDay "5:30", "8:30"
   someDays = new Twix "5/24/1982", "5/25/1982", true
-
-  console.log someDays.end
 
   describe "non-all-day events", ->
 

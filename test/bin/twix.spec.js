@@ -47,6 +47,13 @@
     }
   };
 
+  describe("plugin", function() {
+    return it("works", function() {
+      assertEqual("function", typeof moment.twix);
+      return assertDeepEqual(new Twix("5/25/1982", "5/25/1983", true), moment.twix("5/25/1982", "5/25/1983", true));
+    });
+  });
+
   describe("sameYear()", function() {
     it("returns true if they're the same year", function() {
       return assertEqual(true, new Twix("5/25/1982", "10/14/1982").sameYear());
@@ -106,7 +113,6 @@
       range = new Twix(start, end);
       iter = range.daysIn();
       next = iter.next();
-      console.log(next);
       assertSameDay(thisYear("5/25"), next);
       return assertEqual(null, iter.next());
     });
@@ -347,7 +353,6 @@
     var someDays, someTime;
     someTime = thatDay("5:30", "8:30");
     someDays = new Twix("5/24/1982", "5/25/1982", true);
-    console.log(someDays.end);
     describe("non-all-day events", function() {
       it("spans a later time", function() {
         return assertDeepEqual(thatDay("5:30", "11:30"), someTime.merge(thatDay("9:30", "11:30")));

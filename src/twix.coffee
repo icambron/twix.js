@@ -233,3 +233,4 @@ if typeof module != "undefined"
   module.exports = Twix
 else
   window.Twix = Twix
+moment.twix = -> new Twix(arguments...)
