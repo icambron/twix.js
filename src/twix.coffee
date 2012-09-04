@@ -1,6 +1,6 @@
 if typeof module != "undefined"
   moment = require('moment')
-else moment = window.moment
+else moment = @moment
 
 #ensure we can find moment
 if typeof moment == "undefined"
