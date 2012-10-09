@@ -12,7 +12,7 @@
     "mocha" : "0.8.x",
     "uglify-js" : "1.2.5"
   },
-  "main": "lib/twix",
+  "main": "bin/twix",
   "test": "make test",
   "engines": {
     "node": "*"
