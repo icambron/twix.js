@@ -5,7 +5,7 @@
   if (typeof module !== "undefined") {
     moment = require('moment');
   } else {
-    moment = window.moment;
+    moment = this.moment;
   }
 
   if (typeof moment === "undefined") {
