@@ -13,7 +13,9 @@
     "uglify-js" : "1.2.5"
   },
   "main": "bin/twix",
-  "test": "make test",
+  "scripts": {
+    "test": "make test"
+  },
   "engines": {
     "node": "*"
   },
