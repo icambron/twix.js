@@ -12,7 +12,7 @@ t.duration(); //=> "4 hours"
 t.countDays(); //=> 1
 ```
 
-And much more. See the [docs](https://github.com/icambron/twix.js/wiki/Documentation) for full deets.
+And much more. See the **[docs](https://github.com/icambron/twix.js/wiki/Documentation)** for full deets.
 
 ## Installing ##
 
@@ -42,6 +42,10 @@ Note that the source is `src/twix.coffee`; the output is `bin/twix.js`. You can 
 You can also run the tests in-browser by building and then loading `test/test.html`.
 
 [![Build Status](https://secure.travis-ci.org/icambron/twix.js.png)](http://travis-ci.org/icambron/twix.js)
+
+## Future plans ##
+
+For the broad aims of Twix 2.0, see the [future plans](https://github.com/icambron/twix.js/wiki/Future-plans) page.
 
 ## License (MIT)##
 
