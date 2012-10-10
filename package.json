@@ -6,11 +6,11 @@
   "author": "Isaac Cambron",
   "keywords": ["twix", "date", "date range"],
   "dependencies": {
-    "moment": "1.7"
+    "moment": ">= 1.7"
   },
   "devDependencies": {
-    "mocha" : "0.8.x",
-    "uglify-js" : "1.2.5"
+    "mocha" : ">= 0.8",
+    "uglify-js" : ">= 1.2.5"
   },
   "main": "bin/twix",
   "scripts": {
