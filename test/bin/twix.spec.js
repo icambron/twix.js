@@ -429,6 +429,14 @@
         end: thisYear("5/26", "3:30 PM"),
         result: 'May 25, 5:30 AM - May 26, 3:30 PM'
       });
+      test("this year, different day shows year if requested", {
+        start: thisYear("5/25", "5:30 AM"),
+        end: thisYear("5/26", "3:30 PM"),
+        options: {
+          implicitYear: false
+        },
+        result: "May 25, 5:30 AM - May 26, 3:30 PM, " + ((new Date).getFullYear())
+      });
       test("same day, different times shows date once", {
         start: "5/25/1982 5:30 AM",
         end: "5/25/1982 3:30 PM",
@@ -475,11 +483,29 @@
         allDay: true,
         result: "May 25 - 26"
       });
+      test("same month says month on one side, with year if requested", {
+        start: thisYear("5/25"),
+        end: thisYear("5/26"),
+        allDay: true,
+        options: {
+          implicitYear: false
+        },
+        result: "May 25 - 26, " + ((new Date).getFullYear())
+      });
       test("different month shows both", {
         start: thisYear("5/25"),
         end: thisYear("6/1"),
         allDay: true,
         result: "May 25 - Jun 1"
+      });
+      test("different month shows both, with year if requested", {
+        start: thisYear("5/25"),
+        end: thisYear("6/1"),
+        allDay: true,
+        options: {
+          implicitYear: false
+        },
+        result: "May 25 - Jun 1, " + ((new Date).getFullYear())
       });
       test("explicit year shows the year once", {
         start: "5/25/1982",

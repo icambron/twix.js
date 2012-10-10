@@ -129,6 +129,7 @@
         showDayOfWeek: false,
         twentyFourHour: false,
         implicitMinutes: true,
+        implicitYear: true,
         yearFormat: "YYYY",
         monthFormat: "MMM",
         weekdayFormat: "ddd",
@@ -157,7 +158,7 @@
           pre: " "
         });
       }
-      if (needDate && (this.start.year() !== moment().year() || !this.sameYear())) {
+      if (needDate && (!options.implicitYear || this.start.year() !== moment().year() || !this.sameYear())) {
         fs.push({
           name: "year",
           fn: function(date) {

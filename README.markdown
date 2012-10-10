@@ -41,6 +41,8 @@ Note that the source is `src/twix.coffee`; the output is `bin/twix.js`. You can 
     
 You can also run the tests in-browser by building and then loading `test/test.html`.
 
+[![Build Status](https://secure.travis-ci.org/icambron/twix.js.png)](http://travis-ci.org/icambron/twix.js)
+
 ## License (MIT)##
 
 Copyright (c) 2012 Isaac Cambron
