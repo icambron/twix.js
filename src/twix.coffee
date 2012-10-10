@@ -87,6 +87,7 @@ class Twix
       showDayOfWeek: false
       twentyFourHour: false
       implicitMinutes: true
+      implicitYear: true
       yearFormat: "YYYY"
       monthFormat: "MMM"
       weekdayFormat: "ddd"
@@ -120,7 +121,7 @@ class Twix
         slot: 0
         pre: " "
 
-    if needDate && (@start.year() != moment().year() || !@sameYear())
+    if needDate && (!options.implicitYear || @start.year() != moment().year() || !@sameYear())
       fs.push
         name: "year",
         fn: (date) -> date.format options.yearFormat
