@@ -20,6 +20,95 @@
       this.allDay = allDay || false;
     }
 
+    Twix.defaults = {
+      twentyFourHour: false,
+      allDaySimple: {
+        fn: function(options) {
+          return options.allDay;
+        },
+        slot: 0,
+        pre: " "
+      },
+      dayOfWeek: {
+        fn: function(options) {
+          return function(date) {
+            return date.format(options.weekdayFormat);
+          };
+        },
+        slot: 1,
+        pre: " "
+      },
+      allDayMonth: {
+        fn: function(options) {
+          return function(date) {
+            return date.format("" + options.monthFormat + " " + options.dayFormat);
+          };
+        },
+        slot: 2,
+        pre: " "
+      },
+      month: {
+        fn: function(options) {
+          return function(date) {
+            return date.format(options.monthFormat);
+          };
+        },
+        slot: 2,
+        pre: " "
+      },
+      date: {
+        fn: function(options) {
+          return function(date) {
+            return date.format(options.dayFormat);
+          };
+        },
+        slot: 3,
+        pre: " "
+      },
+      year: {
+        fn: function(options) {
+          return function(date) {
+            return date.format(options.yearFormat);
+          };
+        },
+        slot: 4,
+        pre: ", "
+      },
+      time: {
+        fn: function(options) {
+          return function(date) {
+            var str;
+            str = date.minutes() === 0 && options.implicitMinutes && !options.twentyFourHour ? date.format(options.hourFormat) : date.format("" + options.hourFormat + ":" + options.minuteFormat);
+            if (!options.groupMeridiems && !options.twentyFourHour) {
+              if (options.spaceBeforeMeridiem) {
+                str += " ";
+              }
+              str += date.format(options.meridiemFormat);
+            }
+            return str;
+          };
+        },
+        slot: 5,
+        pre: ", "
+      },
+      meridiem: {
+        fn: function(options) {
+          var _this = this;
+          return function(t) {
+            return t.format(options.meridiemFormat);
+          };
+        },
+        slot: 6,
+        pre: function(spaceBeforeMeridiem) {
+          if (spaceBeforeMeridiem) {
+            return " ";
+          } else {
+            return "";
+          }
+        }
+      }
+    };
+
     Twix.prototype.sameDay = function() {
       return this.start.year() === this.end.year() && this.start.month() === this.end.month() && this.start.date() === this.end.date();
     };
@@ -127,7 +216,7 @@
         spaceBeforeMeridiem: true,
         showDate: true,
         showDayOfWeek: false,
-        twentyFourHour: false,
+        twentyFourHour: moment.langData()._twix.twentyFourHour,
         implicitMinutes: true,
         implicitYear: true,
         yearFormat: "YYYY",
@@ -152,91 +241,69 @@
         fs.push({
           name: "all day simple",
           fn: function() {
-            return options.allDay;
+            return moment.langData().twix_fn('allDaySimple', options);
           },
-          slot: 0,
-          pre: " "
+          pre: moment.langData().twix_pre('allDaySimple'),
+          slot: moment.langData().twix_slot('allDaySimple')
         });
       }
       if (needDate && (!options.implicitYear || this.start.year() !== moment().year() || !this.sameYear())) {
         fs.push({
           name: "year",
-          fn: function(date) {
-            return date.format(options.yearFormat);
-          },
-          pre: ", ",
-          slot: 4
+          fn: moment.langData().twix_fn('year', options),
+          pre: moment.langData().twix_pre('year'),
+          slot: moment.langData().twix_slot('year')
         });
       }
       if (!this.allDay && needDate) {
         fs.push({
           name: "all day month",
-          fn: function(date) {
-            return date.format("" + options.monthFormat + " " + options.dayFormat);
-          },
+          fn: moment.langData().twix_fn('allDayMonth', options),
           ignoreEnd: function() {
             return goesIntoTheMorning;
           },
-          slot: 2,
-          pre: " "
+          pre: moment.langData().twix_pre('allDayMonth'),
+          slot: moment.langData().twix_slot('allDayMonth')
         });
       }
       if (this.allDay && needDate) {
         fs.push({
           name: "month",
-          fn: function(date) {
-            return date.format("MMM");
-          },
-          slot: 2,
-          pre: " "
+          fn: moment.langData().twix_fn('month', options),
+          pre: moment.langData().twix_pre('month'),
+          slot: moment.langData().twix_slot('month')
         });
       }
       if (this.allDay && needDate) {
         fs.push({
           name: "date",
-          fn: function(date) {
-            return date.format(options.dayFormat);
-          },
-          slot: 3,
-          pre: " "
+          fn: moment.langData().twix_fn('date', options),
+          pre: moment.langData().twix_pre('date'),
+          slot: moment.langData().twix_slot('date')
         });
       }
       if (needDate && options.showDayOfWeek) {
         fs.push({
           name: "day of week",
-          fn: function(date) {
-            return date.format(options.weekdayFormat);
-          },
-          pre: " ",
-          slot: 1
+          fn: moment.langData().twix_fn('dayOfWeek', options),
+          pre: moment.langData().twix_pre('dayOfWeek'),
+          slot: moment.langData().twix_slot('dayOfWeek')
         });
       }
       if (options.groupMeridiems && !options.twentyFourHour && !this.allDay) {
         fs.push({
           name: "meridiem",
-          fn: function(t) {
-            return t.format(options.meridiemFormat);
-          },
-          slot: 6,
-          pre: options.spaceBeforeMeridiem ? " " : ""
+          fn: moment.langData().twix_fn('meridiem', options),
+          pre: moment.langData().twix_pre('meridiem'),
+          slot: moment.langData().twix_slot('meridiem')
         });
       }
       if (!this.allDay) {
         fs.push({
           name: "time",
-          fn: function(date) {
-            var str;
-            str = date.minutes() === 0 && options.implicitMinutes && !options.twentyFourHour ? date.format(options.hourFormat) : date.format("" + options.hourFormat + ":" + options.minuteFormat);
-            if (!options.groupMeridiems && !options.twentyFourHour) {
-              if (options.spaceBeforeMeridiem) {
-                str += " ";
-              }
-              str += date.format(options.meridiemFormat);
-            }
-            return str;
-          },
-          pre: ", ",
-          slot: 5
+          fn: moment.langData().twix_fn('time', options),
+          pre: moment.langData().twix_pre('time'),
+          slot: moment.langData().twix_slot('time')
         });
       }
       start_bucket = [];
@@ -323,6 +390,23 @@
     }
     return _results;
   };
+
+  $.extend(true, moment.fn._lang.__proto__, {
+    twix_fn: function(name, options) {
+      return this._twix[name].fn(options);
+    },
+    twix_slot: function(name) {
+      return this._twix[name].slot;
+    },
+    twix_pre: function(name) {
+      if ($.isFunction(this._twix[name].pre)) {
+        return this._twix[name].pre();
+      } else {
+        return this._twix[name].pre;
+      }
+    },
+    _twix: Twix.defaults
+  });
 
   if (typeof module !== "undefined") {
     module.exports = Twix;
