@@ -1,13 +1,12 @@
 if typeof module != "undefined"
   moment = require("moment")
-  assertEqual = require('assert').equal
-  assertDeepEqual = require('assert').deepEqual
   Twix = require("../../bin/twix")
 else
   moment = window.moment
   Twix = window.Twix
-  assertEqual = (a, b) -> throw new Error("Found #{b}, expected #{a}") unless a == b
-  assertDeepEqual = (a, b) -> throw new Error("Found #{b}, expected #{a}") unless a.equals(b)
+
+assertEqual = (a, b) -> throw new Error("Found #{b}, expected #{a}") unless a == b
+assertTwixEqual = (a, b) -> throw new Error("Found #{b}, expected #{a}") unless a.equals(b)
 
 thisYear = (partial, time) ->
   fullDate = "#{partial}/#{moment().year()}"
@@ -26,7 +25,7 @@ thatDay = (start, end) ->
 describe "plugin", ->
   it "works", ->
     assertEqual "function", typeof(moment.twix)
-    assertDeepEqual new Twix("5/25/1982", "5/25/1983", true), moment.twix("5/25/1982", "5/25/1983", true)
+    assertTwixEqual new Twix("5/25/1982", "5/25/1983", true), moment.twix("5/25/1982", "5/25/1983", true)
 
 describe "sameYear()", ->
 
@@ -160,7 +159,7 @@ describe "past()", ->
     it "returns false for the future", ->
       assertEqual(false, new Twix(moment().add('hours', 2), moment().add('hours', 3)).past())
 
-describe "overlaps", ->
+describe "overlaps()", ->
 
   assertOverlap = (first, second) -> assertOverlapness(true)(first, second)
   assertNoOverlap = (first, second) -> assertOverlapness(false)(first, second)
@@ -225,7 +224,7 @@ describe "overlaps", ->
     it "returns true for an engulfing event", ->
       assertOverlap someDays, new Twix("5/22/1982", "5/28/1982", true)
 
-describe "engulfs", ->
+describe "engulfs()", ->
 
   assertEngulfing = (first, second) -> assertEqual true, first.engulfs(second)
   assertNotEngulfing = (first, second) -> assertEqual false, first.engulfs(second)
@@ -293,56 +292,56 @@ describe "merge()", ->
   describe "non-all-day events", ->
 
     it "spans a later time", ->
-      assertDeepEqual thatDay("5:30", "11:30"), someTime.merge(thatDay "9:30", "11:30")
+      assertTwixEqual thatDay("5:30", "11:30"), someTime.merge(thatDay "9:30", "11:30")
 
     it "spans an earlier time", ->
-      assertDeepEqual thatDay("3:30", "8:30"), someTime.merge(thatDay "3:30", "4:30")
+      assertTwixEqual thatDay("3:30", "8:30"), someTime.merge(thatDay "3:30", "4:30")
 
     it "spans a partially later event", ->
-      assertDeepEqual thatDay("5:30", "11:30"), someTime.merge(thatDay "8:00", "11:30")
+      assertTwixEqual thatDay("5:30", "11:30"), someTime.merge(thatDay "8:00", "11:30")
 
     it "spans a partially earlier event", ->
-      assertDeepEqual thatDay("4:30", "8:30"), someTime.merge(thatDay "4:30", "6:30")
+      assertTwixEqual thatDay("4:30", "8:30"), someTime.merge(thatDay "4:30", "6:30")
 
     it "isn't affected by engulfed events", ->
-      assertDeepEqual someTime, someTime.merge(thatDay "6:30", "7:30")
+      assertTwixEqual someTime, someTime.merge(thatDay "6:30", "7:30")
 
     it "becomes an engulfing event", ->
-      assertDeepEqual thatDay("4:30", "9:30"), someTime.merge(thatDay "4:30", "9:30")
+      assertTwixEqual thatDay("4:30", "9:30"), someTime.merge(thatDay "4:30", "9:30")
 
   describe "one all-day event", ->
     it "spans a later time", ->
-      assertDeepEqual new Twix("5/24/1982 00:00", "5/26/1982 7:00"), someDays.merge(new Twix("5/24/1982 20:00", "5/26/1982 7:00"))
+      assertTwixEqual new Twix("5/24/1982 00:00", "5/26/1982 7:00"), someDays.merge(new Twix("5/24/1982 20:00", "5/26/1982 7:00"))
 
     it "spans an earlier time", ->
-      assertDeepEqual new Twix("5/23/1982 8:00", moment("5/25/1982").endOf('day')), someDays.merge(new Twix("5/23/1982 8:00", "5/25/1982 7:00"))
+      assertTwixEqual new Twix("5/23/1982 8:00", moment("5/25/1982").endOf('day')), someDays.merge(new Twix("5/23/1982 8:00", "5/25/1982 7:00"))
 
     #i'm tempted to just say this is wrong...shouldn't it get to stay an all-day event?
     it "isn't affected by engulfing events", ->
-      assertDeepEqual new Twix("5/24/1982 00:00", moment("5/25/1982").endOf('day')), someDays.merge(someTime)
+      assertTwixEqual new Twix("5/24/1982 00:00", moment("5/25/1982").endOf('day')), someDays.merge(someTime)
 
     it "becomes an engulfing event", ->
-      assertDeepEqual new Twix("5/23/1982 20:00", "5/26/1982 8:30"), someDays.merge(new Twix("5/23/1982 20:00", "5/26/1982 8:30"))
+      assertTwixEqual new Twix("5/23/1982 20:00", "5/26/1982 8:30"), someDays.merge(new Twix("5/23/1982 20:00", "5/26/1982 8:30"))
 
   describe "two all-day events", ->
 
     it "spans a later time", ->
-      assertDeepEqual new Twix("5/24/1982", "5/28/1982", true), someDays.merge(new Twix("5/27/1982", "5/28/1982", true))
+      assertTwixEqual new Twix("5/24/1982", "5/28/1982", true), someDays.merge(new Twix("5/27/1982", "5/28/1982", true))
 
     it "spans an earlier time", ->
-      assertDeepEqual new Twix("5/21/1982", "5/25/1982", true), someDays.merge(new Twix("5/21/1982", "5/22/1982", true))
+      assertTwixEqual new Twix("5/21/1982", "5/25/1982", true), someDays.merge(new Twix("5/21/1982", "5/22/1982", true))
 
     it "spans a partially later time", ->
-      assertDeepEqual new Twix("5/24/1982", "5/26/1982", true), someDays.merge(new Twix("5/25/1982", "5/26/1982", true))
+      assertTwixEqual new Twix("5/24/1982", "5/26/1982", true), someDays.merge(new Twix("5/25/1982", "5/26/1982", true))
 
     it "spans a partially earlier time", ->
-      assertDeepEqual new Twix("5/23/1982", "5/25/1982", true), someDays.merge(new Twix("5/23/1982", "5/25/1982", true))
+      assertTwixEqual new Twix("5/23/1982", "5/25/1982", true), someDays.merge(new Twix("5/23/1982", "5/25/1982", true))
 
     it "isn't affected by engulfing events", ->
-      assertDeepEqual someDays, someDays.merge(thatDay())
+      assertTwixEqual someDays, someDays.merge(thatDay())
 
     it "becomes an engulfing event", ->
-      assertDeepEqual someDays, thatDay().merge(someDays)
+      assertTwixEqual someDays, thatDay().merge(someDays)
 
 describe "format()", ->
 
