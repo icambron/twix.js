@@ -1,3 +1,5 @@
+#Twix [![Build Status](https://secure.travis-ci.org/icambron/twix.js.png)](http://travis-ci.org/icambron/twix.js)#
+
 Twix is a simple but opinionated JS library for formatting date ranges. It's written in CoffeeScript and it depends on [Moment.js](http://momentjs.com/).
 
 It allows you to do, among other things, this:
@@ -44,8 +46,6 @@ Note that the source is `src/twix.coffee`; the output is `bin/twix.js`. You can 
     make test
     
 You can also run the tests in-browser by building and then loading `test/test.html`.
-
-[![Build Status](https://secure.travis-ci.org/icambron/twix.js.png)](http://travis-ci.org/icambron/twix.js)
 
 ## Future plans ##
 
