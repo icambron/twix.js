@@ -14,8 +14,8 @@ thisYear = (partial, time) ->
   fullDate += " #{time}" if time
   moment fullDate
 
-yesterday = -> moment().subtract('days', 1).sod()
-tomorrow = -> moment().add('days', 1).sod()
+yesterday = -> moment().subtract('days', 1).startOf('day')
+tomorrow = -> moment().add('days', 1).startOf('day')
 
 thatDay = (start, end) ->
   if start
@@ -148,7 +148,7 @@ describe "past()", ->
       assertEqual(true, new Twix(yesterday(), yesterday(), true).past())
 
     it "returns false for today", ->
-      assertEqual(false, new Twix(moment().sod(), moment().sod(), true).past())
+      assertEqual(false, new Twix(moment().startOf('day'), moment().startOf('day'), true).past())
 
     it "returns false for days in the future", ->
       assertEqual(false, new Twix(tomorrow(), tomorrow(), true).past())
@@ -315,11 +315,11 @@ describe "merge()", ->
       assertDeepEqual new Twix("5/24/1982 00:00", "5/26/1982 7:00"), someDays.merge(new Twix("5/24/1982 20:00", "5/26/1982 7:00"))
 
     it "spans an earlier time", ->
-      assertDeepEqual new Twix("5/23/1982 8:00", moment("5/25/1982").eod()), someDays.merge(new Twix("5/23/1982 8:00", "5/25/1982 7:00"))
+      assertDeepEqual new Twix("5/23/1982 8:00", moment("5/25/1982").endOf('day')), someDays.merge(new Twix("5/23/1982 8:00", "5/25/1982 7:00"))
 
     #i'm tempted to just say this is wrong...shouldn't it get to stay an all-day event?
     it "isn't affected by engulfing events", ->
-      assertDeepEqual new Twix("5/24/1982 00:00", moment("5/25/1982").eod()), someDays.merge(someTime)
+      assertDeepEqual new Twix("5/24/1982 00:00", moment("5/25/1982").endOf('day')), someDays.merge(someTime)
 
     it "becomes an engulfing event", ->
       assertDeepEqual new Twix("5/23/1982 20:00", "5/26/1982 8:30"), someDays.merge(new Twix("5/23/1982 20:00", "5/26/1982 8:30"))
