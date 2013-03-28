@@ -351,7 +351,7 @@ describe "format()", ->
     assertEqual(t.result, twix.format(t.options))
 
   describe "simple ranges", ->
-    test "different year, different day shows everything"
+    test "different year, different day shows everything",
       start: "5/25/1982 5:30 AM"
       end: "5/26/1983 3:30 PM"
       result: 'May 25, 1982, 5:30 AM - May 26, 1983, 3:30 PM'
@@ -441,7 +441,7 @@ describe "format()", ->
       allDay: true
       result: "May 25, 1982 - May 25, 1983"
 
-    test "different year different month shows the month at the end"
+    test "different year different month shows the month at the end",
       start: "5/25/1982"
       end: "6/1/1983"
       allDay: true
@@ -488,20 +488,20 @@ describe "format()", ->
       result: "May 25, 7 PM - 9 PM"
 
   describe "no meridiem spaces", ->
-    test "should skip the meridiem space"
+    test "should skip the meridiem space",
       start: thisYear "5/25", "5:30 AM"
       end: thisYear "5/25", "7:30 AM"
       options: {spaceBeforeMeridiem: false, groupMeridiems: false}
       result: "May 25, 5:30AM - 7:30AM"
 
   describe "24 hours", ->
-    test "shouldn't show meridians"
+    test "shouldn't show meridians",
       start: thisYear "5/25", "5:30 AM"
       end: thisYear "5/25", "7:30 PM"
       options: {twentyFourHour: true},
       result: "May 25, 5:30 - 19:30"
 
-    test "always shows the :00"
+    test "always shows the :00",
       start: thisYear "5/25", "12:00"
       end: thisYear "5/25", "15:00"
       options: {twentyFourHour: true},
@@ -509,19 +509,19 @@ describe "format()", ->
 
   describe "show day of week", ->
 
-    test "should show day of week"
+    test "should show day of week",
       start: thisYear "5/25", "5:30 AM"
       end: thisYear "5/28", "7:30 PM"
       options: {showDayOfWeek: true},
       result: "Fri May 25, 5:30 AM - Mon May 28, 7:30 PM"
 
-    test "collapses show day of week"
+    test "collapses show day of week",
       start: thisYear "5/25", "5:30 AM"
       end: thisYear "5/25", "7:30 PM"
       options: {showDayOfWeek: true},
       result: "Fri May 25, 5:30 AM - 7:30 PM"
 
-    test "doesn't collapse with one week of separation"
+    test "doesn't collapse with one week of separation",
       start: thisYear "5/25"
       end: thisYear "6/1"
       allDay: true
@@ -530,25 +530,25 @@ describe "format()", ->
 
   describe "goes into the morning", ->
 
-    test "elides late nights"
+    test "elides late nights",
       start: "5/25/1982 5:00 PM"
       end: "5/26/1982 2:00 AM"
       options: {lastNightEndsAt: 5},
       result: "May 25, 1982, 5 PM - 2 AM"
 
-    test "keeps late mornings"
+    test "keeps late mornings",
       start: "5/25/1982 5:00 PM"
       end: "5/26/1982 10:00 AM"
       options: {lastNightEndsAt: 5},
       result: "May 25, 5 PM - May 26, 10 AM, 1982"
 
-    test "morning start is adjustable"
+    test "morning start is adjustable",
       start: "5/25/1982 5:00 PM"
       end: "5/26/1982 10:00 AM"
       options: {lastNightEndsAt: 11},
       result: "May 25, 1982, 5 PM - 10 AM"
 
-    test "doesn't elide if you start in the AM"
+    test "doesn't elide if you start in the AM",
       start: "5/25/1982 5:00 AM"
       end: "5/26/1982 4:00 AM"
       options: {lastNightEndsAt: 5},
@@ -556,13 +556,13 @@ describe "format()", ->
 
     describe "and we're trying to hide the date", ->
 
-      test "elides the date too for early mornings"
+      test "elides the date too for early mornings",
         start: "5/25/1982 5:00 PM"
         end: "5/26/1982 2:00 AM"
         options: {lastNightEndsAt: 5, showDate: false},
         result: "5 PM - 2 AM"
 
-      test "doesn't elide if the morning ends late"
+      test "doesn't elide if the morning ends late",
         start: "5/25/1982 5:00 PM"
         end: "5/26/1982 10:00 AM"
         options: {lastNightEndsAt: 5},
