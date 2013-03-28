@@ -12,7 +12,11 @@ t.duration(); //=> "4 hours"
 t.countDays(); //=> 1
 ```
 
-And much more. See the **[docs](https://github.com/icambron/twix.js/wiki/Documentation)** for full deets.
+And much more.
+
+##Documentation##
+
+Docs are [here](https://github.com/icambron/twix.js/wiki/Documentation).
 
 ## Installing ##
 
