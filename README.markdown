@@ -35,7 +35,7 @@ Grab [the file](https://raw.github.com/icambron/twix.js/master/bin/twix.min.js) 
 <script src="twix.min.js"></script>
 ```
 
-###Building###
+##Building##
 If you want to build Twix for yourself, just run the build file:
 
     npm install
