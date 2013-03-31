@@ -1,130 +1,171 @@
 if typeof module != "undefined"
-  moment = require("moment")
-  Twix = require("../../bin/twix")
+  moment = require "moment"
+  Twix = require "../../bin/twix"
 else
   moment = window.moment
   Twix = window.Twix
 
 assertEqual = (a, b) -> throw new Error("Found #{b}, expected #{a}") unless a == b
-assertTwixEqual = (a, b) -> throw new Error("Found #{b}, expected #{a}") unless a.equals(b)
+assertTwixEqual = (a, b) -> throw new Error("Found #{b}, expected #{a}") unless a.equals b
 
 thisYear = (partial, time) ->
   fullDate = "#{partial}/#{moment().year()}"
   fullDate += " #{time}" if time
   moment fullDate
 
-yesterday = -> moment().subtract('days', 1).startOf('day')
-tomorrow = -> moment().add('days', 1).startOf('day')
+nextYear = (partial, time) -> thisYear(partial, time).add("years", 1)
+
+yesterday = -> moment().subtract('days', 1).startOf 'day'
+tomorrow = -> moment().add('days', 1).startOf 'day'
 
 thatDay = (start, end) ->
   if start
-    new Twix "5/25/1982 #{start}", "5/25/1982 #{end}"
+    moment("5/25/1982 #{start}").twix "5/25/1982 #{end}"
   else
-    new Twix "5/25/1982", "5/25/1982", true
+    moment("5/25/1982").twix "5/25/1982", true
 
 describe "plugin", ->
-  it "works", ->
-    assertEqual "function", typeof(moment.twix)
-    assertTwixEqual new Twix("5/25/1982", "5/25/1983", true), moment.twix("5/25/1982", "5/25/1983", true)
+  describe "static constructor", ->
+    it "works", ->
+      assertEqual "function", typeof moment.twix
+      assertTwixEqual new Twix("5/25/1982", "5/25/1983", true), moment.twix("5/25/1982", "5/25/1983", true)
 
-describe "sameYear()", ->
+  describe "create from a member", ->
+    it "works", ->
+      assertEqual "function", typeof(moment().twix)
+      assertTwixEqual new Twix("5/25/1982", "5/25/1983", true), moment("5/25/1982").twix("5/25/1983", true)
 
-  it "returns true if they're the same year", ->
-    assertEqual true, new Twix("5/25/1982", "10/14/1982").sameYear()
+describe "isSame()", ->
 
-  it "returns false if they're different years", ->
-    assertEqual false, new Twix("5/25/1982", "10/14/1983").sameYear()
+  describe "year", ->
+    it "returns true if they're the same year", ->
+      assertEqual true, moment("5/25/1982").twix("10/14/1982").isSame("year")
 
-describe "sameDay()", ->
+    it "returns false if they're different years", ->
+      assertEqual false, moment("5/25/1982").twix("10/14/1983").isSame("year")
 
-  it "returns true if they're the same day", ->
-    assertEqual true, new Twix("5/25/1982 5:30 AM", "5/25/1982 7:30 PM").sameDay()
+  describe "day", ->
 
-  it "returns false if they're different days day", ->
-    assertEqual false, new Twix("5/25/1982 5:30 AM", "5/26/1982 7:30 PM").sameDay()
+    it "returns true if they're the same day", ->
+      assertEqual true, moment("5/25/1982 5:30 AM").twix("5/25/1982 7:30 PM").isSame("day")
 
-  it "returns true they're in different UTC days but the same local days", ->
-    assertEqual true, new Twix("5/25/1982 5:30 AM", "5/25/1982 11:30 PM").sameDay()
+    it "returns false if they're different days day", ->
+      assertEqual false, moment("5/25/1982 5:30 AM").twix("5/26/1982 7:30 PM").isSame("day")
 
-describe "countDays()", ->
+    it "returns true they're in different UTC days but the same local days", ->
+      assertEqual true, moment("5/25/1982 5:30 AM").twix("5/25/1982 11:30 PM").isSame("day")
 
-  it "inside one day returns 1", ->
-    start = thisYear "5/25", "3:00"
-    end = thisYear "5/25", "14:00"
-    range = new Twix start, end
-    assertEqual 1, range.countDays()
+describe "count()", ->
 
-  it "returns 2 if the range crosses midnight", ->
-    start = thisYear "5/25", "16:00"
-    end = thisYear "5/26", "3:00"
-    range = new Twix start, end
-    assertEqual 2, range.countDays()
+  describe "days", ->
 
-  it "works fine for all-day events", ->
-    start = thisYear "5/25"
-    end = thisYear "5/26"
-    range = new Twix start, end, true
-    assertEqual 2, range.countDays()
+    it "inside one day returns 1", ->
+      start = thisYear "5/25", "3:00"
+      end = thisYear "5/25", "14:00"
+      range = moment(start).twix end
+      assertEqual 1, range.count("days")
 
-describe "daysIn()", ->
+    it "returns 2 if the range crosses midnight", ->
+      start = thisYear "5/25", "16:00"
+      end = thisYear "5/26", "3:00"
+      range = moment(start).twix end
+      assertEqual 2, range.count("days")
 
-  assertSameDay = (first, second) ->
-    assertEqual first.year(), second.year()
-    assertEqual first.month(), second.month()
-    assertEqual first.date(), second.date()
+    it "works fine for all-day events", ->
+      start = thisYear "5/25"
+      end = thisYear "5/26"
+      range = moment(start).twix end, true
+      assertEqual 2, range.count("days")
 
-  it "provides 1 day if the range includes 1 day", ->
-    start = thisYear "5/25", "3:00"
-    end = thisYear "5/25", "14:00"
-    range = new Twix start, end
+  describe "years", ->
 
-    iter = range.daysIn()
-    next = iter.next()
-    assertSameDay thisYear("5/25"), next
-    assertEqual null, iter.next()
+    it "inside one year returns 1", ->
+      start = thisYear "5/25"
+      end = thisYear "5/26"
+      assertEqual 1, moment(start).twix(end).count("year")
 
-  it "provides 2 days if the range crosses midnight", ->
-    start = thisYear "5/25", "16:00"
-    end = thisYear "5/26", "3:00"
-    range = new Twix start, end
+    it "returns 2 if the range crosses Jan 1", ->
+      start = thisYear "5/25"
+      end = nextYear "5/26"
+      assertEqual 2, moment(start).twix(end).count("year")
 
-    iter = range.daysIn()
-    assertSameDay thisYear("5/25"), iter.next()
-    assertSameDay thisYear("5/26"), iter.next()
-    assertEqual null, iter.next()
+describe "iterate()", ->
 
-  it "provides 366 days if the range is a year", ->
-    start = thisYear "5/25", "16:00"
-    end = thisYear("5/25", "3:00").add('years', 1)
-    iter = new Twix(start, end).daysIn()
-    results = while iter.hasNext()
-      iter.next()
-    assertEqual(366, results.length)
+  describe "days", ->
+    assertSameDay = (first, second) -> assertEqual true, first.isSame(second, "day")
 
-  it "provides 1 day for an all-day event", ->
-    start = thisYear "5/25"
-    end = thisYear "5/25"
-    iter = new Twix(start, end, true).daysIn()
-    assertSameDay thisYear("5/25"), iter.next()
-    assertEqual null, iter.next()
+    it "provides 1 day if the range includes 1 day", ->
+      start = thisYear "5/25", "3:00"
+      end = thisYear "5/25", "14:00"
+      iter = start.twix(end).iterate("days")
+      assertSameDay thisYear("5/25"), iter.next()
+      assertEqual null, iter.next()
 
-  it "doesn't generate extra days when there's a min time", ->
-    start = thisYear "5/25", "16:00"
-    end = thisYear "5/26", "3:00"
-    range = new Twix start, end
+    it "provides 2 days if the range crosses midnight", ->
+      start = thisYear "5/25", "16:00"
+      end = thisYear "5/26", "3:00"
+      iter = start.twix(end).iterate("days")
+      assertSameDay start, iter.next()
+      assertSameDay end, iter.next()
+      assertEqual null, iter.next()
 
-    iter = range.daysIn(4)
-    assertSameDay thisYear("5/25"), iter.next()
-    assertEqual null, iter.next()
+    it "provides 366 days if the range is a year", ->
+      start = thisYear "5/25", "16:00"
+      end = thisYear("5/25", "3:00").add 'years', 1
+      iter = start.twix(end).iterate "days"
+      results = while iter.hasNext()
+        iter.next()
+      assertEqual(366, results.length)
 
-  it "provides 1 day for all-day events when there's a min time", ->
-    start = thisYear "5/25"
-    end = thisYear "5/25"
-    iter = new Twix(start, end, true).daysIn(4)
-    assertEqual true, iter.hasNext()
-    assertSameDay thisYear("5/25"), iter.next()
-    assertEqual false, iter.hasNext()
-    assertEqual null, iter.next()
+    it "provides 1 day for an all-day event", ->
+      start = thisYear "5/25"
+      end = thisYear "5/25"
+      iter = start.twix(end, true).iterate "days"
+      assertSameDay thisYear("5/25"), iter.next()
+      assertEqual null, iter.next()
+
+    it "doesn't generate extra days when there's a min time", ->
+      start = thisYear "5/25", "16:00"
+      end = thisYear "5/26", "3:00"
+      iter = start.twix(end).iterate "days", 4
+      assertSameDay thisYear("5/25"), iter.next()
+      assertEqual null, iter.next()
+
+    it "provides 1 day for all-day events when there's a min time", ->
+      start = thisYear "5/25"
+      end = thisYear "5/25"
+      iter = start.twix(end, true).iterate "days", 4
+      assertEqual true, iter.hasNext()
+      assertSameDay start, iter.next()
+      assertEqual false, iter.hasNext()
+      assertEqual null, iter.next()
+
+  describe "years", ->
+    assertSameYear = (first, second) -> assertEqual true, first.isSame(second, "year")
+
+    it "provides 1 year if the range happens inside a year", ->
+      start = thisYear "5/25"
+      end = thisYear "5/25"
+      iter = start.twix(end).iterate("years")
+      assertSameYear start, iter.next()
+      assertEqual null, iter.next()
+
+    it "provides 2 years if the range crosses Jan 1", ->
+      start = thisYear "5/25"
+      end = nextYear "5/26"
+      iter = start.twix(end).iterate("years")
+      assertSameYear start, iter.next()
+      assertSameYear end, iter.next()
+      assertEqual null, iter.next()
+
+    #is this good behavior?
+    it "doesn't generate extra years when there's a min time", ->
+      start = thisYear "5/25", "16:00"
+      end = nextYear "1/1", "3:00"
+      range = moment(start).twix end
+      iter = range.iterate "years", 4
+      assertSameYear thisYear("5/25"), iter.next()
+      assertEqual null, iter.next()
 
 describe "duration()", ->
   describe "all-day events", ->
@@ -141,23 +182,74 @@ describe "duration()", ->
     it "formats multiday correctly", ->
       assertEqual("2 days", new Twix("5/25/1982", "5/27/1982").duration())
 
-describe "past()", ->
+describe "isPast()", ->
   describe "all-day events", ->
     it "returns true for days in the past", ->
-      assertEqual(true, new Twix(yesterday(), yesterday(), true).past())
+      assertEqual true, yesterday().twix(yesterday(), true).isPast()
 
     it "returns false for today", ->
-      assertEqual(false, new Twix(moment().startOf('day'), moment().startOf('day'), true).past())
+      today = moment().startOf 'day'
+      assertEqual false, today.twix(today, true).isPast()
 
     it "returns false for days in the future", ->
-      assertEqual(false, new Twix(tomorrow(), tomorrow(), true).past())
+      assertEqual false, tomorrow().twix(tomorrow(), true).isPast()
 
   describe "non-all-day events", ->
     it "returns true for the past", ->
-      assertEqual(true, new Twix(moment().subtract('hours', 3), moment().subtract('hours', 2)).past())
+      past = moment().subtract 'hours', 3
+      nearerPast = moment().subtract 'hours', 2
+      assertEqual true, past.twix(nearerPast).isPast()
 
     it "returns false for the future", ->
-      assertEqual(false, new Twix(moment().add('hours', 2), moment().add('hours', 3)).past())
+      future = moment().add 'hours', 2
+      furtherFuture = moment().add 'hours', 3
+      assertEqual false, future.twix(furtherFuture).isPast()
+
+describe "isFuture()", ->
+  describe "all-day events", ->
+    it "returns false for days in the past", ->
+      assertEqual false, yesterday().twix(yesterday(), true).isFuture()
+
+    it "returns false for today", ->
+      today = moment().startOf 'day'
+      assertEqual false, today.twix(today, true).isFuture()
+
+    it "returns true for days in the future", ->
+      assertEqual true, tomorrow().twix(tomorrow(), true).isFuture()
+
+  describe "non-all-day events", ->
+    it "returns false for the past", ->
+      past = moment().subtract 'hours', 3
+      nearerPast = moment().subtract 'hours', 2
+      assertEqual false, past.twix(nearerPast).isFuture()
+
+    it "returns true for the future", ->
+      future = moment().add 'hours', 2
+      furtherFuture = moment().add 'hours', 3
+      assertEqual true, future.twix(furtherFuture).isFuture()
+
+describe "isCurrent()", ->
+  describe "all-day events", ->
+    it "returns false for days in the past", ->
+      assertEqual false, yesterday().twix(yesterday(), true).isCurrent()
+
+    it "returns true for today", ->
+      today = moment().startOf 'day'
+      assertEqual true, today.twix(today, true).isCurrent()
+
+    it "returns false for days in the future", ->
+      assertEqual false, tomorrow().twix(tomorrow(), true).isCurrent()
+
+  describe "non-all-day events", ->
+    it "returns false for the past", ->
+      past = moment().subtract 'hours', 3
+      nearerPast = moment().subtract 'hours', 2
+      assertEqual false, past.twix(nearerPast).isCurrent()
+
+    it "returns false for the future", ->
+      future = moment().add 'hours', 2
+      furtherFuture = moment().add 'hours', 3
+      assertEqual false, future.twix(furtherFuture).isCurrent()
 
 describe "overlaps()", ->
 
@@ -364,7 +456,7 @@ describe "format()", ->
       start: thisYear("5/25", "5:30 AM")
       end: thisYear("5/26", "3:30 PM")
       options: {implicitYear: false}
-      result: "May 25, 5:30 AM - May 26, 3:30 PM, #{ (new Date).getFullYear() }"
+      result: "May 25, 5:30 AM - May 26, 3:30 PM, #{new Date().getFullYear() }"
 
     test "same day, different times shows date once",
       start: "5/25/1982 5:30 AM"

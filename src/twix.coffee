@@ -12,22 +12,17 @@ class Twix
     @end = moment end
     @allDay = allDay || false
 
-  sameDay: ->
-    @start.year() == @end.year() &&
-    @start.month() == @end.month() &&
-    @start.date() == @end.date()
+  # -- INFORMATIONAL --
+  isSame: (period) -> @start.isSame @end, period
 
-  sameYear: ->
-    @start.year() == @end.year()
+  count: (period) ->
+    start = @start.clone().startOf period
+    end = @end.clone().startOf period
+    end.diff(start, period) + 1
 
-  countDays: ->
-    startDate = @start.clone().startOf("day")
-    endDate = @end.clone().startOf("day")
-    endDate.diff(startDate, 'days') + 1
-
-  daysIn: (minHours) ->
-    iter = @start.clone().startOf("day")
-    endDate = @end.clone().startOf("day")
+  iterate: (period, minHours) ->
+    iter = @start.clone().startOf period
+    endDate = @end.clone().startOf period
 
     hasNext = => iter <= endDate && (!minHours || iter.valueOf() != endDate.valueOf() || @end.hours() > minHours || @allDay)
 
@@ -36,7 +31,7 @@ class Twix
         null
       else
         val = iter.clone()
-        iter.add('days', 1)
+        iter.add(period, 1)
         val
     hasNext: hasNext
 
@@ -49,12 +44,21 @@ class Twix
     else
       @start.from(@end, true)
 
-  past: ->
+  isPast: ->
     if @allDay
       @end.clone().endOf("day") < moment()
     else
       @end < moment()
 
+  isFuture: ->
+    if @allDay
+      @start.clone().startOf("day") > moment()
+    else
+      @start > moment()
+
+  isCurrent: -> !@isPast() && !@isFuture()
+
+  # -- WORK WITH MULTIPLE RANGES --
   overlaps: (other) -> !(@_trueEnd() < other._trueStart() || @_trueStart() > other._trueEnd())
 
   engulfs: (other) -> @_trueStart() <= other._trueStart() && @_trueEnd() >= other._trueEnd()
@@ -79,6 +83,7 @@ class Twix
       @start.valueOf() == other.start.valueOf() &&
       @end.valueOf() == other.end.valueOf()
 
+  # -- FORMATING --
   format: (inopts) ->
     options =
       groupMeridiems: true
@@ -226,6 +231,13 @@ class Twix
 
     fold common_bucket
 
+  # -- DEPRECATED METHODS --
+  sameDay: -> @isSame "day"
+  sameYear: -> @isSame "year"
+  countDays: -> @count "days"
+  daysIn: (minHours) -> @iterate 'days', minHours
+  past: @isPast
+
 extend = (first, second) ->
   for attr of second
     first[attr] = second[attr] unless typeof second[attr] == "undefined"
@@ -234,4 +246,6 @@ if typeof module != "undefined"
   module.exports = Twix
 else
   window.Twix = Twix
+
 moment.twix = -> new Twix(arguments...)
+moment.fn.twix = -> new Twix(this, arguments...)
