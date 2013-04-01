@@ -1,12 +1,12 @@
 {
   "name": "twix",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Twix.js allows you to work with date ranges",
   "homepage": "https://github.com/icambron/twix.js",
   "author": "Isaac Cambron",
   "keywords": ["twix", "date", "date range"],
   "dependencies": {
-    "moment": "2.0.0"
+    "moment": ">= 2.0.0"
   },
   "devDependencies": {
     "mocha" : "1.8.2",

@@ -1,6 +1,6 @@
 #Twix [![Build Status](https://secure.travis-ci.org/icambron/twix.js.png?branch=master)](http://travis-ci.org/icambron/twix.js)#
 
-Twix is a simple but opinionated JS library for formatting date ranges. It's written in CoffeeScript and it depends on [Moment.js](http://momentjs.com/).
+Twix is a simple but opinionated JS library for working with date ranges, and includes a customizable smart formatter. It's written in CoffeeScript and it depends on [Moment.js](http://momentjs.com/).
 
 It allows you to do, among other things, this:
 
@@ -38,10 +38,9 @@ Grab [the file](https://raw.github.com/icambron/twix.js/master/bin/twix.min.js) 
 ##Building##
 If you want to build Twix for yourself, just run the build file:
 
-    npm install
-    make build
+    make configure build
     
-Note that the source is `src/twix.coffee`; the output is `bin/twix.js`. You can run the tests via
+The configure part just installs the NPMs and a git submodule; you only need run that the first time you build. Note that the source is `src/twix.coffee`; the output is `bin/twix.js`. You can run the tests via
 
     make test
     
