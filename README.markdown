@@ -1,4 +1,4 @@
-Twix is a simple but opinionated JS library for formatting date ranges. It's written in CoffeeScript and it depends on [Moment.js](http://momentjs.com/).
+Twix is a simple but opinionated JS library for working with date ranges, and includes a customizable smart formatter. It's written in CoffeeScript and it depends on [Moment.js](http://momentjs.com/).
 
 It allows you to do, among other things, this:
 
