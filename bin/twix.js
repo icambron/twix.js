@@ -57,9 +57,9 @@
       };
     };
 
-    Twix.prototype.duration = function() {
+    Twix.prototype.humanizeLength = function() {
       if (this.allDay) {
-        if (this.sameDay()) {
+        if (this.isSame("day")) {
           return "all day";
         } else {
           return this.start.from(this.end.clone().add('days', 1), true);
@@ -67,6 +67,13 @@
       } else {
         return this.start.from(this.end, true);
       }
+    };
+
+    Twix.prototype.asDuration = function(units) {
+      var diff;
+
+      diff = this.end.diff(this.start);
+      return moment.duration(diff);
     };
 
     Twix.prototype.isPast = function() {
@@ -131,6 +138,24 @@
       return (other instanceof Twix) && this.allDay === other.allDay && this.start.valueOf() === other.start.valueOf() && this.end.valueOf() === other.end.valueOf();
     };
 
+    Twix.prototype.toString = function() {
+      var _ref;
+
+      return "{start: " + (this.start.format()) + ", end: " + (this.end.format()) + ", allDay: " + ((_ref = this.allDay) != null ? _ref : {
+        "true": "false"
+      }) + "}";
+    };
+
+    Twix.prototype.simpleFormat = function(momentOpts) {
+      var s;
+
+      s = "" + (this.start.format(momentOpts)) + " - " + (this.end.format(momentOpts));
+      if (this.allDay) {
+        s += " (all day)";
+      }
+      return s;
+    };
+
     Twix.prototype.format = function(inopts) {
       var common_bucket, end_bucket, fold, format, fs, global_first, goesIntoTheMorning, needDate, options, process, start_bucket, together, _i, _len,
         _this = this;
@@ -160,8 +185,8 @@
         options.hourFormat = options.hourFormat.replace("h", "H");
       }
       goesIntoTheMorning = options.lastNightEndsAt > 0 && !this.allDay && this.end.clone().startOf('day').valueOf() === this.start.clone().add('days', 1).startOf("day").valueOf() && this.start.hours() > 12 && this.end.hours() < options.lastNightEndsAt;
-      needDate = options.showDate || (!this.sameDay() && !goesIntoTheMorning);
-      if (this.allDay && this.sameDay() && (!options.showDate || options.explicitAllDay)) {
+      needDate = options.showDate || (!this.isSame("day") && !goesIntoTheMorning);
+      if (this.allDay && this.isSame("day") && (!options.showDate || options.explicitAllDay)) {
         fs.push({
           name: "all day simple",
           fn: function() {
@@ -171,7 +196,7 @@
           pre: " "
         });
       }
-      if (needDate && (!options.implicitYear || this.start.year() !== moment().year() || !this.sameYear())) {
+      if (needDate && (!options.implicitYear || this.start.year() !== moment().year() || !this.isSame("year"))) {
         fs.push({
           name: "year",
           fn: function(date) {
@@ -339,7 +364,13 @@
       return this.iterate('days', minHours);
     };
 
-    Twix.prototype.past = Twix.isPast;
+    Twix.prototype.past = function() {
+      return this.isPast();
+    };
+
+    Twix.prototype.duration = function() {
+      return this.humanizeLength();
+    };
 
     return Twix;
 
@@ -379,6 +410,18 @@
       var child = new ctor, result = func.apply(child, args);
       return Object(result) === result ? result : child;
     })(Twix, [this].concat(__slice.call(arguments)), function(){});
+  };
+
+  moment.fn.forDuration = function(duration, allDay) {
+    return new Twix(this, this.clone().add(duration), allDay);
+  };
+
+  moment.duration.fn.afterMoment = function(startingTime, allDay) {
+    return new Twix(startingTime, startingTime.clone().add(this), allDay);
+  };
+
+  moment.duration.fn.beforeMoment = function(startingTime, allDay) {
+    return new Twix(startingTime.clone().subtract(this), startingTime, allDay);
   };
 
 }).call(this);
