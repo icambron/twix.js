@@ -139,7 +139,7 @@ class Twix
     if @allDay && needDate
       fs.push
         name: "month"
-        fn: (date) -> date.format "MMM"
+        fn: (date) -> date.format options.monthFormat
         slot: 2
         pre: " "
 

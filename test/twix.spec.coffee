@@ -376,6 +376,19 @@ describe "format()", ->
       end: "5/25/1982 6:30 AM"
       result: 'May 25, 1982, 5:30 - 6:30 AM'
 
+    test "custom month format for regular event",
+      start: "8/25/2010 5:30 AM"
+      end: "8/25/2010 6:30 AM"
+      options: {monthFormat: "MMMM"}
+      result: 'August 25, 2010, 5:30 - 6:30 AM'
+
+    test "custom month format for all day event",
+      start: "8/25/2010"
+      end: "8/25/2010"
+      allDay: true
+      options: {monthFormat: "MMMM"}
+      result: 'August 25, 2010'
+
   describe "rounded times", ->
     test "round hour doesn't show :00",
       start: "5/25/1982 5:00 AM"
@@ -397,10 +410,10 @@ describe "format()", ->
   describe "all day events", ->
 
     test "one day has no range",
-      start: "5/25/2010"
-      end: "5/25/2010"
+      start: "8/25/2010"
+      end: "8/25/2010"
       allDay: true
-      result: "May 25, 2010"
+      result: "Aug 25, 2010"
 
     test "same month says month on one side",
       start: thisYear("5/25")
@@ -513,6 +526,12 @@ describe "format()", ->
       end: thisYear "5/28", "7:30 PM"
       options: {showDayOfWeek: true},
       result: "Sat May 25, 5:30 AM - Tue May 28, 7:30 PM"
+
+    test "should show day of week, specify day of week format",
+      start: thisYear "8/25", "5:30 AM"
+      end: thisYear "8/28", "7:30 PM"
+      options: {showDayOfWeek: true, weekdayFormat: 'dddd'}
+      result: "Sunday Aug 25, 5:30 AM - Wednesday Aug 28, 7:30 PM"
 
     test "collapses show day of week",
       start: thisYear "5/25", "5:30 AM"
