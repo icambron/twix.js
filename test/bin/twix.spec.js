@@ -18,7 +18,7 @@
 
   assertTwixEqual = function(a, b) {
     if (!a.equals(b)) {
-      throw new Error("Found " + b + ", expected " + a);
+      throw new Error("Found " + (b.toString()) + ", expected " + (a.toString()));
     }
   };
 
@@ -54,15 +54,67 @@
 
   describe("plugin", function() {
     describe("static constructor", function() {
-      return it("works", function() {
+      return it("is the same as instantiating via the contructor", function() {
         assertEqual("function", typeof moment.twix);
         return assertTwixEqual(new Twix("5/25/1982", "5/25/1983", true), moment.twix("5/25/1982", "5/25/1983", true));
       });
     });
-    return describe("create from a member", function() {
-      return it("works", function() {
+    describe("create from a member", function() {
+      return it("is the same as instantiating via the contructor", function() {
         assertEqual("function", typeof (moment().twix));
         return assertTwixEqual(new Twix("5/25/1982", "5/25/1983", true), moment("5/25/1982").twix("5/25/1983", true));
+      });
+    });
+    describe("moment.forDuration()", function() {
+      it("constructs a twix", function() {
+        var duration, from, to, twix;
+
+        from = thisYear("5/25");
+        to = thisYear("5/26");
+        duration = moment.duration(to.diff(from));
+        twix = from.forDuration(duration);
+        return assertTwixEqual(new Twix(from, to), twix);
+      });
+      return it("constructs an all-day twix", function() {
+        var duration, from, to, twix;
+
+        from = thisYear("5/25");
+        to = thisYear("5/26");
+        duration = moment.duration(to.diff(from));
+        twix = from.forDuration(duration, true);
+        return assertTwixEqual(new Twix(from, to, true), twix);
+      });
+    });
+    describe("duration.afterMoment()", function() {
+      it("contructs a twix", function() {
+        var d, twix;
+
+        d = moment.duration(2, "days");
+        twix = d.afterMoment(thisYear("5/25"));
+        return assertTwixEqual(new Twix(thisYear("5/25"), thisYear("5/27")), twix);
+      });
+      return it("contructs an all-day twix", function() {
+        var d, twix;
+
+        d = moment.duration(2, "days");
+        twix = d.afterMoment(thisYear("5/25"), true);
+        return assertTwixEqual(new Twix(thisYear("5/25"), thisYear("5/27"), true), twix);
+      });
+    });
+    return describe("duration.beforeMoment()", function() {
+      it("contructs a twix", function() {
+        var d, twix;
+
+        d = moment.duration(2, "days");
+        twix = d.beforeMoment(thisYear("5/25"));
+        return assertTwixEqual(new Twix(thisYear("5/23"), thisYear("5/25")), twix);
+      });
+      return it("contructs an all-day twix", function() {
+        var d, twix;
+
+        d = moment.duration(2, "days");
+        twix = d.beforeMoment(thisYear("5/25"), true);
+        return assertTwixEqual(new Twix(thisYear("5/23"), thisYear("5/25"), true), twix);
       });
     });
   });
@@ -91,7 +143,7 @@
 
   describe("count()", function() {
     describe("days", function() {
-      it("inside one day returns 1", function() {
+      it("returns 1 inside a day", function() {
         var end, range, start;
 
         start = thisYear("5/25", "3:00");
@@ -117,7 +169,7 @@
       });
     });
     return describe("years", function() {
-      it("inside one year returns 1", function() {
+      it("returns 1 inside a year", function() {
         var end, start;
 
         start = thisYear("5/25");
@@ -245,22 +297,32 @@
     });
   });
 
-  describe("duration()", function() {
+  describe("humanizeLength()", function() {
     describe("all-day events", function() {
       it("formats single-day correctly", function() {
-        return assertEqual("all day", new Twix("5/25/1982", "5/25/1982", true).duration());
+        return assertEqual("all day", new Twix("5/25/1982", "5/25/1982", true).humanizeLength());
       });
       return it("formats multiday correctly", function() {
-        return assertEqual("3 days", new Twix("5/25/1982", "5/27/1982", true).duration());
+        return assertEqual("3 days", new Twix("5/25/1982", "5/27/1982", true).humanizeLength());
       });
     });
     return describe("non-all-day events", function() {
       it("formats single-day correctly", function() {
-        return assertEqual("4 hours", thatDay("12:00", "16:00").duration());
+        return assertEqual("4 hours", thatDay("12:00", "16:00").humanizeLength());
       });
       return it("formats multiday correctly", function() {
-        return assertEqual("2 days", new Twix("5/25/1982", "5/27/1982").duration());
+        return assertEqual("2 days", new Twix("5/25/1982", "5/27/1982").humanizeLength());
       });
+    });
+  });
+
+  describe("asDuration()", function() {
+    return it("returns a duration object", function() {
+      var duration;
+
+      duration = yesterday().twix(tomorrow()).asDuration();
+      assertEqual(true, moment.isDuration(duration));
+      return assertEqual(2, duration.days());
     });
   });
 
@@ -561,6 +623,27 @@
       return it("becomes an engulfing event", function() {
         return assertTwixEqual(someDays, thatDay().merge(someDays));
       });
+    });
+  });
+
+  describe("simpleFormat()", function() {
+    it("it provides a simple string when provided no options", function() {
+      var s;
+
+      s = yesterday().twix(tomorrow()).simpleFormat();
+      return assertEqual(true, s.indexOf(" - ") > -1);
+    });
+    it("specifies '(all day)' if it's all day", function() {
+      var s;
+
+      s = yesterday().twix(tomorrow(), true).simpleFormat();
+      return assertEqual(true, s.indexOf("(all day)") > -1);
+    });
+    return it("accepts moment formatting options", function() {
+      var s;
+
+      s = thisYear("10/14").twix(thisYear("10/14")).simpleFormat("MMMM");
+      return assertEqual("October - October", s);
     });
   });
 

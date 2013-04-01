@@ -6,7 +6,7 @@ else
   Twix = window.Twix
 
 assertEqual = (a, b) -> throw new Error("Found #{b}, expected #{a}") unless a == b
-assertTwixEqual = (a, b) -> throw new Error("Found #{b}, expected #{a}") unless a.equals b
+assertTwixEqual = (a, b) -> throw new Error("Found #{b.toString()}, expected #{a.toString()}") unless a.equals b
 
 thisYear = (partial, time) ->
   fullDate = "#{partial}/#{moment().year()}"
@@ -26,40 +26,77 @@ thatDay = (start, end) ->
 
 describe "plugin", ->
   describe "static constructor", ->
-    it "works", ->
+    it "is the same as instantiating via the contructor", ->
       assertEqual "function", typeof moment.twix
       assertTwixEqual new Twix("5/25/1982", "5/25/1983", true), moment.twix("5/25/1982", "5/25/1983", true)
 
   describe "create from a member", ->
-    it "works", ->
+    it "is the same as instantiating via the contructor", ->
       assertEqual "function", typeof(moment().twix)
       assertTwixEqual new Twix("5/25/1982", "5/25/1983", true), moment("5/25/1982").twix("5/25/1983", true)
+
+  describe "moment.forDuration()", ->
+    it "constructs a twix", ->
+      from = thisYear("5/25")
+      to = thisYear("5/26")
+      duration = moment.duration(to.diff from)
+      twix = from.forDuration duration
+      assertTwixEqual new Twix(from, to), twix
+
+    it "constructs an all-day twix", ->
+      from = thisYear("5/25")
+      to = thisYear("5/26")
+      duration = moment.duration(to.diff from)
+      twix = from.forDuration duration, true
+      assertTwixEqual new Twix(from, to, true), twix
+
+  describe "duration.afterMoment()", ->
+    it "contructs a twix", ->
+      d = moment.duration(2, "days")
+      twix = d.afterMoment thisYear("5/25")
+      assertTwixEqual new Twix(thisYear("5/25"), thisYear("5/27")), twix
+
+    it "contructs an all-day twix", ->
+      d = moment.duration(2, "days")
+      twix = d.afterMoment thisYear("5/25"), true
+      assertTwixEqual new Twix(thisYear("5/25"), thisYear("5/27"), true), twix
+
+  describe "duration.beforeMoment()", ->
+    it "contructs a twix", ->
+      d = moment.duration(2, "days")
+      twix = d.beforeMoment thisYear("5/25")
+      assertTwixEqual new Twix(thisYear("5/23"), thisYear("5/25")), twix
+
+    it "contructs an all-day twix", ->
+      d = moment.duration(2, "days")
+      twix = d.beforeMoment thisYear("5/25"), true
+      assertTwixEqual new Twix(thisYear("5/23"), thisYear("5/25"), true), twix
 
 describe "isSame()", ->
 
   describe "year", ->
     it "returns true if they're the same year", ->
-      assertEqual true, moment("5/25/1982").twix("10/14/1982").isSame("year")
+      assertEqual true, moment("5/25/1982").twix("10/14/1982").isSame "year"
 
     it "returns false if they're different years", ->
-      assertEqual false, moment("5/25/1982").twix("10/14/1983").isSame("year")
+      assertEqual false, moment("5/25/1982").twix("10/14/1983").isSame "year"
 
   describe "day", ->
 
     it "returns true if they're the same day", ->
-      assertEqual true, moment("5/25/1982 5:30 AM").twix("5/25/1982 7:30 PM").isSame("day")
+      assertEqual true, moment("5/25/1982 5:30 AM").twix("5/25/1982 7:30 PM").isSame "day"
 
     it "returns false if they're different days day", ->
-      assertEqual false, moment("5/25/1982 5:30 AM").twix("5/26/1982 7:30 PM").isSame("day")
+      assertEqual false, moment("5/25/1982 5:30 AM").twix("5/26/1982 7:30 PM").isSame "day"
 
     it "returns true they're in different UTC days but the same local days", ->
-      assertEqual true, moment("5/25/1982 5:30 AM").twix("5/25/1982 11:30 PM").isSame("day")
+      assertEqual true, moment("5/25/1982 5:30 AM").twix("5/25/1982 11:30 PM").isSame "day"
 
 describe "count()", ->
 
   describe "days", ->
 
-    it "inside one day returns 1", ->
+    it "returns 1 inside a day", ->
       start = thisYear "5/25", "3:00"
       end = thisYear "5/25", "14:00"
       range = moment(start).twix end
@@ -79,7 +116,7 @@ describe "count()", ->
 
   describe "years", ->
 
-    it "inside one year returns 1", ->
+    it "returns 1 inside a year", ->
       start = thisYear "5/25"
       end = thisYear "5/26"
       assertEqual 1, moment(start).twix(end).count("year")
@@ -167,20 +204,26 @@ describe "iterate()", ->
       assertSameYear thisYear("5/25"), iter.next()
       assertEqual null, iter.next()
 
-describe "duration()", ->
+describe "humanizeLength()", ->
   describe "all-day events", ->
     it "formats single-day correctly", ->
-      assertEqual("all day", new Twix("5/25/1982", "5/25/1982", true).duration())
+      assertEqual("all day", new Twix("5/25/1982", "5/25/1982", true).humanizeLength())
 
     it "formats multiday correctly", ->
-      assertEqual("3 days", new Twix("5/25/1982", "5/27/1982", true).duration())
+      assertEqual("3 days", new Twix("5/25/1982", "5/27/1982", true).humanizeLength())
 
   describe "non-all-day events", ->
     it "formats single-day correctly", ->
-      assertEqual("4 hours", thatDay("12:00", "16:00").duration())
+      assertEqual("4 hours", thatDay("12:00", "16:00").humanizeLength())
 
     it "formats multiday correctly", ->
-      assertEqual("2 days", new Twix("5/25/1982", "5/27/1982").duration())
+      assertEqual("2 days", new Twix("5/25/1982", "5/27/1982").humanizeLength())
+
+describe "asDuration()", ->
+  it "returns a duration object", ->
+    duration = yesterday().twix(tomorrow()).asDuration()
+    assertEqual true, moment.isDuration(duration)
+    assertEqual 2, duration.days()
 
 describe "isPast()", ->
   describe "all-day events", ->
@@ -434,6 +477,19 @@ describe "merge()", ->
 
     it "becomes an engulfing event", ->
       assertTwixEqual someDays, thatDay().merge(someDays)
+
+describe "simpleFormat()", ->
+  it "it provides a simple string when provided no options", ->
+    s = yesterday().twix(tomorrow()).simpleFormat()
+    assertEqual true, s.indexOf(" - ") > -1
+
+  it "specifies '(all day)' if it's all day", ->
+    s = yesterday().twix(tomorrow(), true).simpleFormat()
+    assertEqual true, s.indexOf("(all day)") > -1
+
+  it "accepts moment formatting options", ->
+    s = thisYear("10/14").twix(thisYear("10/14")).simpleFormat("MMMM")
+    assertEqual "October - October", s
 
 describe "format()", ->
 

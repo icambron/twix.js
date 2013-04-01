@@ -35,14 +35,18 @@ class Twix
         val
     hasNext: hasNext
 
-  duration: ->
+  humanizeLength: ->
     if @allDay
-      if @sameDay()
+      if @isSame "day"
         "all day"
       else
         @start.from(@end.clone().add('days', 1), true)
     else
       @start.from(@end, true)
+
+  asDuration: (units) ->
+    diff = @end.diff @start
+    moment.duration(diff)
 
   isPast: ->
     if @allDay
@@ -84,6 +88,13 @@ class Twix
       @end.valueOf() == other.end.valueOf()
 
   # -- FORMATING --
+  toString: -> "{start: #{@start.format()}, end: #{@end.format()}, allDay: #{@allDay ? "true" : "false"}}"
+
+  simpleFormat: (momentOpts) ->
+    s = "#{@start.format(momentOpts)} - #{@end.format(momentOpts)}"
+    s += " (all day)" if @allDay
+    s
+
   format: (inopts) ->
     options =
       groupMeridiems: true
@@ -117,16 +128,16 @@ class Twix
       @start.hours() > 12 &&
       @end.hours() < options.lastNightEndsAt
 
-    needDate = options.showDate || (!@sameDay() && !goesIntoTheMorning)
+    needDate = options.showDate || (!@isSame("day") && !goesIntoTheMorning)
 
-    if @allDay && @sameDay() && (!options.showDate || options.explicitAllDay)
+    if @allDay && @isSame("day") && (!options.showDate || options.explicitAllDay)
       fs.push
         name: "all day simple"
         fn: -> options.allDay
         slot: 0
         pre: " "
 
-    if needDate && (!options.implicitYear || @start.year() != moment().year() || !@sameYear())
+    if needDate && (!options.implicitYear || @start.year() != moment().year() || !@isSame("year"))
       fs.push
         name: "year",
         fn: (date) -> date.format options.yearFormat
@@ -236,7 +247,8 @@ class Twix
   sameYear: -> @isSame "year"
   countDays: -> @count "days"
   daysIn: (minHours) -> @iterate 'days', minHours
-  past: @isPast
+  past: -> @isPast()
+  duration: -> @humanizeLength()
 
 extend = (first, second) ->
   for attr of second
@@ -249,3 +261,6 @@ else
 
 moment.twix = -> new Twix(arguments...)
 moment.fn.twix = -> new Twix(this, arguments...)
+moment.fn.forDuration = (duration, allDay) -> new Twix(this, this.clone().add(duration), allDay)
+moment.duration.fn.afterMoment = (startingTime, allDay) -> new Twix(startingTime, startingTime.clone().add(this), allDay)
+moment.duration.fn.beforeMoment = (startingTime, allDay) -> new Twix(startingTime.clone().subtract(this), startingTime, allDay)
