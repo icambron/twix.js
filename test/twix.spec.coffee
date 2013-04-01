@@ -376,6 +376,19 @@ describe "format()", ->
       end: "5/25/1982 6:30 AM"
       result: 'May 25, 1982, 5:30 - 6:30 AM'
 
+    test "custom month format for regular event",
+      start: "8/25/2010 5:30 AM"
+      end: "8/25/2010 6:30 AM"
+      options: {monthFormat: "MMMM"}
+      result: 'August 25, 2010, 5:30 - 6:30 AM'
+
+    test "custom month format for all day event",
+      start: "8/25/2010"
+      end: "8/25/2010"
+      allDay: true
+      options: {monthFormat: "MMMM"}
+      result: 'August 25, 2010'
+
   describe "rounded times", ->
     test "round hour doesn't show :00",
       start: "5/25/1982 5:00 AM"
@@ -401,13 +414,6 @@ describe "format()", ->
       end: "8/25/2010"
       allDay: true
       result: "Aug 25, 2010"
-
-    test "one day has no range, specify month format",
-      start: "8/25/2010"
-      end: "8/25/2010"
-      allDay: true
-      options: {monthFormat: "MMMM"}
-      result: "August 25, 2010"
 
     test "same month says month on one side",
       start: thisYear("5/25")
