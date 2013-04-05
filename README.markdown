@@ -36,11 +36,14 @@ Grab [the file](https://raw.github.com/icambron/twix.js/master/bin/twix.min.js) 
 ```
 
 ##Building##
-If you want to build Twix for yourself, just run the build file:
+
+If you want to build Twix for yourself, clone the repo out and run this:
 
     make configure build
-    
-The configure part just installs the NPMs and a git submodule; you only need run that the first time you build. Note that the source is `src/twix.coffee`; the output is `bin/twix.js`. You can run the tests via
+
+Configure just installs the NPMs and brings in Moment as a submodule, so you only have to do that part once. 
+
+Note that the source is `src/twix.coffee`; the output is `bin/twix.js`. You can run the tests via
 
     make test
     
