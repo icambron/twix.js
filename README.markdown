@@ -49,7 +49,7 @@ Note that the source is `src/twix.coffee`; the output is `bin/twix.js`. You can 
     
 You can also run the tests in-browser by building and then loading `test/test.html`.
 
-## License (MIT)##
+##License (MIT)##
 
 Copyright (c) 2012 Isaac Cambron
 
