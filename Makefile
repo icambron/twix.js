@@ -6,3 +6,7 @@ build:
 
 test: build
 	@node_modules/mocha/bin/mocha --reporter spec test/bin/twix.spec.js
+
+configure:
+	@npm install
+	@git submodule update --init --recursive
