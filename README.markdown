@@ -49,10 +49,6 @@ Note that the source is `src/twix.coffee`; the output is `bin/twix.js`. You can 
     
 You can also run the tests in-browser by building and then loading `test/test.html`.
 
-## Future plans ##
-
-For the broad aims of Twix 2.0, see the [future plans](https://github.com/icambron/twix.js/wiki/Future-plans) page.
-
 ## License (MIT)##
 
 Copyright (c) 2012 Isaac Cambron
