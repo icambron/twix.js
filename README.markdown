@@ -18,7 +18,7 @@ And much more.
 
 ##Documentation##
 
-Docs are [here](https://github.com/icambron/twix.js/wiki/Documentation).
+Comprehensive docs are [here](http://icambron.github.io/twix.js/).
 
 ## Installing ##
 
@@ -48,6 +48,13 @@ Note that the source is `src/twix.coffee`; the output is `bin/twix.js`. You can 
     make test
     
 You can also run the tests in-browser by building and then loading `test/test.html`.
+
+
+##Changelog##
+
+ * **0.2.0**: Deprecated `sameDay`, `sameYear`, `countDays`, `daysIn`, `past`, and `duration`. Added `isSame`, `humanizeLength`, `asDuration`, `isPast`, `isFuture`, `isCurrent`. Added duration methods. Emphasized moment() monkey patch methods over Twix() constructor. Some bug fixes.
+
+ * Older versions - wasn't tracking.
 
 ##License (MIT)##
 
