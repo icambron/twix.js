@@ -11,7 +11,11 @@ Twix.js is a [Moment.js](http://momentjs.com) plugin for working with time range
 
 ###Browser
 
-Simply reference twix after moment:
+Grab [the
+file](https://raw.github.com/icambron/twix.js/master/bin/twix.min.js) as
+well as
+[moment.js](https://raw.github.com/timrwood/moment/1.3.0/moment.min.js).
+Then simply reference twix after moment:
 
 ```html
 <script src="moment.min.js"></script>
