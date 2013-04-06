@@ -262,6 +262,15 @@ It appends some extra stuff
 
 The most important feature is formatting. By default, Twix tries to make brief, readable strings.
 
+###The basics
+
+Twix's `format` method returns a string showing the range. Called with no arguments it uses the default options for how to do that. The most important part of that is that it elides as much redundant information as it can. For example, if the event begins and ends today, it doesn't specify today's date twice. This makes for short, natural-looking time ranges.
+
+```js
+moment("1/25/1982 9:00 AM").twix("1/25/1982 11:00 AM").format();  //=> 'Jan 25, 1982, 9 - 11 AM'
+moment("1/25/1982 9:00").twix("1/26/1982 13:00").format(); //=> 'Jan 25, 9 AM - Jan 26, 1 PM, 1982'
+```
+
 ###<a id="formatAllDay"></a>All-day ranges
 
 All day ranges won't show times: they're just assumed to take up the full day local time.
@@ -280,7 +289,7 @@ Notice the various the different kinds of groupings and abbreviations:
  * Twix only shows the year and month once if they're consistent across the range.
  * If it's all the same day, Twix doesn't show a range at all.
 
-###Events with hours and minutes
+###Ranges with hours and minutes
 
 Unless the allDay parameter is set to true, the time is considered relevant:
 
