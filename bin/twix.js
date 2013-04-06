@@ -146,12 +146,16 @@
       }) + "}";
     };
 
-    Twix.prototype.simpleFormat = function(momentOpts) {
-      var s;
+    Twix.prototype.simpleFormat = function(momentOpts, inopts) {
+      var options, s;
 
+      options = {
+        allDay: "(all day)"
+      };
+      extend(options, inopts || {});
       s = "" + (this.start.format(momentOpts)) + " - " + (this.end.format(momentOpts));
-      if (this.allDay) {
-        s += " (all day)";
+      if (this.allDay && options.allDay) {
+        s += " " + options.allDay;
       }
       return s;
     };
@@ -223,7 +227,7 @@
         fs.push({
           name: "month",
           fn: function(date) {
-            return date.format("MMM");
+            return date.format(options.monthFormat);
           },
           slot: 2,
           pre: " "
@@ -417,11 +421,11 @@
   };
 
   moment.duration.fn.afterMoment = function(startingTime, allDay) {
-    return new Twix(startingTime, startingTime.clone().add(this), allDay);
+    return new Twix(startingTime, moment(startingTime).clone().add(this), allDay);
   };
 
   moment.duration.fn.beforeMoment = function(startingTime, allDay) {
-    return new Twix(startingTime.clone().subtract(this), startingTime, allDay);
+    return new Twix(moment(startingTime).clone().subtract(this), startingTime, allDay);
   };
 
 }).call(this);

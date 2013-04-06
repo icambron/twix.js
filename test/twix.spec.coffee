@@ -56,6 +56,11 @@ describe "plugin", ->
       twix = d.afterMoment thisYear("5/25")
       assertTwixEqual new Twix(thisYear("5/25"), thisYear("5/27")), twix
 
+    it "can use text", ->
+      d = moment.duration(2, "days")
+      twix = d.afterMoment "5/25/1982"
+      assertTwixEqual new Twix("5/25/1982", "5/27/1982"), twix
+
     it "contructs an all-day twix", ->
       d = moment.duration(2, "days")
       twix = d.afterMoment thisYear("5/25"), true
@@ -66,6 +71,11 @@ describe "plugin", ->
       d = moment.duration(2, "days")
       twix = d.beforeMoment thisYear("5/25")
       assertTwixEqual new Twix(thisYear("5/23"), thisYear("5/25")), twix
+
+    it "can use text", ->
+      d = moment.duration(2, "days")
+      twix = d.beforeMoment "5/25/1982"
+      assertTwixEqual new Twix("5/23/1982", "5/25/1982"), twix
 
     it "contructs an all-day twix", ->
       d = moment.duration(2, "days")
@@ -488,8 +498,16 @@ describe "simpleFormat()", ->
     assertEqual true, s.indexOf("(all day)") > -1
 
   it "accepts moment formatting options", ->
-    s = thisYear("10/14").twix(thisYear("10/14")).simpleFormat("MMMM")
+    s = thisYear("10/14").twix(thisYear("10/14")).simpleFormat "MMMM"
     assertEqual "October - October", s
+
+  it "accepts an allDay option", ->
+    s = thisYear("5/25").twix(thisYear("5/26"), true).simpleFormat null, allDay: "(wayo wayo)"
+    assertEqual true, s.indexOf("(wayo wayo)") > -1
+
+  it "removes the all day text if allDay is null", ->
+    s = thisYear("5/25").twix(thisYear("5/26"), true).simpleFormat null, allDay: null
+    assertEqual true, s.indexOf("(all day)") == -1
 
 describe "format()", ->
 

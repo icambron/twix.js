@@ -90,9 +90,13 @@ class Twix
   # -- FORMATING --
   toString: -> "{start: #{@start.format()}, end: #{@end.format()}, allDay: #{@allDay ? "true" : "false"}}"
 
-  simpleFormat: (momentOpts) ->
+  simpleFormat: (momentOpts, inopts) ->
+    options = allDay: "(all day)"
+
+    extend options, (inopts || {})
+
     s = "#{@start.format(momentOpts)} - #{@end.format(momentOpts)}"
-    s += " (all day)" if @allDay
+    s += " #{options.allDay}" if @allDay && options.allDay
     s
 
   format: (inopts) ->
@@ -262,5 +266,5 @@ else
 moment.twix = -> new Twix(arguments...)
 moment.fn.twix = -> new Twix(this, arguments...)
 moment.fn.forDuration = (duration, allDay) -> new Twix(this, this.clone().add(duration), allDay)
-moment.duration.fn.afterMoment = (startingTime, allDay) -> new Twix(startingTime, startingTime.clone().add(this), allDay)
-moment.duration.fn.beforeMoment = (startingTime, allDay) -> new Twix(startingTime.clone().subtract(this), startingTime, allDay)
+moment.duration.fn.afterMoment = (startingTime, allDay) -> new Twix(startingTime, moment(startingTime).clone().add(this), allDay)
+moment.duration.fn.beforeMoment = (startingTime, allDay) -> new Twix(moment(startingTime).clone().subtract(this), startingTime, allDay)
