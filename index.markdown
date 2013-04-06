@@ -5,7 +5,7 @@ title: Twix.js
 
 <a id="home"></a>
 
-Twix.js is a [Moment.js](http://momentjs.com) plugin for working with time ranges. Use it to manipulate, interrogate, and [intelligently format](#smarFormatting) a block of time.
+Twix.js is a [Moment.js](http://momentjs.com) plugin for working with time ranges. Use it to manipulate, interrogate, and [intelligently format](#smartFormatting) a block of time.
 
 ##<a id="gettingStarted"></a>Getting started
 
