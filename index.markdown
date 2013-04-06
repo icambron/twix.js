@@ -232,8 +232,9 @@ var range = moment("5/25/1982 9:00").twix("5/25/1982 12:00");
 range.simpleFormat(); //=> '1982-05-25T09:00:00-04:00 - 1982-05-25T12:00:00-04:00'
 ```
 
-It can take a Moment [formatting string](http://momentjs.com/docs/#/displaying/format/) and will format both ends of the range accordingly:
+But you probably want to pass a Moment [formatting string](http://momentjs.com/docs/#/displaying/format/). It will format both ends of the range accordingly:
 
+```js
 range.simpleFormat("ddd, hA"); //=> 'Tue, 9AM - Tue, 12PM'
 ```
 
@@ -320,7 +321,8 @@ twix.format({implicitYear: false}); //=> Mar 28, 1:13 AM - Mar 29, 1:13 AM, 2013
 Right, not everyone is American:
 
 ```js
-moment("5/25/2012 16:00").twix("5/25/2012 17:00").format({twentyFourHour: true});  //=> May 25, 16:00 - 17:00
+moment("5/25/2012 16:00").twix("5/25/2012 17:00").format({twentyFourHour: true});
+//=> May 25, 16:00 - 17:00
 ```
 
 Notice there's no hour abbreviation.
@@ -333,7 +335,7 @@ I've made the format hackable, allowing you to specify the Moment formatting par
 moment("1/25/2012 8:00").twix("1/25/2012 17:00").format({
   monthFormat: "MMMM",
   dayFormat: "Do"
-});                                                         //=> January 25th, 8 AM - 5 PM
+});                                                   //=> January 25th, 8 AM - 5 PM
 ```
 
 See all the `*Format` options below. You should look at [Moment's format documentation](http://momentjs.com/docs/#/displaying/format/) for more info. YMMV -- because of the string munging, not everything will act quite like you expect.
@@ -343,13 +345,14 @@ See all the `*Format` options below. You should look at [Moment's format documen
 You can get rid of the space before the meridiem:
 
 ```js
-moment("5/25/2012 8:00").twix("5/25/2012 17:00").format({spaceBeforeMeridiem: false})  //=> May 25, 8AM - 5PM
+moment("5/25/2012 8:00").twix("5/25/2012 17:00").format({spaceBeforeMeridiem: false});
+//=> May 25, 8AM - 5PM
 ```
 
 If you're showing the date somewhere else, it's sometimes useful to only show the times:
 
 ```js
-moment("5/25/2012 8:00").twix("5/25/2012 17:00").format({showDate: false})            //=> 8 AM - 5 PM
+moment("5/25/2012 8:00").twix("5/25/2012 17:00").format({showDate: false}); //=> 8 AM - 5 PM
 ```
 
 This doesn't affect ranges that span multiple days; they still show the dates.
@@ -357,7 +360,7 @@ This doesn't affect ranges that span multiple days; they still show the dates.
 If you combine an all-day event with `showDate:false`, you get this:
 
 ```js
-moment("1/25/2012").twix("1/25/2012", true).format({showDate: false})                //=> All day
+moment("1/25/2012").twix("1/25/2012", true).format({showDate: false}); //=> All day
 ```
 
 That text is customizable through the `allDay` option.

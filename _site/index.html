@@ -254,11 +254,9 @@ Then simply reference twix after moment:</p>
 
 <span class="nx">range</span><span class="p">.</span><span class="nx">simpleFormat</span><span class="p">();</span> <span class="c1">//=&gt; &#39;1982-05-25T09:00:00-04:00 - 1982-05-25T12:00:00-04:00&#39;</span>
 </code></pre></div>
-<p>It can take a Moment <a href="http://momentjs.com/docs/#/displaying/format/">formatting string</a> and will format both ends of the range accordingly:</p>
-
-<p>range.simpleFormat(&quot;ddd, hA&quot;); //=&gt; &#39;Tue, 9AM - Tue, 12PM&#39;
-```</p>
-
+<p>But you probably want to pass a Moment <a href="http://momentjs.com/docs/#/displaying/format/">formatting string</a>. It will format both ends of the range accordingly:</p>
+<div class="highlight"><pre><code class="js"><span class="nx">range</span><span class="p">.</span><span class="nx">simpleFormat</span><span class="p">(</span><span class="s2">&quot;ddd, hA&quot;</span><span class="p">);</span> <span class="c1">//=&gt; &#39;Tue, 9AM - Tue, 12PM&#39;</span>
+</code></pre></div>
 <p>All-day ranges will add some extra text:</p>
 <div class="highlight"><pre><code class="js"><span class="kd">var</span> <span class="nx">range</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/1982&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/26/1982&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
 
@@ -321,7 +319,8 @@ Then simply reference twix after moment:</p>
 <h3>24-hour time</h3>
 
 <p>Right, not everyone is American:</p>
-<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/2012 16:00&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/25/2012 17:00&quot;</span><span class="p">).</span><span class="nx">format</span><span class="p">({</span><span class="nx">twentyFourHour</span><span class="o">:</span> <span class="kc">true</span><span class="p">});</span>  <span class="c1">//=&gt; May 25, 16:00 - 17:00</span>
+<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/2012 16:00&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/25/2012 17:00&quot;</span><span class="p">).</span><span class="nx">format</span><span class="p">({</span><span class="nx">twentyFourHour</span><span class="o">:</span> <span class="kc">true</span><span class="p">});</span>
+<span class="c1">//=&gt; May 25, 16:00 - 17:00</span>
 </code></pre></div>
 <p>Notice there&#39;s no hour abbreviation.</p>
 
@@ -331,22 +330,23 @@ Then simply reference twix after moment:</p>
 <div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;1/25/2012 8:00&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;1/25/2012 17:00&quot;</span><span class="p">).</span><span class="nx">format</span><span class="p">({</span>
   <span class="nx">monthFormat</span><span class="o">:</span> <span class="s2">&quot;MMMM&quot;</span><span class="p">,</span>
   <span class="nx">dayFormat</span><span class="o">:</span> <span class="s2">&quot;Do&quot;</span>
-<span class="p">});</span>                                                         <span class="c1">//=&gt; January 25th, 8 AM - 5 PM</span>
+<span class="p">});</span>                                                   <span class="c1">//=&gt; January 25th, 8 AM - 5 PM</span>
 </code></pre></div>
 <p>See all the <code>*Format</code> options below. You should look at <a href="http://momentjs.com/docs/#/displaying/format/">Moment&#39;s format documentation</a> for more info. YMMV -- because of the string munging, not everything will act quite like you expect.</p>
 
 <h3>Odds and ends</h3>
 
 <p>You can get rid of the space before the meridiem:</p>
-<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/2012 8:00&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/25/2012 17:00&quot;</span><span class="p">).</span><span class="nx">format</span><span class="p">({</span><span class="nx">spaceBeforeMeridiem</span><span class="o">:</span> <span class="kc">false</span><span class="p">})</span>  <span class="c1">//=&gt; May 25, 8AM - 5PM</span>
+<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/2012 8:00&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/25/2012 17:00&quot;</span><span class="p">).</span><span class="nx">format</span><span class="p">({</span><span class="nx">spaceBeforeMeridiem</span><span class="o">:</span> <span class="kc">false</span><span class="p">});</span>
+<span class="c1">//=&gt; May 25, 8AM - 5PM</span>
 </code></pre></div>
 <p>If you&#39;re showing the date somewhere else, it&#39;s sometimes useful to only show the times:</p>
-<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/2012 8:00&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/25/2012 17:00&quot;</span><span class="p">).</span><span class="nx">format</span><span class="p">({</span><span class="nx">showDate</span><span class="o">:</span> <span class="kc">false</span><span class="p">})</span>            <span class="c1">//=&gt; 8 AM - 5 PM</span>
+<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/2012 8:00&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/25/2012 17:00&quot;</span><span class="p">).</span><span class="nx">format</span><span class="p">({</span><span class="nx">showDate</span><span class="o">:</span> <span class="kc">false</span><span class="p">});</span> <span class="c1">//=&gt; 8 AM - 5 PM</span>
 </code></pre></div>
 <p>This doesn&#39;t affect ranges that span multiple days; they still show the dates.</p>
 
 <p>If you combine an all-day event with <code>showDate:false</code>, you get this:</p>
-<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;1/25/2012&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;1/25/2012&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">).</span><span class="nx">format</span><span class="p">({</span><span class="nx">showDate</span><span class="o">:</span> <span class="kc">false</span><span class="p">})</span>                <span class="c1">//=&gt; All day</span>
+<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;1/25/2012&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;1/25/2012&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">).</span><span class="nx">format</span><span class="p">({</span><span class="nx">showDate</span><span class="o">:</span> <span class="kc">false</span><span class="p">});</span> <span class="c1">//=&gt; All day</span>
 </code></pre></div>
 <p>That text is customizable through the <code>allDay</code> option.</p>
 
