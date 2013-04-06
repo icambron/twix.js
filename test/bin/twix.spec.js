@@ -155,6 +155,28 @@
     });
   });
 
+  describe("diff()", function() {
+    describe("days", function() {
+      it("returns 1 for yesterday - today", function() {
+        return assertEqual(1, yesterday().twix(moment()).diff("days"));
+      });
+      it("returns 1 for a one-day all-day event", function() {
+        return assertEqual(1, moment().twix(moment(), true).diff("days"));
+      });
+      return it("returns 2 for a two-day all-day event", function() {
+        return assertEqual(2, yesterday().twix(moment(), true).diff("days"));
+      });
+    });
+    return describe("other", function() {
+      it("returns the right number for a years", function() {
+        return assertEqual(16, moment("2012-8-14").diff("1996-2-17", "years"));
+      });
+      return it("returns the right number for a months", function() {
+        return assertEqual(197, moment("2012-8-14").diff("1996-2-17", "months"));
+      });
+    });
+  });
+
   describe("count()", function() {
     describe("days", function() {
       it("returns 1 inside a day", function() {
@@ -196,6 +218,67 @@
         start = thisYear("5/25");
         end = nextYear("5/26");
         return assertEqual(2, moment(start).twix(end).count("year"));
+      });
+    });
+  });
+
+  describe("countInner()", function() {
+    return describe("days", function() {
+      it("returns 0 inside a day", function() {
+        var end, range, start;
+
+        start = thisYear("5/25", "3:00");
+        end = thisYear("5/25", "14:00");
+        range = moment(start).twix(end);
+        return assertEqual(0, range.countInner("days"));
+      });
+      it("returns 0 if the range crosses midnight but is still < 24 hours", function() {
+        var end, range, start;
+
+        start = thisYear("5/25", "16:00");
+        end = thisYear("5/26", "3:00");
+        range = moment(start).twix(end);
+        return assertEqual(0, range.countInner("days"));
+      });
+      it("returns 0 if the range is > 24 hours but still doesn't cover a full day", function() {
+        var end, range, start;
+
+        start = thisYear("5/25", "16:00");
+        end = thisYear("5/26", "17:00");
+        range = moment(start).twix(end);
+        return assertEqual(0, range.countInner("days"));
+      });
+      it("returns 1 if the range includes one full day", function() {
+        var end, range, start;
+
+        start = thisYear("5/24", "16:00");
+        end = thisYear("5/26", "17:00");
+        range = moment(start).twix(end);
+        return assertEqual(1, range.countInner("days"));
+      });
+      it("returns 2 if the range includes two full days", function() {
+        var end, range, start;
+
+        start = thisYear("5/23", "16:00");
+        end = thisYear("5/26", "17:00");
+        range = moment(start).twix(end);
+        return assertEqual(2, range.countInner("days"));
+      });
+      it("returns 1 for a one-day all-day event", function() {
+        var end, range, start;
+
+        start = thisYear("5/25");
+        end = thisYear("5/25");
+        range = moment(start).twix(end, true);
+        return assertEqual(1, range.countInner("days"));
+      });
+      return it("returns 2 for a two-day all-day event", function() {
+        var end, range, start;
+
+        start = thisYear("5/25");
+        end = thisYear("5/26");
+        range = moment(start).twix(end, true);
+        return assertEqual(2, range.countInner("days"));
       });
     });
   });
@@ -306,6 +389,64 @@
         range = moment(start).twix(end);
         iter = range.iterate("years", 4);
         assertSameYear(thisYear("5/25"), iter.next());
+        return assertEqual(null, iter.next());
+      });
+    });
+  });
+
+  describe("iterateInner()", function() {
+    return describe("days", function() {
+      var assertSameDay;
+
+      assertSameDay = function(first, second) {
+        return assertEqual(true, first.isSame(second, "day"));
+      };
+      it("is empty if the range starts and ends the same day", function() {
+        var end, iter, start;
+
+        start = thisYear("5/25", "3:00");
+        end = thisYear("5/25", "14:00");
+        iter = start.twix(end).iterateInner("days");
+        assertEqual(false, iter.hasNext());
+        return assertEqual(null, iter.next());
+      });
+      it("is empty if the range doesn't contain a whole day", function() {
+        var end, iter, start;
+
+        start = thisYear("5/25", "16:00");
+        end = thisYear("5/26", "17:00");
+        iter = start.twix(end).iterateInner("days");
+        assertEqual(false, iter.hasNext());
+        return assertEqual(null, iter.next());
+      });
+      it("provides 1 day if the range contains 1 full day", function() {
+        var end, iter, start;
+
+        start = thisYear("5/24", "16:00");
+        end = thisYear("5/26", "3:00");
+        iter = start.twix(end).iterateInner("days");
+        assertSameDay(thisYear("5/25"), iter.next());
+        return assertEqual(null, iter.next());
+      });
+      it("provides 1 day for an all-day event", function() {
+        var end, iter, start;
+
+        start = thisYear("5/25");
+        end = thisYear("5/25");
+        iter = start.twix(end, true).iterateInner("days");
+        assertSameDay(thisYear("5/25"), iter.next());
+        return assertEqual(null, iter.next());
+      });
+      return it("provides 2 days for a two-day all-day event", function() {
+        var end, iter, start;
+
+        start = thisYear("5/25");
+        end = thisYear("5/26");
+        iter = start.twix(end, true).iterateInner("days");
+        assertEqual(true, iter.hasNext());
+        assertSameDay(thisYear("5/25"), iter.next());
+        assertEqual(true, iter.hasNext());
+        assertSameDay(thisYear("5/26"), iter.next());
         return assertEqual(null, iter.next());
       });
     });
@@ -435,6 +576,52 @@
         future = moment().add('hours', 2);
         furtherFuture = moment().add('hours', 3);
         return assertEqual(false, future.twix(furtherFuture).isCurrent());
+      });
+    });
+  });
+
+  describe("contains()", function() {
+    describe("non-all-day", function() {
+      var end, range, start;
+
+      start = thisYear("5/25", "6:00");
+      end = thisYear("5/25", "7:00");
+      range = start.twix(end);
+      it("returns true for moments inside the range", function() {
+        return assertEqual(true, range.contains(thisYear("5/25", "6:30")));
+      });
+      it("returns true for moments at the beginning of the range", function() {
+        return assertEqual(true, range.contains(start));
+      });
+      it("returns true for moments at the end of the range", function() {
+        return assertEqual(true, range.contains(end));
+      });
+      it("returns false for moments before the range", function() {
+        return assertEqual(false, range.contains(thisYear("5/25", "5:30")));
+      });
+      return it("returns false for moments after the range", function() {
+        return assertEqual(false, range.contains(thisYear("5/25", "8:30")));
+      });
+    });
+    return describe("all-day", function() {
+      var range, start;
+
+      start = thisYear("5/25");
+      range = start.twix(start, true);
+      it("returns true for moments inside the range", function() {
+        return assertEqual(true, range.contains(thisYear("5/25", "6:30")));
+      });
+      it("returns true for moments at the beginning of the range", function() {
+        return assertEqual(true, range.contains(start));
+      });
+      it("returns true for moments at the end of the range", function() {
+        return assertEqual(true, range.contains(start.clone().endOf("day")));
+      });
+      it("returns false for moments before the range", function() {
+        return assertEqual(false, range.contains(thisYear("5/24")));
+      });
+      return it("returns false for moments after the range", function() {
+        return assertEqual(false, range.contains(thisYear("5/26")));
       });
     });
   });

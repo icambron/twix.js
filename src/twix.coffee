@@ -15,25 +15,30 @@ class Twix
   # -- INFORMATIONAL --
   isSame: (period) -> @start.isSame @end, period
 
+  diff: (period) -> @_trueEnd().add(1, "millisecond").diff @_trueStart(), period
+
   count: (period) ->
     start = @start.clone().startOf period
     end = @end.clone().startOf period
     end.diff(start, period) + 1
 
+  countInner: (period) ->
+    [start, end] = @_inner period
+
+    return 0 if start >= end
+    end.diff(start, period)
+
   iterate: (period, minHours) ->
-    iter = @start.clone().startOf period
-    endDate = @end.clone().startOf period
+    start = @start.clone().startOf period
+    end = @end.clone().startOf period
+    hasNext = => start <= end && (!minHours || start.valueOf() != end.valueOf() || @end.hours() > minHours || @allDay)
+    @_iterateHelper period, start, hasNext
 
-    hasNext = => iter <= endDate && (!minHours || iter.valueOf() != endDate.valueOf() || @end.hours() > minHours || @allDay)
+  iterateInner: (period) ->
+    [start, end] = @_inner period
+    hasNext = -> start < end
 
-    next: =>
-      unless hasNext()
-        null
-      else
-        val = iter.clone()
-        iter.add(period, 1)
-        val
-    hasNext: hasNext
+    @_iterateHelper period, start, hasNext
 
   humanizeLength: ->
     if @allDay
@@ -62,6 +67,10 @@ class Twix
 
   isCurrent: -> !@isPast() && !@isFuture()
 
+  contains: (mom) ->
+    mom = moment mom
+    @_trueStart() <= mom && @_trueEnd() >= mom
+
   # -- WORK WITH MULTIPLE RANGES --
   overlaps: (other) -> !(@_trueEnd() < other._trueStart() || @_trueStart() > other._trueEnd())
 
@@ -77,9 +86,6 @@ class Twix
       newEnd = if @_trueEnd() > other._trueEnd() then @_trueEnd() else other._trueEnd()
 
     new Twix(newStart, newEnd, allDay)
-
-  _trueStart: -> if @allDay then @start.clone().startOf("day") else @start
-  _trueEnd: -> if @allDay then @end.clone().endOf("day") else @end
 
   equals: (other) ->
     (other instanceof Twix) &&
@@ -249,10 +255,30 @@ class Twix
   # -- DEPRECATED METHODS --
   sameDay: -> @isSame "day"
   sameYear: -> @isSame "year"
-  countDays: -> @count "days"
+  countDays: -> @countOuter "days"
   daysIn: (minHours) -> @iterate 'days', minHours
   past: -> @isPast()
   duration: -> @humanizeLength()
+
+  # -- INTERNAL
+  _trueStart: -> if @allDay then @start.clone().startOf("day") else @start
+  _trueEnd: -> if @allDay then @end.clone().endOf("day") else @end
+
+  _iterateHelper: (period, iter, hasNext) ->
+    next: =>
+      unless hasNext()
+        null
+      else
+        val = iter.clone()
+        iter.add(period, 1)
+        val
+    hasNext: hasNext
+
+  _inner: (period) ->
+    start = @start.clone().startOf(period)
+    end = @end.clone().startOf(period)
+    (if @allDay then end else start).add(1, period)
+    [start, end]
 
 extend = (first, second) ->
   for attr of second

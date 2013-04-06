@@ -24,6 +24,10 @@
       return this.start.isSame(this.end, period);
     };
 
+    Twix.prototype.diff = function(period) {
+      return this._trueEnd().add(1, "millisecond").diff(this._trueStart(), period);
+    };
+
     Twix.prototype.count = function(period) {
       var end, start;
 
@@ -32,29 +36,36 @@
       return end.diff(start, period) + 1;
     };
 
+    Twix.prototype.countInner = function(period) {
+      var end, start, _ref;
+
+      _ref = this._inner(period), start = _ref[0], end = _ref[1];
+      if (start >= end) {
+        return 0;
+      }
+      return end.diff(start, period);
+    };
+
     Twix.prototype.iterate = function(period, minHours) {
-      var endDate, hasNext, iter,
+      var end, hasNext, start,
         _this = this;
 
-      iter = this.start.clone().startOf(period);
-      endDate = this.end.clone().startOf(period);
+      start = this.start.clone().startOf(period);
+      end = this.end.clone().startOf(period);
       hasNext = function() {
-        return iter <= endDate && (!minHours || iter.valueOf() !== endDate.valueOf() || _this.end.hours() > minHours || _this.allDay);
+        return start <= end && (!minHours || start.valueOf() !== end.valueOf() || _this.end.hours() > minHours || _this.allDay);
       };
-      return {
-        next: function() {
-          var val;
+      return this._iterateHelper(period, start, hasNext);
+    };
 
-          if (!hasNext()) {
-            return null;
-          } else {
-            val = iter.clone();
-            iter.add(period, 1);
-            return val;
-          }
-        },
-        hasNext: hasNext
+    Twix.prototype.iterateInner = function(period) {
+      var end, hasNext, start, _ref;
+
+      _ref = this._inner(period), start = _ref[0], end = _ref[1];
+      hasNext = function() {
+        return start < end;
       };
+      return this._iterateHelper(period, start, hasNext);
     };
 
     Twix.prototype.humanizeLength = function() {
@@ -96,6 +107,11 @@
       return !this.isPast() && !this.isFuture();
     };
 
+    Twix.prototype.contains = function(mom) {
+      mom = moment(mom);
+      return this._trueStart() <= mom && this._trueEnd() >= mom;
+    };
+
     Twix.prototype.overlaps = function(other) {
       return !(this._trueEnd() < other._trueStart() || this._trueStart() > other._trueEnd());
     };
@@ -116,22 +132,6 @@
         newEnd = this._trueEnd() > other._trueEnd() ? this._trueEnd() : other._trueEnd();
       }
       return new Twix(newStart, newEnd, allDay);
-    };
-
-    Twix.prototype._trueStart = function() {
-      if (this.allDay) {
-        return this.start.clone().startOf("day");
-      } else {
-        return this.start;
-      }
-    };
-
-    Twix.prototype._trueEnd = function() {
-      if (this.allDay) {
-        return this.end.clone().endOf("day");
-      } else {
-        return this.end;
-      }
     };
 
     Twix.prototype.equals = function(other) {
@@ -361,7 +361,7 @@
     };
 
     Twix.prototype.countDays = function() {
-      return this.count("days");
+      return this.countOuter("days");
     };
 
     Twix.prototype.daysIn = function(minHours) {
@@ -374,6 +374,50 @@
 
     Twix.prototype.duration = function() {
       return this.humanizeLength();
+    };
+
+    Twix.prototype._trueStart = function() {
+      if (this.allDay) {
+        return this.start.clone().startOf("day");
+      } else {
+        return this.start;
+      }
+    };
+
+    Twix.prototype._trueEnd = function() {
+      if (this.allDay) {
+        return this.end.clone().endOf("day");
+      } else {
+        return this.end;
+      }
+    };
+
+    Twix.prototype._iterateHelper = function(period, iter, hasNext) {
+      var _this = this;
+
+      return {
+        next: function() {
+          var val;
+
+          if (!hasNext()) {
+            return null;
+          } else {
+            val = iter.clone();
+            iter.add(period, 1);
+            return val;
+          }
+        },
+        hasNext: hasNext
+      };
+    };
+
+    Twix.prototype._inner = function(period) {
+      var end, start;
+
+      start = this.start.clone().startOf(period);
+      end = this.end.clone().startOf(period);
+      (this.allDay ? end : start).add(1, period);
+      return [start, end];
     };
 
     return Twix;

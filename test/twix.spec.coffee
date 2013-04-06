@@ -102,6 +102,24 @@ describe "isSame()", ->
     it "returns true they're in different UTC days but the same local days", ->
       assertEqual true, moment("5/25/1982 5:30 AM").twix("5/25/1982 11:30 PM").isSame "day"
 
+describe "diff()", ->
+  describe "days", ->
+    it "returns 1 for yesterday - today", ->
+      assertEqual 1, yesterday().twix(moment()).diff("days")
+
+    it "returns 1 for a one-day all-day event", ->
+      assertEqual 1, moment().twix(moment(), true).diff("days")
+
+    it "returns 2 for a two-day all-day event", ->
+      assertEqual 2, yesterday().twix(moment(), true).diff("days")
+
+  describe "other", ->
+    it "returns the right number for a years", ->
+      assertEqual 16, moment("2012-8-14").diff("1996-2-17", "years")
+
+    it "returns the right number for a months", ->
+      assertEqual 197, moment("2012-8-14").diff("1996-2-17", "months")
+
 describe "count()", ->
 
   describe "days", ->
@@ -135,6 +153,51 @@ describe "count()", ->
       start = thisYear "5/25"
       end = nextYear "5/26"
       assertEqual 2, moment(start).twix(end).count("year")
+
+describe "countInner()", ->
+  describe "days", ->
+
+    it "returns 0 inside a day", ->
+      start = thisYear "5/25", "3:00"
+      end = thisYear "5/25", "14:00"
+      range = moment(start).twix end
+      assertEqual 0, range.countInner("days")
+
+    it "returns 0 if the range crosses midnight but is still < 24 hours", ->
+      start = thisYear "5/25", "16:00"
+      end = thisYear "5/26", "3:00"
+      range = moment(start).twix end
+      assertEqual 0, range.countInner("days")
+
+    it "returns 0 if the range is > 24 hours but still doesn't cover a full day", ->
+      start = thisYear "5/25", "16:00"
+      end = thisYear "5/26", "17:00"
+      range = moment(start).twix end
+      assertEqual 0, range.countInner("days")
+
+    it "returns 1 if the range includes one full day", ->
+      start = thisYear "5/24", "16:00"
+      end = thisYear "5/26", "17:00"
+      range = moment(start).twix end
+      assertEqual 1, range.countInner("days")
+
+    it "returns 2 if the range includes two full days", ->
+      start = thisYear "5/23", "16:00"
+      end = thisYear "5/26", "17:00"
+      range = moment(start).twix end
+      assertEqual 2, range.countInner("days")
+
+    it "returns 1 for a one-day all-day event", ->
+      start = thisYear "5/25"
+      end = thisYear "5/25"
+      range = moment(start).twix end, true
+      assertEqual 1, range.countInner("days")
+
+    it "returns 2 for a two-day all-day event", ->
+      start = thisYear "5/25"
+      end = thisYear "5/26"
+      range = moment(start).twix end, true
+      assertEqual 2, range.countInner("days")
 
 describe "iterate()", ->
 
@@ -212,6 +275,50 @@ describe "iterate()", ->
       range = moment(start).twix end
       iter = range.iterate "years", 4
       assertSameYear thisYear("5/25"), iter.next()
+      assertEqual null, iter.next()
+
+describe "iterateInner()", ->
+
+  describe "days", ->
+
+    assertSameDay = (first, second) -> assertEqual true, first.isSame(second, "day")
+
+    it "is empty if the range starts and ends the same day", ->
+      start = thisYear "5/25", "3:00"
+      end = thisYear "5/25", "14:00"
+      iter = start.twix(end).iterateInner("days")
+      assertEqual false, iter.hasNext()
+      assertEqual null, iter.next()
+
+    it "is empty if the range doesn't contain a whole day", ->
+      start = thisYear "5/25", "16:00"
+      end = thisYear "5/26", "17:00"
+      iter = start.twix(end).iterateInner("days")
+      assertEqual false, iter.hasNext()
+      assertEqual null, iter.next()
+
+    it "provides 1 day if the range contains 1 full day", ->
+      start = thisYear "5/24", "16:00"
+      end = thisYear "5/26", "3:00"
+      iter = start.twix(end).iterateInner("days")
+      assertSameDay thisYear("5/25"), iter.next()
+      assertEqual null, iter.next()
+
+    it "provides 1 day for an all-day event", ->
+      start = thisYear "5/25"
+      end = thisYear "5/25"
+      iter = start.twix(end, true).iterateInner "days"
+      assertSameDay thisYear("5/25"), iter.next()
+      assertEqual null, iter.next()
+
+    it "provides 2 days for a two-day all-day event", ->
+      start = thisYear "5/25"
+      end = thisYear "5/26"
+      iter = start.twix(end, true).iterateInner "days"
+      assertEqual true, iter.hasNext()
+      assertSameDay thisYear("5/25"), iter.next()
+      assertEqual true, iter.hasNext()
+      assertSameDay thisYear("5/26"), iter.next()
       assertEqual null, iter.next()
 
 describe "humanizeLength()", ->
@@ -303,6 +410,47 @@ describe "isCurrent()", ->
       future = moment().add 'hours', 2
       furtherFuture = moment().add 'hours', 3
       assertEqual false, future.twix(furtherFuture).isCurrent()
+
+describe "contains()", ->
+
+  describe "non-all-day", ->
+    start = thisYear "5/25", "6:00"
+    end = thisYear "5/25", "7:00"
+    range = start.twix end
+
+    it "returns true for moments inside the range", ->
+      assertEqual true, range.contains(thisYear "5/25", "6:30")
+
+    it "returns true for moments at the beginning of the range", ->
+      assertEqual true, range.contains(start)
+
+    it "returns true for moments at the end of the range", ->
+      assertEqual true, range.contains(end)
+
+    it "returns false for moments before the range", ->
+      assertEqual false, range.contains(thisYear "5/25", "5:30")
+
+    it "returns false for moments after the range", ->
+      assertEqual false, range.contains(thisYear "5/25", "8:30")
+
+  describe "all-day", ->
+    start = thisYear "5/25"
+    range = start.twix start, true
+
+    it "returns true for moments inside the range", ->
+      assertEqual true, range.contains(thisYear "5/25", "6:30")
+
+    it "returns true for moments at the beginning of the range", ->
+      assertEqual true, range.contains(start)
+
+    it "returns true for moments at the end of the range", ->
+      assertEqual true, range.contains(start.clone().endOf "day")
+
+    it "returns false for moments before the range", ->
+      assertEqual false, range.contains(thisYear "5/24")
+
+    it "returns false for moments after the range", ->
+      assertEqual false, range.contains(thisYear "5/26")
 
 describe "overlaps()", ->
 
