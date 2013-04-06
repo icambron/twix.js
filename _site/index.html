@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Twix.js</title>
+    <script type='text/javascript' src='http://code.jquery.com/jquery-1.9.1.min.js'></script>
+    <script type='text/javascript' src='js/bootstrap.min.js'></script>
+    <script type='text/javascript' src='js/bootstrap-affix.js'></script>
+    <script type='text/javascript' src='js/twix-site.js'></script>
+    <link rel='stylesheet' type='text/css' href='css/bootstrap.min.css'/>
+    <link rel='stylesheet' type='text/css' href='css/syntax.css'/>
+    <link rel='stylesheet' type='text/css' href='css/twix.css'/>
+    <link rel='stylesheet' type='text/css' href='css/font-awesome.min.css'/>
+  </head>
+  <body data-spy="scroll" data-target=".bs-docs-sidebar">
+    <header class="jumbotron subhead">
+      <div class="container">
+        <h1>Twix.js</h1>
+        <p>Date ranges for JavaScript</p>
+      </div>
+    </header>
+    <div class="container">
+      <div class="row">
+        <div class="span3 bs-docs-sidebar">
+          <ul class="nav nav-list bs-docs-sidenav affix">
+            <li class="active">
+              <a href="#home">
+                <i class="icon-chevron-right"></i>
+                Home
+              </a>
+            </li>
+            <li>
+              <a href="#gettingStarted">
+                <i class="icon-chevron-right"></i>
+                Getting started
+              </a>
+            </li>
+            <li>
+              <a href="#creatingRanges">
+                <i class="icon-chevron-right"></i>
+                Creating ranges
+              </a>
+            </li>
+            <li>
+              <a href="#basicOperations">
+                <i class="icon-chevron-right"></i>
+                Basic operations
+              </a>
+            </li>
+            <li>
+              <a href="#multipleRanges">
+                <i class="icon-chevron-right"></i>
+                Multiple ranges
+              </a>
+            </li>
+            <li>
+              <a href="#momentDurations">
+                <i class="icon-chevron-right"></i>
+                Moment durations
+              </a>
+            </li>
+            <li>
+              <a href="#basicFormatting">
+                <i class="icon-chevron-right"></i>
+                Basic formatting
+              </a>
+            </li>
+            <li>
+              <a href="#smartFormatting">
+                <i class="icon-chevron-right"></i>
+                Smart formatting
+              </a>
+            </li>
+          </ul>
+      </div>
+      <div class="span9">
+        <p><a id="home"></a></p>
+
+<p>Twix.js is a <a href="http://momentjs.com">Moment.js</a> plugin for working with time ranges. Use it to manipulate, interrogate, and <a href="#smarFormatting">intelligently format</a> a block of time.</p>
+
+<h2><a id="gettingStarted"></a>Getting started</h2>
+
+<h3>Browser</h3>
+
+<p>Simply reference twix after moment:</p>
+<div class="highlight"><pre><code class="html"><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;moment.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;twix.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</code></pre></div>
+<h3>Node.js</h3>
+
+<p>To install, run</p>
+<div class="highlight"><pre><code class="text">npm install twix
+</code></pre></div>
+<p>And then in your application, just <code>require</code> moment:</p>
+<div class="highlight"><pre><code class="js"><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;twix&#39;</span><span class="p">);</span>
+</code></pre></div>
+<h2><a id="creatingRanges"></a>Creating ranges</h2>
+
+<p>Twix mixes the <code>twix()</code> method into all moment objects. You use that to create a time range from that moment:</p>
+<div class="highlight"><pre><code class="js"><span class="kd">var</span> <span class="nx">range</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="nx">startTime</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="nx">endTime</span><span class="p">);</span> <span class="c1">//=&gt; from start time until end time</span>
+</code></pre></div>
+<p>You can also create a range directly from the moment constructor:</p>
+<div class="highlight"><pre><code class="js"><span class="kd">var</span> <span class="nx">range</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">.</span><span class="nx">twix</span><span class="p">(</span><span class="nx">startTime</span><span class="p">,</span> <span class="nx">endTime</span><span class="p">);</span>
+</code></pre></div>
+<p>You can also create a range from a moment duration object. See <a href="#rangeFromDuration">Creating a duration from a range</a>.</p>
+
+<h3>Inputs accepted</h3>
+
+<p>To specify the dates, you can pass in anything that can be processed by moment&#39;s one-argument constructor. This includes:</p>
+
+<ul>
+<li>A JS Date object</li>
+<li>A moment object</li>
+<li>Anything parsable by the Date() constructor. This includes most obvious date formats.</li>
+</ul>
+
+<p>If you want more complicated parsing, just use moment for that:</p>
+<div class="highlight"><pre><code class="js"><span class="kd">var</span> <span class="nx">startTime</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s1">&#39;2012 juillet&#39;</span><span class="p">,</span> <span class="s1">&#39;YYYY MMM&#39;</span><span class="p">,</span> <span class="s1">&#39;fr&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">endTime</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s1">&#39;2012 August&#39;</span><span class="p">,</span> <span class="s1">&#39;YYYY MMM&#39;</span><span class="p">,</span> <span class="s1">&#39;en&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">range</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">.</span><span class="nx">twix</span><span class="p">(</span><span class="nx">startTime</span><span class="p">,</span> <span class="nx">endTime</span><span class="p">);</span> <span class="c1">//=&gt; from July 1 to August 1</span>
+</code></pre></div>
+<h3>All day ranges</h3>
+
+<p>Regular events last from a specific moment in time to another specific moment in time. All-day events, on the other hand, capture the concept of the entire day. It&#39;s an important distinction in several respects:</p>
+
+<ul>
+<li>The ranges are actually different times. A regular event from 5/25 - 5/26 is from 5/25, 12:00 AM to 5/26, 12:00, where as the all day event is over both days.</li>
+<li>All of Twix&#39;s functions respect the all-day semantics when comparing or</li>
+<li>The time range is formatted to differently -- see <a href="#formattingAllDay">below</a> for more information.</li>
+</ul>
+
+<p>You create an all-day range by passing <code>true</code> as an extra argument to <code>twix()</code>:</p>
+<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s1">&#39;5/25/1982&#39;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s1">&#39;5/26/1982&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+</code></pre></div>
+<h2><a id="basicOperations"></a>Basic operations</h2>
+
+<h3>same()</h3>
+
+<p>Does the event begin and end on the same minute/hour/day/month/year? Any time period understood by moment will work.</p>
+<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/1982 5:00&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/26/1982 6:00&quot;</span><span class="p">).</span><span class="nx">same</span><span class="p">(</span><span class="s2">&quot;day&quot;</span><span class="p">);</span>  <span class="c1">//=&gt; false</span>
+<span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/1982 5:00&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/25/1982 6:00&quot;</span><span class="p">).</span><span class="nx">same</span><span class="p">(</span><span class="s2">&quot;day&quot;</span><span class="p">);</span>  <span class="c1">//=&gt; true</span>
+<span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/1982 5:00&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/25/1982 6:00&quot;</span><span class="p">).</span><span class="nx">same</span><span class="p">(</span><span class="s2">&quot;year&quot;</span><span class="p">);</span> <span class="c1">//=&gt; true</span>
+</code></pre></div>
+<h3>isPast()</h3>
+
+<p>Does the range end in the past?</p>
+<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/1982&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/26/1982&quot;</span><span class="p">).</span><span class="nx">isPast</span><span class="p">();</span> <span class="c1">//=&gt; true</span>
+</code></pre></div>
+<h3>isFuture()</h3>
+
+<p>Does the range start in the future?</p>
+<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/2054&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/26/2054&quot;</span><span class="p">).</span><span class="nx">isFuture</span><span class="p">();</span> <span class="c1">//=&gt; true</span>
+</code></pre></div>
+<h3>isCurrent()</h3>
+
+<p>Does the range include the current time?</p>
+<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">.</span><span class="nx">subtract</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;hour&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="nx">moment</span><span class="p">().</span><span class="nx">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;hour&quot;</span><span class="p">)).</span><span class="nx">isCurrent</span><span class="p">();</span> <span class="c1">//=&gt; true</span>
+</code></pre></div>
+<h3>count()</h3>
+
+<p>The number of minutes/hours/days/months/years the range includes. Any time period understood by moment will work.</p>
+<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/1982 5:00&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/25/1982 6:00&quot;</span><span class="p">).</span><span class="nx">count</span><span class="p">(</span><span class="s2">&quot;days&quot;</span><span class="p">)</span>  <span class="c1">//=&gt; 1</span>
+<span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/1982 5:00&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/26/1982 6:00&quot;</span><span class="p">).</span><span class="nx">count</span><span class="p">(</span><span class="s2">&quot;days&quot;</span><span class="p">)</span>  <span class="c1">//=&gt; 2</span>
+</code></pre></div>
+<h3>iterate()</h3>
+
+<p>Returns an iterator that will return each a moment for each time period in during the range. Any time period understood by moment will work.</p>
+<div class="highlight"><pre><code class="js"><span class="kd">var</span> <span class="nx">iter</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/1982 5:00&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/26/1982 6:00&quot;</span><span class="p">).</span><span class="nx">iterate</span><span class="p">(</span><span class="s2">&quot;days&quot;</span><span class="p">);</span>
+<span class="nx">iter</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span> <span class="c1">//=&gt; moment(&quot;5/25/1982&quot;)</span>
+<span class="nx">iter</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span> <span class="c1">//=&gt; moment(&quot;5/26/1982&quot;)</span>
+<span class="nx">iter</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span> <span class="c1">//=&gt; null</span>
+</code></pre></div>
+<h2><a id="multipleRanges"></a>Working with multiple ranges</h2>
+
+<h3>overlaps()</h3>
+
+<p>Does this range overlap another range?</p>
+<div class="highlight"><pre><code class="js"><span class="kd">var</span> <span class="nx">range1</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/1982&quot;</span><span class="p">,</span> <span class="s2">&quot;5/30/1982&quot;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">range2</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/27/1982&quot;</span><span class="p">,</span> <span class="s2">&quot;6/13/1982&quot;</span><span class="p">);</span>
+
+<span class="nx">range1</span><span class="p">.</span><span class="nx">overlaps</span><span class="p">(</span><span class="nx">range2</span><span class="p">);</span> <span class="c1">//=&gt; true</span>
+</code></pre></div>
+<h3>engulfs()</h3>
+
+<p>Does this range have a start time before and an end time after another range?</p>
+<div class="highlight"><pre><code class="js"><span class="kd">var</span> <span class="nx">range1</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/1982&quot;</span><span class="p">,</span> <span class="s2">&quot;8/30/1982&quot;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">range2</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/27/1982&quot;</span><span class="p">,</span> <span class="s2">&quot;6/13/1982&quot;</span><span class="p">);</span>
+
+<span class="nx">range1</span><span class="p">.</span><span class="nx">overlaps</span><span class="p">(</span><span class="nx">range2</span><span class="p">);</span> <span class="c1">//=&gt; true</span>
+<span class="nx">range2</span><span class="p">.</span><span class="nx">overlaps</span><span class="p">(</span><span class="nx">range1</span><span class="p">);</span> <span class="c1">//=&gt; false</span>
+</code></pre></div>
+<h3>equals()</h3>
+
+<p>Are these two ranges the same? Equality also requires that either both or neither ranges are all-day.</p>
+<div class="highlight"><pre><code class="js"><span class="kd">var</span> <span class="nx">range1</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/1982&quot;</span><span class="p">,</span> <span class="s2">&quot;8/30/1982&quot;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">range2</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/1982&quot;</span><span class="p">,</span> <span class="s2">&quot;8/30/1982&quot;</span><span class="p">);</span>
+
+<span class="nx">range1</span><span class="p">.</span><span class="nx">equals</span><span class="p">(</span><span class="nx">range2</span><span class="p">);</span> <span class="c1">//=&gt; true</span>
+<span class="nx">range2</span><span class="p">.</span><span class="nx">equals</span><span class="p">(</span><span class="nx">range1</span><span class="p">);</span> <span class="c1">//=&gt; true</span>
+</code></pre></div>
+<h3>merge()</h3>
+
+<p>Produce a range that has the minimum start time and the maximum end time of the two ranges.</p>
+<div class="highlight"><pre><code class="js"><span class="kd">var</span> <span class="nx">range1</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/1982&quot;</span><span class="p">,</span> <span class="s2">&quot;5/30/1982&quot;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">range2</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/27/1982&quot;</span><span class="p">,</span> <span class="s2">&quot;6/13/1982&quot;</span><span class="p">);</span>
+
+<span class="nx">range1</span><span class="p">.</span><span class="nx">merge</span><span class="p">(</span><span class="nx">range2</span><span class="p">);</span> <span class="c1">//=&gt; 5/25/82 - 6/13/1982</span>
+</code></pre></div>
+<h2><a id="momentDurations"></a>Working with Moment durations</h2>
+
+<p>Moment now has <a href="http://momentjs.com/docs/#/durations/">durations</a>, which a block of time, but not a <em>specific</em> block of time, just a period of, say, hours or days. Twix provides some utilities for working with durations.</p>
+
+<h3><a id="rangeFromDuration"></a>Creating a range from a duration</h3>
+
+<p>You can create a range from a duration by anchoring it to a time:</p>
+<div class="highlight"><pre><code class="js"><span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">.</span><span class="nx">duration</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;days&quot;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">range</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">afterMoment</span><span class="p">(</span><span class="s2">&quot;5/25/1982&quot;</span><span class="p">);</span> <span class="c1">//=&gt; 5/25/1982 - 5/27/1982</span>
+</code></pre></div>
+<p>You can also make the range extend backward by the duration:</p>
+<div class="highlight"><pre><code class="js"><span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">.</span><span class="nx">duration</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;days&quot;</span><span class="p">);</span>
+<span class="nx">d</span><span class="p">.</span><span class="nx">beforeMoment</span><span class="p">(</span><span class="s2">&quot;5/25/1982&quot;</span><span class="p">);</span> <span class="c1">//=&gt; 5/23/1982 - 5/25/1982</span>
+</code></pre></div>
+<h3>Creating a duration from a range</h3>
+
+<p>You can also create durations from ranges:</p>
+<div class="highlight"><pre><code class="js"><span class="kd">var</span> <span class="nx">range</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/1982&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/28/1982&quot;</span><span class="p">);</span>
+<span class="nx">range</span><span class="p">.</span><span class="nx">asDuration</span><span class="p">(</span><span class="s2">&quot;days&quot;</span><span class="p">);</span> <span class="c1">//=&gt; duration object with {days: 3}</span>
+</code></pre></div>
+<h2><a id="basicFormatting"></a>Basic formatting</h2>
+
+<p>While Twix&#39;s formatting options focus on <a href="#smartFormatting">smart formatting</a>, it also has a few other formatting methods.</p>
+
+<h3>humanizeLength()</h3>
+
+<p>Get the length of a range in human-readable terms.</p>
+<div class="highlight"><pre><code class="js"><span class="kd">var</span> <span class="nx">range</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/1982 8:00&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/25/1982 10:00&quot;</span><span class="p">);</span>
+<span class="nx">range</span><span class="p">.</span><span class="nx">humanizeLength</span><span class="p">();</span> <span class="c1">//=&gt; &quot;2 hours&quot;</span>
+
+<span class="nx">range</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/1982&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;1/1/2013&quot;</span><span class="p">);</span>
+<span class="nx">range</span><span class="p">.</span><span class="nx">humanizeLength</span><span class="p">();</span> <span class="c1">//=&gt; 31 years</span>
+</code></pre></div>
+<h3>simpleFormat()</h3>
+
+<p>Simple format produces a very simple string representation of the range. It&#39;s useful if you don&#39;t want all the cleverness of smart formatting. The signature is <code>simpleFormat(momentFormat, options)</code> and both args are optional. Here&#39;s how it works.</p>
+<div class="highlight"><pre><code class="js"><span class="kd">var</span> <span class="nx">range</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/1982 9:00&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/25/1982 12:00&quot;</span><span class="p">);</span>
+
+<span class="nx">range</span><span class="p">.</span><span class="nx">simpleFormat</span><span class="p">();</span> <span class="c1">//=&gt; &#39;1982-05-25T09:00:00-04:00 - 1982-05-25T12:00:00-04:00&#39;</span>
+</code></pre></div>
+<p>It can take a Moment <a href="http://momentjs.com/docs/#/displaying/format/">formatting string</a> and will format both ends of the range accordingly:</p>
+
+<p>range.simpleFormat(&quot;ddd, hA&quot;); //=&gt; &#39;Tue, 9AM - Tue, 12PM&#39;
+```</p>
+
+<p>All-day ranges will add some extra text:</p>
+<div class="highlight"><pre><code class="js"><span class="kd">var</span> <span class="nx">range</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/1982&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/26/1982&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+
+<span class="nx">range</span><span class="p">.</span><span class="nx">simpleFormat</span><span class="p">();</span> <span class="c1">//=&gt; &#39;1982-05-25T00:00:00-04:00 - 1982-05-26T00:00:00-04:00 (all day)&#39;</span>
+<span class="nx">range</span><span class="p">.</span><span class="nx">simpleFormat</span><span class="p">(</span><span class="nx">YYYY</span><span class="o">-</span><span class="nx">MM</span><span class="o">-</span><span class="nx">DD</span><span class="p">);</span> <span class="c1">//=&gt; &#39;1982-05-25 - 1982-05-26 (all day)&#39;</span>
+</code></pre></div>
+<p>You can control that text through the options argument, and even get rid of it altogether:</p>
+<div class="highlight"><pre><code class="js"><span class="nx">range</span><span class="p">.</span><span class="nx">simpleFormat</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="p">{</span><span class="nx">allDay</span><span class="o">:</span> <span class="s2">&quot;-- all day! --&quot;</span><span class="p">});</span> <span class="c1">//=&gt; &#39;1982-05-25T00:00:00-04:00 - 1982-05-26T00:00:00-04:00 -- all day! --&#39;</span>
+
+<span class="nx">range</span><span class="p">.</span><span class="nx">simpleFormat</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="p">{</span><span class="nx">allDay</span><span class="o">:</span> <span class="kc">null</span><span class="p">});</span> <span class="c1">//=&gt; &#39;1982-05-25T00:00:00-04:00 - 1982-05-26T00:00:00-04:00&#39;</span>
+</code></pre></div>
+<p>It appends some extra stuff </p>
+
+<h2><a id="smartFormatting"></a>Smart formatting</h2>
+
+<p>The most important feature is formatting. By default, Twix tries to make brief, readable strings.</p>
+
+<h3><a id="formatAllDay"></a>All-day ranges</h3>
+
+<p>All day ranges won&#39;t show times: they&#39;re just assumed to take up the full day local time.</p>
+<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;1/25/2012&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;1/25/2012&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">).</span><span class="nx">format</span><span class="p">();</span>   <span class="c1">//=&gt; Jan 25</span>
+<span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;1/25/1982&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;1/25/1982&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">).</span><span class="nx">format</span><span class="p">();</span>   <span class="c1">//=&gt; Jan 25, 1982</span>
+<span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;1/25/2012&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;1/26/2012&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">).</span><span class="nx">format</span><span class="p">();</span>   <span class="c1">//=&gt; Jan 25 - 26</span>
+<span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;1/25/1982&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;2/25/1982&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">).</span><span class="nx">format</span><span class="p">();</span>   <span class="c1">//=&gt; Jan 25 - Feb 25, 1982</span>
+<span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;1/25/1982&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">(),</span> <span class="kc">true</span><span class="p">).</span><span class="nx">format</span><span class="p">();</span>    <span class="c1">//=&gt; Jan 25, 1982 - Jan 9, 2012</span>
+</code></pre></div>
+<p>Notice the various the different kinds of groupings and abbreviations:</p>
+
+<ul>
+<li>If the entire range occurs within the current year, Twix doesn&#39;t show the year.</li>
+<li>Twix only shows the year and month once if they&#39;re consistent across the range.</li>
+<li>If it&#39;s all the same day, Twix doesn&#39;t show a range at all.</li>
+</ul>
+
+<h3>Events with hours and minutes</h3>
+
+<p>Unless the allDay parameter is set to true, the time is considered relevant:</p>
+<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;1/25/1982 9:30 AM&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;1/25/1982 1:30 PM&quot;</span><span class="p">).</span><span class="nx">format</span><span class="p">();</span>  <span class="c1">//=&gt; Jan 25, 1982, 9:30 AM - 1:30 PM</span>
+<span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;1/25/1982 9:30 AM&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="k">new</span> <span class="nb">Date</span><span class="p">()).</span><span class="nx">format</span><span class="p">();</span>           <span class="c1">//=&gt; Jan 25, 1982, 9:30 AM - Jan 9, 2012, 3:05 AM</span>
+<span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;1/25/1982&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;1/27/1982&quot;</span><span class="p">).</span><span class="nx">format</span><span class="p">();</span>                  <span class="c1">//=&gt; Jan 25, 12 AM - Jan 27, 12 AM, 1982</span>
+</code></pre></div>
+<h3>Brevity and its discontents</h3>
+
+<p>Twix chops off the <code>:00</code> on whole hours and, where possible, only display AM/PM once. This can be turned off:</p>
+<div class="highlight"><pre><code class="js"><span class="kd">var</span> <span class="nx">twix</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/2012 9:00&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/25/2012 10:00&quot;</span><span class="p">);</span>
+
+<span class="nx">twix</span><span class="p">.</span><span class="nx">format</span><span class="p">();</span>                                                    <span class="c1">//=&gt; May 25, 9 - 10 AM</span>
+<span class="nx">twix</span><span class="p">.</span><span class="nx">format</span><span class="p">({</span><span class="nx">implicitMinutes</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span> <span class="nx">groupMeridiems</span><span class="o">:</span> <span class="kc">false</span><span class="p">});</span>     <span class="c1">//=&gt; May 25, 9:00 AM - 10:00 AM</span>
+</code></pre></div>
+<p>There&#39;s an <code>implicitYear</code> option, which you can use to always show the year, even when it&#39;s this year:</p>
+<div class="highlight"><pre><code class="js"><span class="kd">var</span> <span class="nx">twix</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">().</span><span class="nx">twix</span><span class="p">(</span><span class="nx">moment</span><span class="p">().</span><span class="nx">add</span><span class="p">(</span><span class="s1">&#39;days&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">));</span>
+<span class="nx">twix</span><span class="p">.</span><span class="nx">format</span><span class="p">({</span><span class="nx">implicitYear</span><span class="o">:</span> <span class="kc">false</span><span class="p">});</span> <span class="c1">//=&gt; Mar 28, 1:13 AM - Mar 29, 1:13 AM, 2013</span>
+</code></pre></div>
+<h3>24-hour time</h3>
+
+<p>Right, not everyone is American:</p>
+<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/2012 16:00&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/25/2012 17:00&quot;</span><span class="p">).</span><span class="nx">format</span><span class="p">({</span><span class="nx">twentyFourHour</span><span class="o">:</span> <span class="kc">true</span><span class="p">});</span>  <span class="c1">//=&gt; May 25, 16:00 - 17:00</span>
+</code></pre></div>
+<p>Notice there&#39;s no hour abbreviation.</p>
+
+<h3>Changing the format</h3>
+
+<p>I&#39;ve made the format hackable, allowing you to specify the Moment formatting parameters externally -- these are what Twix uses to format the bits and pieces of text it glues together. You can use that to adjust how, say, months are displayed:</p>
+<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;1/25/2012 8:00&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;1/25/2012 17:00&quot;</span><span class="p">).</span><span class="nx">format</span><span class="p">({</span>
+  <span class="nx">monthFormat</span><span class="o">:</span> <span class="s2">&quot;MMMM&quot;</span><span class="p">,</span>
+  <span class="nx">dayFormat</span><span class="o">:</span> <span class="s2">&quot;Do&quot;</span>
+<span class="p">});</span>                                                         <span class="c1">//=&gt; January 25th, 8 AM - 5 PM</span>
+</code></pre></div>
+<p>See all the <code>*Format</code> options below. You should look at <a href="http://momentjs.com/docs/#/displaying/format/">Moment&#39;s format documentation</a> for more info. YMMV -- because of the string munging, not everything will act quite like you expect.</p>
+
+<h3>Odds and ends</h3>
+
+<p>You can get rid of the space before the meridiem:</p>
+<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/2012 8:00&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/25/2012 17:00&quot;</span><span class="p">).</span><span class="nx">format</span><span class="p">({</span><span class="nx">spaceBeforeMeridiem</span><span class="o">:</span> <span class="kc">false</span><span class="p">})</span>  <span class="c1">//=&gt; May 25, 8AM - 5PM</span>
+</code></pre></div>
+<p>If you&#39;re showing the date somewhere else, it&#39;s sometimes useful to only show the times:</p>
+<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/2012 8:00&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/25/2012 17:00&quot;</span><span class="p">).</span><span class="nx">format</span><span class="p">({</span><span class="nx">showDate</span><span class="o">:</span> <span class="kc">false</span><span class="p">})</span>            <span class="c1">//=&gt; 8 AM - 5 PM</span>
+</code></pre></div>
+<p>This doesn&#39;t affect ranges that span multiple days; they still show the dates.</p>
+
+<p>If you combine an all-day event with <code>showDate:false</code>, you get this:</p>
+<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;1/25/2012&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;1/25/2012&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">).</span><span class="nx">format</span><span class="p">({</span><span class="nx">showDate</span><span class="o">:</span> <span class="kc">false</span><span class="p">})</span>                <span class="c1">//=&gt; All day</span>
+</code></pre></div>
+<p>That text is customizable through the <code>allDay</code> option.</p>
+
+<h3>All the options</h3>
+
+<p>Here are all the options and their defaults</p>
+<div class="highlight"><pre><code class="js"><span class="p">{</span>
+  <span class="nx">groupMeridiems</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nx">spaceBeforeMeridiem</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nx">showDate</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nx">showDayOfWeek</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+  <span class="nx">twentyFourHour</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+  <span class="nx">implicitMinutes</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nx">implicitYear</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nx">yearFormat</span><span class="o">:</span> <span class="s2">&quot;YYYY&quot;</span><span class="p">,</span>
+  <span class="nx">monthFormat</span><span class="o">:</span> <span class="s2">&quot;MMM&quot;</span><span class="p">,</span>
+  <span class="nx">weekdayFormat</span><span class="o">:</span> <span class="s2">&quot;ddd&quot;</span><span class="p">,</span>
+  <span class="nx">dayFormat</span><span class="o">:</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span>
+  <span class="nx">meridiemFormat</span><span class="o">:</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span>
+  <span class="nx">hourFormat</span><span class="o">:</span> <span class="s2">&quot;h&quot;</span><span class="p">,</span>
+  <span class="nx">minuteFormat</span><span class="o">:</span> <span class="s2">&quot;mm&quot;</span><span class="p">,</span>
+  <span class="nx">allDay</span><span class="o">:</span> <span class="s2">&quot;all day&quot;</span><span class="p">,</span>
+  <span class="nx">explicitAllDay</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+  <span class="nx">lastNightEndsAt</span><span class="o">:</span> <span class="mi">0</span>
+<span class="p">}</span>
+</code></pre></div>
+      </div>
+    </div>
+    <div class='footer'>
+      <div class='container'>
+        <p>Copyright 2013 Isaac Cambron. Twix.js is available under the MIT license.</p>
+      </div>
+    </div>
+  </body>
+</html>
