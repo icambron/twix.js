@@ -3,9 +3,7 @@ layout: default
 title: Twix.js
 ---
 
-<a id="home"></a>
-
-Twix.js is a [Moment.js](http://momentjs.com) plugin for working with time ranges. Use it to manipulate, interrogate, and [intelligently format](#smartFormatting) a block of time.
+Twix.js is a [Moment.js](http://momentjs.com) plugin for working with time ranges. Use it to manipulate, interrogate, and [intelligently format](#smartFormatting) a block of time. You can find the source on [Github](http://github.com/icambron/twix.js) and the docs here.
 
 ##<a id="gettingStarted"></a>Getting started
 
@@ -389,3 +387,10 @@ Here are all the options and their defaults
   lastNightEndsAt: 0
 }
 ```
+
+##<a id="sourceCode"></a>Source code
+
+Twix is open source (MIT License) and hosted on Github [here](http://github.com/icambron/twix.js). Instructions for building/contributing are there.
+
+[![Build Status](https://secure.travis-ci.org/icambron/twix.js.png?branch=master)](http://travis-ci.org/icambron/twix.js)
+

@@ -12,7 +12,7 @@
     <link rel='stylesheet' type='text/css' href='css/font-awesome.min.css'/>
   </head>
   <body data-spy="scroll" data-target=".bs-docs-sidebar">
-    <header class="jumbotron subhead">
+    <header class="jumbotron subhead" id="home">
       <div class="container">
         <h1>Twix.js</h1>
         <p>Date ranges for JavaScript</p>
@@ -70,18 +70,26 @@
                 Smart formatting
               </a>
             </li>
+            <li>
+              <a href="#sourceCode">
+                <i class="icon-chevron-right"></i>
+                Source code
+              </a>
+            </li>
           </ul>
       </div>
       <div class="span9">
-        <p><a id="home"></a></p>
-
-<p>Twix.js is a <a href="http://momentjs.com">Moment.js</a> plugin for working with time ranges. Use it to manipulate, interrogate, and <a href="#smarFormatting">intelligently format</a> a block of time.</p>
+        <p>Twix.js is a <a href="http://momentjs.com">Moment.js</a> plugin for working with time ranges. Use it to manipulate, interrogate, and <a href="#smartFormatting">intelligently format</a> a block of time. You can find the source on <a href="http://github.com/icambron/twix.js">Github</a> and the docs here.</p>
 
 <h2><a id="gettingStarted"></a>Getting started</h2>
 
 <h3>Browser</h3>
 
-<p>Simply reference twix after moment:</p>
+<p>Grab <a href="https://raw.github.com/icambron/twix.js/master/bin/twix.min.js">the
+file</a> as
+well as
+<a href="https://raw.github.com/timrwood/moment/1.3.0/moment.min.js">moment.js</a>.
+Then simply reference twix after moment:</p>
 <div class="highlight"><pre><code class="html"><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;moment.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
 <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;twix.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
 </code></pre></div>
@@ -90,8 +98,9 @@
 <p>To install, run</p>
 <div class="highlight"><pre><code class="text">npm install twix
 </code></pre></div>
-<p>And then in your application, just <code>require</code> moment:</p>
-<div class="highlight"><pre><code class="js"><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;twix&#39;</span><span class="p">);</span>
+<p>And then in your application, just <code>require</code> moment and twix.</p>
+<div class="highlight"><pre><code class="js"><span class="kd">var</span> <span class="nx">moment</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;moment&#39;</span><span class="p">);</span>
+<span class="nx">require</span><span class="p">(</span><span class="s1">&#39;twix&#39;</span><span class="p">);</span>
 </code></pre></div>
 <h2><a id="creatingRanges"></a>Creating ranges</h2>
 
@@ -267,6 +276,12 @@
 
 <p>The most important feature is formatting. By default, Twix tries to make brief, readable strings.</p>
 
+<h3>The basics</h3>
+
+<p>Twix&#39;s <code>format</code> method returns a string showing the range. Called with no arguments it uses the default options for how to do that. The most important part of that is that it elides as much redundant information as it can. For example, if the event begins and ends today, it doesn&#39;t specify today&#39;s date twice. This makes for short, natural-looking time ranges.</p>
+<div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;1/25/1982 9:00 AM&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;1/25/1982 11:00 AM&quot;</span><span class="p">).</span><span class="nx">format</span><span class="p">();</span>  <span class="c1">//=&gt; &#39;Jan 25, 1982, 9 - 11 AM&#39;</span>
+<span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;1/25/1982 9:00&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;1/26/1982 13:00&quot;</span><span class="p">).</span><span class="nx">format</span><span class="p">();</span> <span class="c1">//=&gt; &#39;Jan 25, 9 AM - Jan 26, 1 PM, 1982&#39;</span>
+</code></pre></div>
 <h3><a id="formatAllDay"></a>All-day ranges</h3>
 
 <p>All day ranges won&#39;t show times: they&#39;re just assumed to take up the full day local time.</p>
@@ -284,7 +299,7 @@
 <li>If it&#39;s all the same day, Twix doesn&#39;t show a range at all.</li>
 </ul>
 
-<h3>Events with hours and minutes</h3>
+<h3>Ranges with hours and minutes</h3>
 
 <p>Unless the allDay parameter is set to true, the time is considered relevant:</p>
 <div class="highlight"><pre><code class="js"><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;1/25/1982 9:30 AM&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;1/25/1982 1:30 PM&quot;</span><span class="p">).</span><span class="nx">format</span><span class="p">();</span>  <span class="c1">//=&gt; Jan 25, 1982, 9:30 AM - 1:30 PM</span>
@@ -358,6 +373,12 @@
   <span class="nx">lastNightEndsAt</span><span class="o">:</span> <span class="mi">0</span>
 <span class="p">}</span>
 </code></pre></div>
+<h2><a id="sourceCode"></a>Source code</h2>
+
+<p>Twix is open source (MIT License) and hosted on Github <a href="http://github.com/icambron/twix.js">here</a>. Instructions for building/contributing are there.</p>
+
+<p><a href="http://travis-ci.org/icambron/twix.js"><img src="https://secure.travis-ci.org/icambron/twix.js.png?branch=master" alt="Build Status"></a></p>
+
       </div>
     </div>
     <div class='footer'>
