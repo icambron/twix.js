@@ -2,7 +2,7 @@
   "name": "twix",
   "version": "0.2.0",
   "description": "Twix.js allows you to work with date ranges",
-  "homepage": "https://github.com/icambron/twix.js",
+  "homepage": "http://icambron.github.io/twix.js/",
   "author": "Isaac Cambron",
   "keywords": ["twix", "date", "date range"],
   "dependencies": {
