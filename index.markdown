@@ -30,9 +30,10 @@ To install, run
 npm install twix
 ```
 
-And then in your application, just `require` moment:
+And then in your application, just `require` moment and twix.
 
 ```js
+var moment = require('moment');
 require('twix');
 ```
 
