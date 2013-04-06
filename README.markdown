@@ -9,16 +9,14 @@ var t = new moment("1/25/1982 9:30 AM").twix("1/25/1982 1:30 PM");
 
 t.format();  //=> Jan 25, 1982, 9:30 AM - 1:30 PM
 
-t.sameDay(); //=> true
-t.duration(); //=> "4 hours"
-t.countDays(); //=> 1
+t.same("day"); //=> true
+t.humanizeDuration(); //=> "4 hours"
+t.count("days"); //=> 1
 ```
 
 And much more.
 
-##Documentation##
-
-Comprehensive docs are [here](http://icambron.github.io/twix.js/).
+##[Documentation](http://icambron.github.io/twix.js/)
 
 ##Building##
 
