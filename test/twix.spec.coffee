@@ -102,23 +102,23 @@ describe "isSame()", ->
     it "returns true they're in different UTC days but the same local days", ->
       assertEqual true, moment("5/25/1982 5:30 AM").twix("5/25/1982 11:30 PM").isSame "day"
 
-describe "diff()", ->
+describe "length()", ->
   describe "days", ->
     it "returns 1 for yesterday - today", ->
-      assertEqual 1, yesterday().twix(moment()).diff("days")
+      assertEqual 1, yesterday().twix(moment()).length("days")
 
     it "returns 1 for a one-day all-day event", ->
-      assertEqual 1, moment().twix(moment(), true).diff("days")
+      assertEqual 1, moment().twix(moment(), true).length("days")
 
     it "returns 2 for a two-day all-day event", ->
-      assertEqual 2, yesterday().twix(moment(), true).diff("days")
+      assertEqual 2, yesterday().twix(moment(), true).length("days")
 
   describe "other", ->
     it "returns the right number for a years", ->
-      assertEqual 16, moment("2012-8-14").diff("1996-2-17", "years")
+      assertEqual 16, moment("1996-2-17").twix("2012-8-14").length("years")
 
     it "returns the right number for a months", ->
-      assertEqual 197, moment("2012-8-14").diff("1996-2-17", "months")
+      assertEqual 197, moment("1996-2-17").twix("2012-8-14").length("months")
 
 describe "count()", ->
 

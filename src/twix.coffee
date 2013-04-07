@@ -15,7 +15,7 @@ class Twix
   # -- INFORMATIONAL --
   isSame: (period) -> @start.isSame @end, period
 
-  diff: (period) -> @_trueEnd().add(1, "millisecond").diff @_trueStart(), period
+  length: (period) -> @_trueEnd().add(1, "millisecond").diff @_trueStart(), period
 
   count: (period) ->
     start = @start.clone().startOf period

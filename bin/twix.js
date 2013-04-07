@@ -24,7 +24,7 @@
       return this.start.isSame(this.end, period);
     };
 
-    Twix.prototype.diff = function(period) {
+    Twix.prototype.length = function(period) {
       return this._trueEnd().add(1, "millisecond").diff(this._trueStart(), period);
     };
 

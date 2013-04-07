@@ -155,24 +155,24 @@
     });
   });
 
-  describe("diff()", function() {
+  describe("length()", function() {
     describe("days", function() {
       it("returns 1 for yesterday - today", function() {
-        return assertEqual(1, yesterday().twix(moment()).diff("days"));
+        return assertEqual(1, yesterday().twix(moment()).length("days"));
       });
       it("returns 1 for a one-day all-day event", function() {
-        return assertEqual(1, moment().twix(moment(), true).diff("days"));
+        return assertEqual(1, moment().twix(moment(), true).length("days"));
       });
       return it("returns 2 for a two-day all-day event", function() {
-        return assertEqual(2, yesterday().twix(moment(), true).diff("days"));
+        return assertEqual(2, yesterday().twix(moment(), true).length("days"));
       });
     });
     return describe("other", function() {
       it("returns the right number for a years", function() {
-        return assertEqual(16, moment("2012-8-14").diff("1996-2-17", "years"));
+        return assertEqual(16, moment("1996-2-17").twix("2012-8-14").length("years"));
       });
       return it("returns the right number for a months", function() {
-        return assertEqual(197, moment("2012-8-14").diff("1996-2-17", "months"));
+        return assertEqual(197, moment("1996-2-17").twix("2012-8-14").length("months"));
       });
     });
   });
