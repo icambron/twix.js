@@ -118,21 +118,65 @@ Does the range include the current time?
 moment.subtract(1, "hour").twix(moment().add(1, "hour")).isCurrent(); //=> true
 ```
 
-###count()
-The number of minutes/hours/days/months/years the range includes. Any time period understood by moment will work.
+###contains()
+
+Determine whether a range contains a time. You can pass in a moment object, a JS date, or a string parsable by the Date constructor. The range is considered inclusive of its endpoints.
+
+```js
+moment("5/25/1982").twix("5/28/1982").contains("5/26/1982"); //=> true
+```
+
+###<a id="length"></a>length()
+Calculate the length of the range in terms of minutes/hours/days/months/etc. Any time period understood by moment will work.
+
+```js
+moment("5/25/1982 5:30").twix("5/25/1982 6:30").length("hours")  //=> 1
+moment("5/25/1982 5:00").twix("5/30/1982 6:00").count("days")    //=> 6
+```
+
+See also [asDuration()](#asDuration).
+
+###<a id="count"></a>count()
+The number of minutes/hours/days/months/years the range includes, even in part. Any time period understood by moment will work.
 
 ```js
 moment("5/25/1982 5:00").twix("5/25/1982 6:00").count("days")  //=> 1
 moment("5/25/1982 5:00").twix("5/26/1982 6:00").count("days")  //=> 2
 ```
 
-###iterate()
-Returns an iterator that will return each a moment for each time period in during the range. Any time period understood by moment will work.
+Note that this is counting sections of the calendar, not periods of time. So it asks "what dates are included by this range?" as opposed to "how many 24-hour periods are contained in this range?" For the latter, see [length()](#length).
+
+###<a id="countInner"></a>countInner()
+The number of minutes/hours/days/months/years that are completely contained, such that both the beginning and end of the period fall inside the range. Any time period understood by moment will work.
+
+```js
+moment("5/25/1982 5:00").twix("5/25/1982 6:00").countInner("days")  //=> 0
+moment("5/24/1982 5:00").twix("5/26/1982 6:00").countInner("days")  //=> 1
+```
+
+See also [count()](#count) and [length()](#length).
+
+###<a id="iterate"></a>iterate()
+Returns an iterator that will return each a moment for each time period included in the range. Any time period understood by moment will work.
 
 ```js
 var iter = moment("5/25/1982 5:00").twix("5/26/1982 6:00").iterate("days");
+iter.hasNext(); //=> false
 iter.next(); //=> moment("5/25/1982")
 iter.next(); //=> moment("5/26/1982")
+iter.hasNext(); //=> false
+iter.next(); //=> null
+```
+
+###iterateInner()
+Like [iterate()](#iterate), but only for days completely contained in the range.
+
+```js
+var iter = moment("5/24/1982 5:00").twix("5/27/1982 6:00").iterate("days");
+iter.hasNext(); //=> false
+iter.next(); //=> moment("5/25/1982")
+iter.next(); //=> moment("5/26/1982")
+iter.hasNext(); //=> false
 iter.next(); //=> null
 ```
 
@@ -199,13 +243,15 @@ var d = moment.duration(2, "days");
 d.beforeMoment("5/25/1982"); //=> 5/23/1982 - 5/25/1982
 ```
 
-###Creating a duration from a range
+###<a id="asDuration"></a>Creating a duration from a range
 You can also create durations from ranges:
 
 ```js
 var range = moment("5/25/1982").twix("5/28/1982");
 range.asDuration("days"); //=> duration object with {days: 3}
 ```
+
+See also [length()](#length).
 
 ##<a id="basicFormatting"></a>Basic formatting
 
