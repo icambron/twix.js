@@ -5,6 +5,17 @@ title: Twix.js
 
 Twix.js is a [Moment.js](http://momentjs.com) plugin for working with time ranges. Use it to manipulate, interrogate, and [intelligently format](#smartFormatting) a block of time. You can find the source on [Github](http://github.com/icambron/twix.js) and the docs here.
 
+##<a id="download"></a>Download
+
+<a class="btn btn-primary" href="https://raw.github.com/icambron/twix.js/master/bin/twix.min.js">
+  <i class="icon-download"></i>
+  Minified
+</a>
+<a class="btn btn-primary" href="https://raw.github.com/icambron/twix.js/master/bin/twix.js">
+  <i class="icon-download"></i>
+  Development
+</a>
+
 ##<a id="gettingStarted"></a>Getting started
 
 ###Browser
