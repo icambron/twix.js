@@ -54,52 +54,69 @@ class Twix
     meridiem:
       fn: (options) -> (t) => t.format options.meridiemFormat
       slot: 6
-      pre: (spaceBeforeMeridiem)->
-        if spaceBeforeMeridiem then " " else ""
+      pre: (options)->
+        if options.spaceBeforeMeridiem then " " else ""
 
-  sameDay: ->
-    @start.year() == @end.year() &&
-    @start.month() == @end.month() &&
-    @start.date() == @end.date()
+  # -- INFORMATIONAL --
+  isSame: (period) -> @start.isSame @end, period
 
-  sameYear: ->
-    @start.year() == @end.year()
+  length: (period) -> @_trueEnd().add(1, "millisecond").diff @_trueStart(), period
 
-  countDays: ->
-    startDate = @start.clone().startOf("day")
-    endDate = @end.clone().startOf("day")
-    endDate.diff(startDate, 'days') + 1
+  count: (period) ->
+    start = @start.clone().startOf period
+    end = @end.clone().startOf period
+    end.diff(start, period) + 1
 
-  daysIn: (minHours) ->
-    iter = @start.clone().startOf("day")
-    endDate = @end.clone().startOf("day")
+  countInner: (period) ->
+    [start, end] = @_inner period
 
-    hasNext = => iter <= endDate && (!minHours || iter.valueOf() != endDate.valueOf() || @end.hours() > minHours || @allDay)
+    return 0 if start >= end
+    end.diff(start, period)
 
-    next: =>
-      unless hasNext()
-        null
-      else
-        val = iter.clone()
-        iter.add('days', 1)
-        val
-    hasNext: hasNext
+  iterate: (period, minHours) ->
+    start = @start.clone().startOf period
+    end = @end.clone().startOf period
+    hasNext = => start <= end && (!minHours || start.valueOf() != end.valueOf() || @end.hours() > minHours || @allDay)
+    @_iterateHelper period, start, hasNext
 
-  duration: ->
+  iterateInner: (period) ->
+    [start, end] = @_inner period
+    hasNext = -> start < end
+
+    @_iterateHelper period, start, hasNext
+
+  humanizeLength: ->
     if @allDay
-      if @sameDay()
+      if @isSame "day"
         "all day"
       else
         @start.from(@end.clone().add('days', 1), true)
     else
       @start.from(@end, true)
 
-  past: ->
+  asDuration: (units) ->
+    diff = @end.diff @start
+    moment.duration(diff)
+
+  isPast: ->
     if @allDay
       @end.clone().endOf("day") < moment()
     else
       @end < moment()
 
+  isFuture: ->
+    if @allDay
+      @start.clone().startOf("day") > moment()
+    else
+      @start > moment()
+
+  isCurrent: -> !@isPast() && !@isFuture()
+
+  contains: (mom) ->
+    mom = moment mom
+    @_trueStart() <= mom && @_trueEnd() >= mom
+
+  # -- WORK WITH MULTIPLE RANGES --
   overlaps: (other) -> !(@_trueEnd() < other._trueStart() || @_trueStart() > other._trueEnd())
 
   engulfs: (other) -> @_trueStart() <= other._trueStart() && @_trueEnd() >= other._trueEnd()
@@ -115,14 +132,23 @@ class Twix
 
     new Twix(newStart, newEnd, allDay)
 
-  _trueStart: -> if @allDay then @start.clone().startOf("day") else @start
-  _trueEnd: -> if @allDay then @end.clone().endOf("day") else @end
-
   equals: (other) ->
     (other instanceof Twix) &&
       @allDay == other.allDay &&
       @start.valueOf() == other.start.valueOf() &&
       @end.valueOf() == other.end.valueOf()
+
+  # -- FORMATING --
+  toString: -> "{start: #{@start.format()}, end: #{@end.format()}, allDay: #{@allDay ? "true" : "false"}}"
+
+  simpleFormat: (momentOpts, inopts) ->
+    options = allDay: "(all day)"
+
+    extend options, (inopts || {})
+
+    s = "#{@start.format(momentOpts)} - #{@end.format(momentOpts)}"
+    s += " #{options.allDay}" if @allDay && options.allDay
+    s
 
   format: (inopts) ->
     options =
@@ -157,20 +183,20 @@ class Twix
       @start.hours() > 12 &&
       @end.hours() < options.lastNightEndsAt
 
-    needDate = options.showDate || (!@sameDay() && !goesIntoTheMorning)
+    needDate = options.showDate || (!@isSame("day") && !goesIntoTheMorning)
 
-    if @allDay && @sameDay() && (!options.showDate || options.explicitAllDay)
+    if @allDay && @isSame("day") && (!options.showDate || options.explicitAllDay)
       fs.push
         name: "all day simple"
         fn: -> moment.langData().twix_fn('allDaySimple', options)
-        pre: moment.langData().twix_pre('allDaySimple')
+        pre: moment.langData().twix_pre('allDaySimple', options)
         slot: moment.langData().twix_slot('allDaySimple')
 
-    if needDate && (!options.implicitYear || @start.year() != moment().year() || !@sameYear())
+    if needDate && (!options.implicitYear || @start.year() != moment().year() || !@isSame("year"))
       fs.push
         name: "year",
         fn: moment.langData().twix_fn('year', options)
-        pre: moment.langData().twix_pre('year')
+        pre: moment.langData().twix_pre('year', options)
         slot: moment.langData().twix_slot('year')
 
     if !@allDay && needDate
@@ -178,42 +204,42 @@ class Twix
         name: "all day month"
         fn: moment.langData().twix_fn('allDayMonth', options)
         ignoreEnd: -> goesIntoTheMorning
-        pre: moment.langData().twix_pre('allDayMonth')
+        pre: moment.langData().twix_pre('allDayMonth', options)
         slot: moment.langData().twix_slot('allDayMonth')
 
     if @allDay && needDate
       fs.push
         name: "month"
         fn: moment.langData().twix_fn('month', options)
-        pre: moment.langData().twix_pre('month')
+        pre: moment.langData().twix_pre('month', options)
         slot: moment.langData().twix_slot('month')
 
     if @allDay && needDate
       fs.push
         name: "date"
         fn: moment.langData().twix_fn('date', options)
-        pre: moment.langData().twix_pre('date')
+        pre: moment.langData().twix_pre('date', options)
         slot: moment.langData().twix_slot('date')
 
     if needDate && options.showDayOfWeek
       fs.push
         name: "day of week",
         fn: moment.langData().twix_fn('dayOfWeek', options)
-        pre: moment.langData().twix_pre('dayOfWeek')
+        pre: moment.langData().twix_pre('dayOfWeek', options)
         slot: moment.langData().twix_slot('dayOfWeek')
 
     if options.groupMeridiems && !options.twentyFourHour && !@allDay
       fs.push
         name: "meridiem",
         fn: moment.langData().twix_fn('meridiem', options)
-        pre: moment.langData().twix_pre('meridiem')
+        pre: moment.langData().twix_pre('meridiem', options)
         slot: moment.langData().twix_slot('meridiem')
 
     if !@allDay
       fs.push
         name: "time",
         fn: moment.langData().twix_fn('time', options)
-        pre: moment.langData().twix_pre('time')
+        pre: moment.langData().twix_pre('time', options)
         slot: moment.langData().twix_slot('time')
 
     start_bucket = []
@@ -262,18 +288,46 @@ class Twix
 
     fold common_bucket
 
+  # -- DEPRECATED METHODS --
+  sameDay: -> @isSame "day"
+  sameYear: -> @isSame "year"
+  countDays: -> @countOuter "days"
+  daysIn: (minHours) -> @iterate 'days', minHours
+  past: -> @isPast()
+  duration: -> @humanizeLength()
+
+  # -- INTERNAL
+  _trueStart: -> if @allDay then @start.clone().startOf("day") else @start
+  _trueEnd: -> if @allDay then @end.clone().endOf("day") else @end
+
+  _iterateHelper: (period, iter, hasNext) ->
+    next: =>
+      unless hasNext()
+        null
+      else
+        val = iter.clone()
+        iter.add(period, 1)
+        val
+    hasNext: hasNext
+
+  _inner: (period) ->
+    start = @start.clone().startOf(period)
+    end = @end.clone().startOf(period)
+    (if @allDay then end else start).add(1, period)
+    [start, end]
+
 extend = (first, second) ->
   for attr of second
     first[attr] = second[attr] unless typeof second[attr] == "undefined"
 
-$.extend(true, moment.fn._lang.__proto__,
+extend(moment.fn._lang.__proto__,
   twix_fn: (name, options)->
     @_twix[name].fn(options)
   twix_slot: (name)->
     @_twix[name].slot
-  twix_pre: (name)->
-    if $.isFunction @_twix[name].pre
-      @_twix[name].pre()
+  twix_pre: (name, options)->
+    if typeof @_twix[name].pre == "function"
+      @_twix[name].pre(options)
     else
       @_twix[name].pre
   _twix: Twix.defaults
@@ -283,4 +337,9 @@ if typeof module != "undefined"
   module.exports = Twix
 else
   window.Twix = Twix
+
 moment.twix = -> new Twix(arguments...)
+moment.fn.twix = -> new Twix(this, arguments...)
+moment.fn.forDuration = (duration, allDay) -> new Twix(this, this.clone().add(duration), allDay)
+moment.duration.fn.afterMoment = (startingTime, allDay) -> new Twix(startingTime, moment(startingTime).clone().add(this), allDay)
+moment.duration.fn.beforeMoment = (startingTime, allDay) -> new Twix(moment(startingTime).clone().subtract(this), startingTime, allDay)

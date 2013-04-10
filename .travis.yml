@@ -1,12 +1,13 @@
 language: node_js
 
 node_js:
+  - 0.10
   - 0.8
   - 0.6
-  - 0.4
 
 before_install:
   - npm install -g coffee-script
-  
+  - git submodule update --init --recursive
+
 before_script:
   - make build

@@ -1,53 +1,45 @@
-Twix is a simple but opinionated JS library for formatting date ranges. It's written in CoffeeScript and it depends on [Moment.js](http://momentjs.com/).
+#Twix [![Build Status](https://secure.travis-ci.org/icambron/twix.js.png?branch=master)](http://travis-ci.org/icambron/twix.js)#
+
+Twix is a simple but opinionated JS library for working with date ranges, and includes a customizable smart formatter. It's written in CoffeeScript and it depends on [Moment.js](http://momentjs.com/).
 
 It allows you to do, among other things, this:
 
 ```js
-var t = new Twix("1/25/1982 9:30 AM", "1/25/1982 1:30 PM");
+var t = new moment("1/25/1982 9:30 AM").twix("1/25/1982 1:30 PM");
 
 t.format();  //=> Jan 25, 1982, 9:30 AM - 1:30 PM
 
-t.sameDay(); //=> true
-t.duration(); //=> "4 hours"
-t.countDays(); //=> 1
+t.same("day"); //=> true
+t.humanizeDuration(); //=> "4 hours"
+t.count("days"); //=> 1
 ```
 
-And much more. See the **[docs](https://github.com/icambron/twix.js/wiki/Documentation)** for full deets.
+And much more.
 
-## Installing ##
+##[Documentation](http://icambron.github.io/twix.js/)
 
-### Nodejs ###
+##Building##
 
-    npm install twix
+If you want to build Twix for yourself, clone the repo out and run this:
 
-### Browser ###
+    make configure build
 
-Grab [the file](https://raw.github.com/icambron/twix.js/master/bin/twix.min.js) as well as [moment.js](https://raw.github.com/timrwood/moment/1.3.0/moment.min.js). Then:
+Configure just installs the NPMs and brings in Moment as a submodule, so you only have to do that part once. 
 
-```html
-<script src="moment.min.js"></script>
-<script src="twix.min.js"></script>
-```
-
-###Building###
-If you want to build Twix for yourself, just run the build file:
-
-    npm install
-    make build
-    
 Note that the source is `src/twix.coffee`; the output is `bin/twix.js`. You can run the tests via
 
     make test
     
 You can also run the tests in-browser by building and then loading `test/test.html`.
 
-[![Build Status](https://secure.travis-ci.org/icambron/twix.js.png)](http://travis-ci.org/icambron/twix.js)
 
-## Future plans ##
+##Changelog##
 
-For the broad aims of Twix 2.0, see the [future plans](https://github.com/icambron/twix.js/wiki/Future-plans) page.
+ * **0.2.0**: Deprecated `sameDay`, `sameYear`, `countDays`, `daysIn`, `past`, and `duration`. Added `isSame`, `humanizeLength`, `asDuration`, `isPast`, `isFuture`, `isCurrent`. Added duration methods. Emphasized moment() monkey patch methods over Twix() constructor. Some bug fixes.
 
-## License (MIT)##
+ * Older versions - wasn't tracking.
+
+##License (MIT)##
 
 Copyright (c) 2012 Isaac Cambron
 
