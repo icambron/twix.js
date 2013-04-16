@@ -183,7 +183,7 @@ iter.next(); //=> null
 Like [iterate()](#iterate), but only for days completely contained in the range.
 
 ```js
-var iter = moment("5/24/1982 5:00").twix("5/27/1982 6:00").iterate("days");
+var iter = moment("5/24/1982 5:00").twix("5/27/1982 6:00").iterateInner("days");
 iter.hasNext(); //=> false
 iter.next(); //=> moment("5/25/1982")
 iter.next(); //=> moment("5/26/1982")
@@ -197,8 +197,8 @@ iter.next(); //=> null
 Does this range overlap another range?
 
 ```js
-var range1 = moment("5/25/1982", "5/30/1982");
-var range2 = moment("5/27/1982", "6/13/1982");
+var range1 = new Twix("5/25/1982", "5/30/1982");
+var range2 = new Twix("5/27/1982", "6/13/1982");
 
 range1.overlaps(range2); //=> true
 ```
@@ -207,8 +207,8 @@ range1.overlaps(range2); //=> true
 Does this range have a start time before and an end time after another range?
 
 ```js
-var range1 = moment("5/25/1982", "8/30/1982");
-var range2 = moment("5/27/1982", "6/13/1982");
+var range1 = new Twix("5/25/1982", "8/30/1982");
+var range2 = new Twix("5/27/1982", "6/13/1982");
 
 range1.overlaps(range2); //=> true
 range2.overlaps(range1); //=> false
@@ -218,8 +218,8 @@ range2.overlaps(range1); //=> false
 Are these two ranges the same? Equality also requires that either both or neither ranges are all-day.
 
 ```js
-var range1 = moment("5/25/1982", "8/30/1982");
-var range2 = moment("5/25/1982", "8/30/1982");
+var range1 = new Twix("5/25/1982", "8/30/1982");
+var range2 = new Twix("5/25/1982", "8/30/1982");
 
 range1.equals(range2); //=> true
 range2.equals(range1); //=> true
@@ -229,8 +229,8 @@ range2.equals(range1); //=> true
 Produce a range that has the minimum start time and the maximum end time of the two ranges.
 
 ```js
-var range1 = moment("5/25/1982", "5/30/1982");
-var range2 = moment("5/27/1982", "6/13/1982");
+var range1 = new Twix("5/25/1982", "5/30/1982");
+var range2 = new Twix("5/27/1982", "6/13/1982");
 
 range1.merge(range2); //=> 5/25/82 - 6/13/1982
 ```
