@@ -169,10 +169,10 @@
     });
     return describe("other", function() {
       it("returns the right number for a years", function() {
-        return assertEqual(16, moment("1996-2-17").twix("2012-8-14").length("years"));
+        return assertEqual(16, moment("1996-02-17").twix("2012-08-14").length("years"));
       });
       return it("returns the right number for a months", function() {
-        return assertEqual(197, moment("1996-2-17").twix("2012-8-14").length("months"));
+        return assertEqual(197, moment("1996-02-17").twix("2012-08-14").length("months"));
       });
     });
   });

@@ -115,10 +115,10 @@ describe "length()", ->
 
   describe "other", ->
     it "returns the right number for a years", ->
-      assertEqual 16, moment("1996-2-17").twix("2012-8-14").length("years")
+      assertEqual 16, moment("1996-02-17").twix("2012-08-14").length("years")
 
     it "returns the right number for a months", ->
-      assertEqual 197, moment("1996-2-17").twix("2012-8-14").length("months")
+      assertEqual 197, moment("1996-02-17").twix("2012-08-14").length("months")
 
 describe "count()", ->
 
