@@ -46,9 +46,9 @@
 
   thatDay = function(start, end) {
     if (start) {
-      return moment("5/25/1982 " + start).twix("5/25/1982 " + end);
+      return moment("1982-5-25 " + start).twix("1982-5-25 " + end);
     } else {
-      return moment("5/25/1982").twix("5/25/1982", true);
+      return moment("1982-5-25").twix("1982-5-25", true);
     }
   };
 
@@ -56,21 +56,21 @@
     describe("static constructor", function() {
       return it("is the same as instantiating via the contructor", function() {
         assertEqual("function", typeof moment.twix);
-        return assertTwixEqual(new Twix("5/25/1982", "5/25/1983", true), moment.twix("5/25/1982", "5/25/1983", true));
+        return assertTwixEqual(new Twix("1982-5-25", "1983-5-25", true), moment.twix("1982-5-25", "1983-5-25", true));
       });
     });
     describe("create from a member", function() {
       return it("is the same as instantiating via the contructor", function() {
         assertEqual("function", typeof (moment().twix));
-        return assertTwixEqual(new Twix("5/25/1982", "5/25/1983", true), moment("5/25/1982").twix("5/25/1983", true));
+        return assertTwixEqual(new Twix("1982-5-25", "1983-5-25", true), moment("1982-5-25").twix("1983-5-25", true));
       });
     });
     describe("moment.forDuration()", function() {
       it("constructs a twix", function() {
         var duration, from, to, twix;
 
-        from = thisYear("5/25");
-        to = thisYear("5/26");
+        from = thisYear("5-25");
+        to = thisYear("5-26");
         duration = moment.duration(to.diff(from));
         twix = from.forDuration(duration);
         return assertTwixEqual(new Twix(from, to), twix);
@@ -78,8 +78,8 @@
       return it("constructs an all-day twix", function() {
         var duration, from, to, twix;
 
-        from = thisYear("5/25");
-        to = thisYear("5/26");
+        from = thisYear("5-25");
+        to = thisYear("5-26");
         duration = moment.duration(to.diff(from));
         twix = from.forDuration(duration, true);
         return assertTwixEqual(new Twix(from, to, true), twix);
@@ -90,22 +90,22 @@
         var d, twix;
 
         d = moment.duration(2, "days");
-        twix = d.afterMoment(thisYear("5/25"));
-        return assertTwixEqual(new Twix(thisYear("5/25"), thisYear("5/27")), twix);
+        twix = d.afterMoment(thisYear("5-25"));
+        return assertTwixEqual(new Twix(thisYear("5-25"), thisYear("5-27")), twix);
       });
       it("can use text", function() {
         var d, twix;
 
         d = moment.duration(2, "days");
-        twix = d.afterMoment("5/25/1982");
-        return assertTwixEqual(new Twix("5/25/1982", "5/27/1982"), twix);
+        twix = d.afterMoment("1982-5-25");
+        return assertTwixEqual(new Twix("1982-5-25", "1982-5-27"), twix);
       });
       return it("contructs an all-day twix", function() {
         var d, twix;
 
         d = moment.duration(2, "days");
-        twix = d.afterMoment(thisYear("5/25"), true);
-        return assertTwixEqual(new Twix(thisYear("5/25"), thisYear("5/27"), true), twix);
+        twix = d.afterMoment(thisYear("5-25"), true);
+        return assertTwixEqual(new Twix(thisYear("5-25"), thisYear("5-27"), true), twix);
       });
     });
     return describe("duration.beforeMoment()", function() {
@@ -113,22 +113,22 @@
         var d, twix;
 
         d = moment.duration(2, "days");
-        twix = d.beforeMoment(thisYear("5/25"));
-        return assertTwixEqual(new Twix(thisYear("5/23"), thisYear("5/25")), twix);
+        twix = d.beforeMoment(thisYear("5-25"));
+        return assertTwixEqual(new Twix(thisYear("5-23"), thisYear("5-25")), twix);
       });
       it("can use text", function() {
         var d, twix;
 
         d = moment.duration(2, "days");
-        twix = d.beforeMoment("5/25/1982");
-        return assertTwixEqual(new Twix("5/23/1982", "5/25/1982"), twix);
+        twix = d.beforeMoment("1982-5-25");
+        return assertTwixEqual(new Twix("1982-5-23", "1982-5-25"), twix);
       });
       return it("contructs an all-day twix", function() {
         var d, twix;
 
         d = moment.duration(2, "days");
-        twix = d.beforeMoment(thisYear("5/25"), true);
-        return assertTwixEqual(new Twix(thisYear("5/23"), thisYear("5/25"), true), twix);
+        twix = d.beforeMoment(thisYear("5-25"), true);
+        return assertTwixEqual(new Twix(thisYear("5-23"), thisYear("5-25"), true), twix);
       });
     });
   });
@@ -136,21 +136,21 @@
   describe("isSame()", function() {
     describe("year", function() {
       it("returns true if they're the same year", function() {
-        return assertEqual(true, moment("5/25/1982").twix("10/14/1982").isSame("year"));
+        return assertEqual(true, moment("1982-5-25").twix("1982-10-14").isSame("year"));
       });
       return it("returns false if they're different years", function() {
-        return assertEqual(false, moment("5/25/1982").twix("10/14/1983").isSame("year"));
+        return assertEqual(false, moment("1982-5-25").twix("1983-10-14").isSame("year"));
       });
     });
     return describe("day", function() {
       it("returns true if they're the same day", function() {
-        return assertEqual(true, moment("5/25/1982 5:30 AM").twix("5/25/1982 7:30 PM").isSame("day"));
+        return assertEqual(true, moment("1982-5-25 5:30 AM").twix("1982-5-25 7:30 PM").isSame("day"));
       });
       it("returns false if they're different days day", function() {
-        return assertEqual(false, moment("5/25/1982 5:30 AM").twix("5/26/1982 7:30 PM").isSame("day"));
+        return assertEqual(false, moment("1982-5-25 5:30 AM").twix("1982-5-26 7:30 PM").isSame("day"));
       });
       return it("returns true they're in different UTC days but the same local days", function() {
-        return assertEqual(true, moment("5/25/1982 5:30 AM").twix("5/25/1982 11:30 PM").isSame("day"));
+        return assertEqual(true, moment("1982-5-25 5:30 AM").twix("1982-5-25 11:30 PM").isSame("day"));
       });
     });
   });
@@ -182,24 +182,24 @@
       it("returns 1 inside a day", function() {
         var end, range, start;
 
-        start = thisYear("5/25", "3:00");
-        end = thisYear("5/25", "14:00");
+        start = thisYear("5-25", "3:00");
+        end = thisYear("5-25", "14:00");
         range = moment(start).twix(end);
         return assertEqual(1, range.count("days"));
       });
       it("returns 2 if the range crosses midnight", function() {
         var end, range, start;
 
-        start = thisYear("5/25", "16:00");
-        end = thisYear("5/26", "3:00");
+        start = thisYear("5-25", "16:00");
+        end = thisYear("5-26", "3:00");
         range = moment(start).twix(end);
         return assertEqual(2, range.count("days"));
       });
       return it("works fine for all-day events", function() {
         var end, range, start;
 
-        start = thisYear("5/25");
-        end = thisYear("5/26");
+        start = thisYear("5-25");
+        end = thisYear("5-26");
         range = moment(start).twix(end, true);
         return assertEqual(2, range.count("days"));
       });
@@ -208,15 +208,15 @@
       it("returns 1 inside a year", function() {
         var end, start;
 
-        start = thisYear("5/25");
-        end = thisYear("5/26");
+        start = thisYear("5-25");
+        end = thisYear("5-26");
         return assertEqual(1, moment(start).twix(end).count("year"));
       });
       return it("returns 2 if the range crosses Jan 1", function() {
         var end, start;
 
-        start = thisYear("5/25");
-        end = nextYear("5/26");
+        start = thisYear("5-25");
+        end = nextYear("5-26");
         return assertEqual(2, moment(start).twix(end).count("year"));
       });
     });
@@ -227,56 +227,56 @@
       it("returns 0 inside a day", function() {
         var end, range, start;
 
-        start = thisYear("5/25", "3:00");
-        end = thisYear("5/25", "14:00");
+        start = thisYear("5-25", "3:00");
+        end = thisYear("5-25", "14:00");
         range = moment(start).twix(end);
         return assertEqual(0, range.countInner("days"));
       });
       it("returns 0 if the range crosses midnight but is still < 24 hours", function() {
         var end, range, start;
 
-        start = thisYear("5/25", "16:00");
-        end = thisYear("5/26", "3:00");
+        start = thisYear("5-25", "16:00");
+        end = thisYear("5-26", "3:00");
         range = moment(start).twix(end);
         return assertEqual(0, range.countInner("days"));
       });
       it("returns 0 if the range is > 24 hours but still doesn't cover a full day", function() {
         var end, range, start;
 
-        start = thisYear("5/25", "16:00");
-        end = thisYear("5/26", "17:00");
+        start = thisYear("5-25", "16:00");
+        end = thisYear("5-26", "17:00");
         range = moment(start).twix(end);
         return assertEqual(0, range.countInner("days"));
       });
       it("returns 1 if the range includes one full day", function() {
         var end, range, start;
 
-        start = thisYear("5/24", "16:00");
-        end = thisYear("5/26", "17:00");
+        start = thisYear("5-24", "16:00");
+        end = thisYear("5-26", "17:00");
         range = moment(start).twix(end);
         return assertEqual(1, range.countInner("days"));
       });
       it("returns 2 if the range includes two full days", function() {
         var end, range, start;
 
-        start = thisYear("5/23", "16:00");
-        end = thisYear("5/26", "17:00");
+        start = thisYear("5-23", "16:00");
+        end = thisYear("5-26", "17:00");
         range = moment(start).twix(end);
         return assertEqual(2, range.countInner("days"));
       });
       it("returns 1 for a one-day all-day event", function() {
         var end, range, start;
 
-        start = thisYear("5/25");
-        end = thisYear("5/25");
+        start = thisYear("5-25");
+        end = thisYear("5-25");
         range = moment(start).twix(end, true);
         return assertEqual(1, range.countInner("days"));
       });
       return it("returns 2 for a two-day all-day event", function() {
         var end, range, start;
 
-        start = thisYear("5/25");
-        end = thisYear("5/26");
+        start = thisYear("5-25");
+        end = thisYear("5-26");
         range = moment(start).twix(end, true);
         return assertEqual(2, range.countInner("days"));
       });
@@ -293,17 +293,17 @@
       it("provides 1 day if the range includes 1 day", function() {
         var end, iter, start;
 
-        start = thisYear("5/25", "3:00");
-        end = thisYear("5/25", "14:00");
+        start = thisYear("5-25", "3:00");
+        end = thisYear("5-25", "14:00");
         iter = start.twix(end).iterate("days");
-        assertSameDay(thisYear("5/25"), iter.next());
+        assertSameDay(thisYear("5-25"), iter.next());
         return assertEqual(null, iter.next());
       });
       it("provides 2 days if the range crosses midnight", function() {
         var end, iter, start;
 
-        start = thisYear("5/25", "16:00");
-        end = thisYear("5/26", "3:00");
+        start = thisYear("5-25", "16:00");
+        end = thisYear("5-26", "3:00");
         iter = start.twix(end).iterate("days");
         assertSameDay(start, iter.next());
         assertSameDay(end, iter.next());
@@ -312,8 +312,8 @@
       it("provides 366 days if the range is a year", function() {
         var end, iter, results, start;
 
-        start = thisYear("5/25", "16:00");
-        end = thisYear("5/25", "3:00").add('years', 1);
+        start = thisYear("5-25", "16:00");
+        end = thisYear("5-25", "3:00").add('years', 1);
         iter = start.twix(end).iterate("days");
         results = (function() {
           var _results;
@@ -329,26 +329,26 @@
       it("provides 1 day for an all-day event", function() {
         var end, iter, start;
 
-        start = thisYear("5/25");
-        end = thisYear("5/25");
+        start = thisYear("5-25");
+        end = thisYear("5-25");
         iter = start.twix(end, true).iterate("days");
-        assertSameDay(thisYear("5/25"), iter.next());
+        assertSameDay(thisYear("5-25"), iter.next());
         return assertEqual(null, iter.next());
       });
       it("doesn't generate extra days when there's a min time", function() {
         var end, iter, start;
 
-        start = thisYear("5/25", "16:00");
-        end = thisYear("5/26", "3:00");
+        start = thisYear("5-25", "16:00");
+        end = thisYear("5-26", "3:00");
         iter = start.twix(end).iterate("days", 4);
-        assertSameDay(thisYear("5/25"), iter.next());
+        assertSameDay(thisYear("5-25"), iter.next());
         return assertEqual(null, iter.next());
       });
       return it("provides 1 day for all-day events when there's a min time", function() {
         var end, iter, start;
 
-        start = thisYear("5/25");
-        end = thisYear("5/25");
+        start = thisYear("5-25");
+        end = thisYear("5-25");
         iter = start.twix(end, true).iterate("days", 4);
         assertEqual(true, iter.hasNext());
         assertSameDay(start, iter.next());
@@ -365,8 +365,8 @@
       it("provides 1 year if the range happens inside a year", function() {
         var end, iter, start;
 
-        start = thisYear("5/25");
-        end = thisYear("5/25");
+        start = thisYear("5-25");
+        end = thisYear("5-25");
         iter = start.twix(end).iterate("years");
         assertSameYear(start, iter.next());
         return assertEqual(null, iter.next());
@@ -374,8 +374,8 @@
       it("provides 2 years if the range crosses Jan 1", function() {
         var end, iter, start;
 
-        start = thisYear("5/25");
-        end = nextYear("5/26");
+        start = thisYear("5-25");
+        end = nextYear("5-26");
         iter = start.twix(end).iterate("years");
         assertSameYear(start, iter.next());
         assertSameYear(end, iter.next());
@@ -384,11 +384,11 @@
       return it("doesn't generate extra years when there's a min time", function() {
         var end, iter, range, start;
 
-        start = thisYear("5/25", "16:00");
-        end = nextYear("1/1", "3:00");
+        start = thisYear("5-25", "16:00");
+        end = nextYear("1-1", "3:00");
         range = moment(start).twix(end);
         iter = range.iterate("years", 4);
-        assertSameYear(thisYear("5/25"), iter.next());
+        assertSameYear(thisYear("5-25"), iter.next());
         return assertEqual(null, iter.next());
       });
     });
@@ -404,8 +404,8 @@
       it("is empty if the range starts and ends the same day", function() {
         var end, iter, start;
 
-        start = thisYear("5/25", "3:00");
-        end = thisYear("5/25", "14:00");
+        start = thisYear("5-25", "3:00");
+        end = thisYear("5-25", "14:00");
         iter = start.twix(end).iterateInner("days");
         assertEqual(false, iter.hasNext());
         return assertEqual(null, iter.next());
@@ -413,8 +413,8 @@
       it("is empty if the range doesn't contain a whole day", function() {
         var end, iter, start;
 
-        start = thisYear("5/25", "16:00");
-        end = thisYear("5/26", "17:00");
+        start = thisYear("5-25", "16:00");
+        end = thisYear("5-26", "17:00");
         iter = start.twix(end).iterateInner("days");
         assertEqual(false, iter.hasNext());
         return assertEqual(null, iter.next());
@@ -422,31 +422,31 @@
       it("provides 1 day if the range contains 1 full day", function() {
         var end, iter, start;
 
-        start = thisYear("5/24", "16:00");
-        end = thisYear("5/26", "3:00");
+        start = thisYear("5-24", "16:00");
+        end = thisYear("5-26", "3:00");
         iter = start.twix(end).iterateInner("days");
-        assertSameDay(thisYear("5/25"), iter.next());
+        assertSameDay(thisYear("5-25"), iter.next());
         return assertEqual(null, iter.next());
       });
       it("provides 1 day for an all-day event", function() {
         var end, iter, start;
 
-        start = thisYear("5/25");
-        end = thisYear("5/25");
+        start = thisYear("5-25");
+        end = thisYear("5-25");
         iter = start.twix(end, true).iterateInner("days");
-        assertSameDay(thisYear("5/25"), iter.next());
+        assertSameDay(thisYear("5-25"), iter.next());
         return assertEqual(null, iter.next());
       });
       return it("provides 2 days for a two-day all-day event", function() {
         var end, iter, start;
 
-        start = thisYear("5/25");
-        end = thisYear("5/26");
+        start = thisYear("5-25");
+        end = thisYear("5-26");
         iter = start.twix(end, true).iterateInner("days");
         assertEqual(true, iter.hasNext());
-        assertSameDay(thisYear("5/25"), iter.next());
+        assertSameDay(thisYear("5-25"), iter.next());
         assertEqual(true, iter.hasNext());
-        assertSameDay(thisYear("5/26"), iter.next());
+        assertSameDay(thisYear("5-26"), iter.next());
         return assertEqual(null, iter.next());
       });
     });
@@ -455,10 +455,10 @@
   describe("humanizeLength()", function() {
     describe("all-day events", function() {
       it("formats single-day correctly", function() {
-        return assertEqual("all day", new Twix("5/25/1982", "5/25/1982", true).humanizeLength());
+        return assertEqual("all day", new Twix("1982-5-25", "1982-5-25", true).humanizeLength());
       });
       return it("formats multiday correctly", function() {
-        return assertEqual("3 days", new Twix("5/25/1982", "5/27/1982", true).humanizeLength());
+        return assertEqual("3 days", new Twix("1982-5-25", "1982-5-27", true).humanizeLength());
       });
     });
     return describe("non-all-day events", function() {
@@ -466,7 +466,7 @@
         return assertEqual("4 hours", thatDay("12:00", "16:00").humanizeLength());
       });
       return it("formats multiday correctly", function() {
-        return assertEqual("2 days", new Twix("5/25/1982", "5/27/1982").humanizeLength());
+        return assertEqual("2 days", new Twix("1982-5-25", "1982-5-27").humanizeLength());
       });
     });
   });
@@ -584,11 +584,11 @@
     describe("non-all-day", function() {
       var end, range, start;
 
-      start = thisYear("5/25", "6:00");
-      end = thisYear("5/25", "7:00");
+      start = thisYear("5-25", "6:00");
+      end = thisYear("5-25", "7:00");
       range = start.twix(end);
       it("returns true for moments inside the range", function() {
-        return assertEqual(true, range.contains(thisYear("5/25", "6:30")));
+        return assertEqual(true, range.contains(thisYear("5-25", "6:30")));
       });
       it("returns true for moments at the beginning of the range", function() {
         return assertEqual(true, range.contains(start));
@@ -597,19 +597,19 @@
         return assertEqual(true, range.contains(end));
       });
       it("returns false for moments before the range", function() {
-        return assertEqual(false, range.contains(thisYear("5/25", "5:30")));
+        return assertEqual(false, range.contains(thisYear("5-25", "5:30")));
       });
       return it("returns false for moments after the range", function() {
-        return assertEqual(false, range.contains(thisYear("5/25", "8:30")));
+        return assertEqual(false, range.contains(thisYear("5-25", "8:30")));
       });
     });
     return describe("all-day", function() {
       var range, start;
 
-      start = thisYear("5/25");
+      start = thisYear("5-25");
       range = start.twix(start, true);
       it("returns true for moments inside the range", function() {
-        return assertEqual(true, range.contains(thisYear("5/25", "6:30")));
+        return assertEqual(true, range.contains(thisYear("5-25", "6:30")));
       });
       it("returns true for moments at the beginning of the range", function() {
         return assertEqual(true, range.contains(start));
@@ -618,10 +618,10 @@
         return assertEqual(true, range.contains(start.clone().endOf("day")));
       });
       it("returns false for moments before the range", function() {
-        return assertEqual(false, range.contains(thisYear("5/24")));
+        return assertEqual(false, range.contains(thisYear("5-24")));
       });
       return it("returns false for moments after the range", function() {
-        return assertEqual(false, range.contains(thisYear("5/26")));
+        return assertEqual(false, range.contains(thisYear("5-26")));
       });
     });
   });
@@ -642,7 +642,7 @@
       };
     };
     someTime = thatDay("5:30", "8:30");
-    someDays = new Twix("5/24/1982", "5/25/1982", true);
+    someDays = new Twix("1982-5-24", "1982-5-25", true);
     describe("non-all-day events", function() {
       it("returns false for a later event", function() {
         return assertNoOverlap(someTime, thatDay("9:30", "11:30"));
@@ -671,42 +671,42 @@
     });
     describe("one all-day event", function() {
       it("returns true for a partially later event", function() {
-        return assertOverlap(thatDay(), new Twix("5/25/1982 20:00", "5/26/1982 5:00"));
+        return assertOverlap(thatDay(), new Twix("1982-5-25 20:00", "1982-5-26 5:00"));
       });
       it("returns true for a partially earlier event", function() {
-        return assertOverlap(thatDay(), new Twix("5/24/1982 20:00", "5/25/1982 7:00"));
+        return assertOverlap(thatDay(), new Twix("1982-5-24 20:00", "1982-5-25 7:00"));
       });
       it("returns true for an engulfed event", function() {
         return assertOverlap(thatDay(), someTime);
       });
       it("returns true for an engulfing event", function() {
-        return assertOverlap(thatDay(), new Twix("5/24/1982 20:00", "5/26/1982 5:00"));
+        return assertOverlap(thatDay(), new Twix("1982-5-24 20:00", "1982-5-26 5:00"));
       });
       it("returns true for an event which starts on the same day", function() {
-        return assertOverlap(thatDay(), new Twix("5/25/1982", "5/27/1982"));
+        return assertOverlap(thatDay(), new Twix("1982-5-25", "1982-5-27"));
       });
       return it("returns true for an event which ends on the same day", function() {
-        return assertOverlap(thatDay(), new Twix("5/23/1982", "5/25/1982", true));
+        return assertOverlap(thatDay(), new Twix("1982-5-23", "1982-5-25", true));
       });
     });
     return describe("two all-day events", function() {
       it("returns false for a later event", function() {
-        return assertNoOverlap(someDays, new Twix("5/26/1982", "5/27/1982", true));
+        return assertNoOverlap(someDays, new Twix("1982-5-26", "1982-5-27", true));
       });
       it("returns false for an earlier event", function() {
-        return assertNoOverlap(someDays, new Twix("5/22/1982", "5/23/1982", true));
+        return assertNoOverlap(someDays, new Twix("1982-5-22", "1982-5-23", true));
       });
       it("returns true for a partially later event", function() {
-        return assertOverlap(someDays, new Twix("5/24/1982", "5/26/1982", true));
+        return assertOverlap(someDays, new Twix("1982-5-24", "1982-5-26", true));
       });
       it("returns true for a partially earlier event", function() {
-        return assertOverlap(someDays, new Twix("5/22/1982", "5/24/1982", true));
+        return assertOverlap(someDays, new Twix("1982-5-22", "1982-5-24", true));
       });
       it("returns true for an engulfed event", function() {
-        return assertOverlap(someDays, new Twix("5/25/1982", "5/25/1982", true));
+        return assertOverlap(someDays, new Twix("1982-5-25", "1982-5-25", true));
       });
       return it("returns true for an engulfing event", function() {
-        return assertOverlap(someDays, new Twix("5/22/1982", "5/28/1982", true));
+        return assertOverlap(someDays, new Twix("1982-5-22", "1982-5-28", true));
       });
     });
   });
@@ -721,7 +721,7 @@
       return assertEqual(false, first.engulfs(second));
     };
     someTime = thatDay("5:30", "8:30");
-    someDays = new Twix("5/24/1982", "5/25/1982", true);
+    someDays = new Twix("1982-5-24", "1982-5-25", true);
     describe("non-all-day events", function() {
       it("returns false for a later event", function() {
         return assertNotEngulfing(someTime, thatDay("9:30", "11:30"));
@@ -744,36 +744,36 @@
     });
     describe("one all-day event", function() {
       it("returns true for a partially later event", function() {
-        return assertNotEngulfing(thatDay(), new Twix("5/25/1982 20:00", "5/26/1982 5:00"));
+        return assertNotEngulfing(thatDay(), new Twix("1982-5-25 20:00", "1982-5-26 5:00"));
       });
       it("returns true for a partially earlier event", function() {
-        return assertNotEngulfing(thatDay(), new Twix("5/24/1982", "20:00", "5/25/1982 7:00"));
+        return assertNotEngulfing(thatDay(), new Twix("1982-5-24", "20:00", "1982-5-25 7:00"));
       });
       it("returns true for an engulfed event", function() {
         return assertEngulfing(thatDay(), someTime);
       });
       return it("returns true for an engulfing event", function() {
-        return assertNotEngulfing(thatDay(), new Twix("5/24/1982 20:00", "5/26/1982 5:00"));
+        return assertNotEngulfing(thatDay(), new Twix("1982-5-24 20:00", "1982-5-26 5:00"));
       });
     });
     return describe("two all-day events", function() {
       it("returns false for a later event", function() {
-        return assertNotEngulfing(someDays, new Twix("5/26/1982", "5/27/1982", true));
+        return assertNotEngulfing(someDays, new Twix("1982-5-26", "1982-5-27", true));
       });
       it("returns false for an earlier event", function() {
-        return assertNotEngulfing(someDays, new Twix("5/22/1982", "5/23/1982", true));
+        return assertNotEngulfing(someDays, new Twix("1982-5-22", "1982-5-23", true));
       });
       it("returns true for a partially later event", function() {
-        return assertNotEngulfing(someDays, new Twix("5/24/1982", "5/26/1982", true));
+        return assertNotEngulfing(someDays, new Twix("1982-5-24", "1982-5-26", true));
       });
       it("returns true for a partially earlier event", function() {
-        return assertNotEngulfing(someDays, new Twix("5/22/1982", "5/24/1982", true));
+        return assertNotEngulfing(someDays, new Twix("1982-5-22", "1982-5-24", true));
       });
       it("returns true for an engulfed event", function() {
-        return assertEngulfing(someDays, new Twix("5/25/1982", "5/25/1982", true));
+        return assertEngulfing(someDays, new Twix("1982-5-25", "1982-5-25", true));
       });
       return it("returns true for an engulfing event", function() {
-        return assertNotEngulfing(someDays, new Twix("5/22/1982", "5/28/1982", true));
+        return assertNotEngulfing(someDays, new Twix("1982-5-22", "1982-5-28", true));
       });
     });
   });
@@ -782,7 +782,7 @@
     var someDays, someTime;
 
     someTime = thatDay("5:30", "8:30");
-    someDays = new Twix("5/24/1982", "5/25/1982", true);
+    someDays = new Twix("1982-5-24", "1982-5-25", true);
     describe("non-all-day events", function() {
       it("spans a later time", function() {
         return assertTwixEqual(thatDay("5:30", "11:30"), someTime.merge(thatDay("9:30", "11:30")));
@@ -805,30 +805,30 @@
     });
     describe("one all-day event", function() {
       it("spans a later time", function() {
-        return assertTwixEqual(new Twix("5/24/1982 00:00", "5/26/1982 7:00"), someDays.merge(new Twix("5/24/1982 20:00", "5/26/1982 7:00")));
+        return assertTwixEqual(new Twix("1982-5-24 00:00", "1982-5-26 7:00"), someDays.merge(new Twix("1982-5-24 20:00", "1982-5-26 7:00")));
       });
       it("spans an earlier time", function() {
-        return assertTwixEqual(new Twix("5/23/1982 8:00", moment("5/25/1982").endOf('day')), someDays.merge(new Twix("5/23/1982 8:00", "5/25/1982 7:00")));
+        return assertTwixEqual(new Twix("1982-5-23 8:00", moment("1982-5-25").endOf('day')), someDays.merge(new Twix("1982-5-23 8:00", "1982-5-25 7:00")));
       });
       it("isn't affected by engulfing events", function() {
-        return assertTwixEqual(new Twix("5/24/1982 00:00", moment("5/25/1982").endOf('day')), someDays.merge(someTime));
+        return assertTwixEqual(new Twix("1982-5-24 00:00", moment("1982-5-25").endOf('day')), someDays.merge(someTime));
       });
       return it("becomes an engulfing event", function() {
-        return assertTwixEqual(new Twix("5/23/1982 20:00", "5/26/1982 8:30"), someDays.merge(new Twix("5/23/1982 20:00", "5/26/1982 8:30")));
+        return assertTwixEqual(new Twix("1982-5-23 20:00", "1982-5-26 8:30"), someDays.merge(new Twix("1982-5-23 20:00", "1982-5-26 8:30")));
       });
     });
     return describe("two all-day events", function() {
       it("spans a later time", function() {
-        return assertTwixEqual(new Twix("5/24/1982", "5/28/1982", true), someDays.merge(new Twix("5/27/1982", "5/28/1982", true)));
+        return assertTwixEqual(new Twix("1982-5-24", "1982-5-28", true), someDays.merge(new Twix("1982-5-27", "1982-5-28", true)));
       });
       it("spans an earlier time", function() {
-        return assertTwixEqual(new Twix("5/21/1982", "5/25/1982", true), someDays.merge(new Twix("5/21/1982", "5/22/1982", true)));
+        return assertTwixEqual(new Twix("1982-5-21", "1982-5-25", true), someDays.merge(new Twix("1982-5-21", "1982-5-22", true)));
       });
       it("spans a partially later time", function() {
-        return assertTwixEqual(new Twix("5/24/1982", "5/26/1982", true), someDays.merge(new Twix("5/25/1982", "5/26/1982", true)));
+        return assertTwixEqual(new Twix("1982-5-24", "1982-5-26", true), someDays.merge(new Twix("1982-5-25", "1982-5-26", true)));
       });
       it("spans a partially earlier time", function() {
-        return assertTwixEqual(new Twix("5/23/1982", "5/25/1982", true), someDays.merge(new Twix("5/23/1982", "5/25/1982", true)));
+        return assertTwixEqual(new Twix("1982-5-23", "1982-5-25", true), someDays.merge(new Twix("1982-5-23", "1982-5-25", true)));
       });
       it("isn't affected by engulfing events", function() {
         return assertTwixEqual(someDays, someDays.merge(thatDay()));
@@ -855,13 +855,13 @@
     it("accepts moment formatting options", function() {
       var s;
 
-      s = thisYear("10/14").twix(thisYear("10/14")).simpleFormat("MMMM");
+      s = thisYear("10-14").twix(thisYear("10-14")).simpleFormat("MMMM");
       return assertEqual("October - October", s);
     });
     it("accepts an allDay option", function() {
       var s;
 
-      s = thisYear("5/25").twix(thisYear("5/26"), true).simpleFormat(null, {
+      s = thisYear("5-25").twix(thisYear("5-26"), true).simpleFormat(null, {
         allDay: "(wayo wayo)"
       });
       return assertEqual(true, s.indexOf("(wayo wayo)") > -1);
@@ -869,7 +869,7 @@
     return it("removes the all day text if allDay is null", function() {
       var s;
 
-      s = thisYear("5/25").twix(thisYear("5/26"), true).simpleFormat(null, {
+      s = thisYear("5-25").twix(thisYear("5-26"), true).simpleFormat(null, {
         allDay: null
       });
       return assertEqual(true, s.indexOf("(all day)") === -1);
@@ -889,44 +889,44 @@
     };
     describe("simple ranges", function() {
       test("different year, different day shows everything", {
-        start: "5/25/1982 5:30 AM",
-        end: "5/26/1983 3:30 PM",
+        start: "1982-5-25 5:30 AM",
+        end: "1983-5-26 3:30 PM",
         result: 'May 25, 1982, 5:30 AM - May 26, 1983, 3:30 PM'
       });
       test("this year, different day skips year", {
-        start: thisYear("5/25", "5:30 AM"),
-        end: thisYear("5/26", "3:30 PM"),
+        start: thisYear("5-25", "5:30 AM"),
+        end: thisYear("5-26", "3:30 PM"),
         result: 'May 25, 5:30 AM - May 26, 3:30 PM'
       });
       test("this year, different day shows year if requested", {
-        start: thisYear("5/25", "5:30 AM"),
-        end: thisYear("5/26", "3:30 PM"),
+        start: thisYear("5-25", "5:30 AM"),
+        end: thisYear("5-26", "3:30 PM"),
         options: {
           implicitYear: false
         },
         result: "May 25, 5:30 AM - May 26, 3:30 PM, " + (new Date().getFullYear())
       });
       test("same day, different times shows date once", {
-        start: "5/25/1982 5:30 AM",
-        end: "5/25/1982 3:30 PM",
+        start: "1982-5-25 5:30 AM",
+        end: "1982-5-25 3:30 PM",
         result: 'May 25, 1982, 5:30 AM - 3:30 PM'
       });
       test("same day, different times, same meridian shows date and meridiem once", {
-        start: "5/25/1982 5:30 AM",
-        end: "5/25/1982 6:30 AM",
+        start: "1982-5-25 5:30 AM",
+        end: "1982-5-25 6:30 AM",
         result: 'May 25, 1982, 5:30 - 6:30 AM'
       });
       test("custom month format for regular event", {
-        start: "8/25/2010 5:30 AM",
-        end: "8/25/2010 6:30 AM",
+        start: "2010-8-25 5:30 AM",
+        end: "2010-8-25 6:30 AM",
         options: {
           monthFormat: "MMMM"
         },
         result: 'August 25, 2010, 5:30 - 6:30 AM'
       });
       return test("custom month format for all day event", {
-        start: "8/25/2010",
-        end: "8/25/2010",
+        start: "2010-8-25",
+        end: "2010-8-25",
         allDay: true,
         options: {
           monthFormat: "MMMM"
@@ -936,20 +936,20 @@
     });
     describe("rounded times", function() {
       test("round hour doesn't show :00", {
-        start: "5/25/1982 5:00 AM",
-        end: "5/25/1982 7:00 AM",
+        start: "1982-5-25 5:00 AM",
+        end: "1982-5-25 7:00 AM",
         result: "May 25, 1982, 5 - 7 AM"
       });
       return test("mixed times still shows :30", {
-        start: "5/25/1982 5:00 AM",
-        end: "5/25/1982 5:30 AM",
+        start: "1982-5-25 5:00 AM",
+        end: "1982-5-25 5:30 AM",
         result: "May 25, 1982, 5 - 5:30 AM"
       });
     });
     describe("implicit minutes", function() {
       return test("still shows the :00", {
-        start: thisYear("5/25", "5:00 AM"),
-        end: thisYear("5/25", "7:00 AM"),
+        start: thisYear("5-25", "5:00 AM"),
+        end: thisYear("5-25", "7:00 AM"),
         options: {
           implicitMinutes: false
         },
@@ -958,20 +958,20 @@
     });
     describe("all day events", function() {
       test("one day has no range", {
-        start: "8/25/2010",
-        end: "8/25/2010",
+        start: "2010-8-25",
+        end: "2010-8-25",
         allDay: true,
         result: "Aug 25, 2010"
       });
       test("same month says month on one side", {
-        start: thisYear("5/25"),
-        end: thisYear("5/26"),
+        start: thisYear("5-25"),
+        end: thisYear("5-26"),
         allDay: true,
         result: "May 25 - 26"
       });
       test("same month says month on one side, with year if requested", {
-        start: thisYear("5/25"),
-        end: thisYear("5/26"),
+        start: thisYear("5-25"),
+        end: thisYear("5-26"),
         allDay: true,
         options: {
           implicitYear: false
@@ -979,14 +979,14 @@
         result: "May 25 - 26, " + ((new Date).getFullYear())
       });
       test("different month shows both", {
-        start: thisYear("5/25"),
-        end: thisYear("6/1"),
+        start: thisYear("5-25"),
+        end: thisYear("6-1"),
         allDay: true,
         result: "May 25 - Jun 1"
       });
       test("different month shows both, with year if requested", {
-        start: thisYear("5/25"),
-        end: thisYear("6/1"),
+        start: thisYear("5-25"),
+        end: thisYear("6-1"),
         allDay: true,
         options: {
           implicitYear: false
@@ -994,26 +994,26 @@
         result: "May 25 - Jun 1, " + ((new Date).getFullYear())
       });
       test("explicit year shows the year once", {
-        start: "5/25/1982",
-        end: "5/26/1982",
+        start: "1982-5-25",
+        end: "1982-5-26",
         allDay: true,
         result: "May 25 - 26, 1982"
       });
       test("different year shows the year twice", {
-        start: "5/25/1982",
-        end: "5/25/1983",
+        start: "1982-5-25",
+        end: "1983-5-25",
         allDay: true,
         result: "May 25, 1982 - May 25, 1983"
       });
       test("different year different month shows the month at the end", {
-        start: "5/25/1982",
-        end: "6/1/1983",
+        start: "1982-5-25",
+        end: "1983-6-1",
         allDay: true,
         result: "May 25, 1982 - Jun 1, 1983"
       });
       return test("explicit allDay", {
-        start: "5/25/1982",
-        end: "5/25/1982",
+        start: "1982-5-25",
+        end: "1982-5-25",
         allDay: true,
         options: {
           explicitAllDay: true
@@ -1023,24 +1023,24 @@
     });
     describe("no single dates", function() {
       test("shouldn't show dates for intraday", {
-        start: "5/25/2010 5:30 AM",
-        end: "5/25/2010 6:30 AM",
+        start: "2010-5-25 5:30 AM",
+        end: "2010-5-25 6:30 AM",
         options: {
           showDate: false
         },
         result: "5:30 - 6:30 AM"
       });
       test("should show the dates for multiday", {
-        start: thisYear("5/25", "5:30 AM"),
-        end: thisYear("5/27", "6:30 AM"),
+        start: thisYear("5-25", "5:30 AM"),
+        end: thisYear("5-27", "6:30 AM"),
         options: {
           showDate: false
         },
         result: "May 25, 5:30 AM - May 27, 6:30 AM"
       });
       return test("should just say 'all day' for all day events", {
-        start: thisYear("5/25"),
-        end: thisYear("5/25"),
+        start: thisYear("5-25"),
+        end: thisYear("5-25"),
         options: {
           showDate: false
         },
@@ -1050,16 +1050,16 @@
     });
     describe("ungroup meridiems", function() {
       test("should put meridiems on both sides", {
-        start: thisYear("5/25", "5:30 AM"),
-        end: thisYear("5/25", "7:30 AM"),
+        start: thisYear("5-25", "5:30 AM"),
+        end: thisYear("5-25", "7:30 AM"),
         options: {
           groupMeridiems: false
         },
         result: "May 25, 5:30 AM - 7:30 AM"
       });
       return test("even with abbreviated hours", {
-        start: thisYear("5/25", "7:00 PM"),
-        end: thisYear("5/25", "9:00 PM"),
+        start: thisYear("5-25", "7:00 PM"),
+        end: thisYear("5-25", "9:00 PM"),
         options: {
           groupMeridiems: false
         },
@@ -1068,8 +1068,8 @@
     });
     describe("no meridiem spaces", function() {
       return test("should skip the meridiem space", {
-        start: thisYear("5/25", "5:30 AM"),
-        end: thisYear("5/25", "7:30 AM"),
+        start: thisYear("5-25", "5:30 AM"),
+        end: thisYear("5-25", "7:30 AM"),
         options: {
           spaceBeforeMeridiem: false,
           groupMeridiems: false
@@ -1079,16 +1079,16 @@
     });
     describe("24 hours", function() {
       test("shouldn't show meridians", {
-        start: thisYear("5/25", "5:30 AM"),
-        end: thisYear("5/25", "7:30 PM"),
+        start: thisYear("5-25", "5:30 AM"),
+        end: thisYear("5-25", "7:30 PM"),
         options: {
           twentyFourHour: true
         },
         result: "May 25, 5:30 - 19:30"
       });
       return test("always shows the :00", {
-        start: thisYear("5/25", "12:00"),
-        end: thisYear("5/25", "15:00"),
+        start: thisYear("5-25", "12:00"),
+        end: thisYear("5-25", "15:00"),
         options: {
           twentyFourHour: true
         },
@@ -1097,16 +1097,16 @@
     });
     describe("show day of week", function() {
       test("should show day of week", {
-        start: thisYear("5/25", "5:30 AM"),
-        end: thisYear("5/28", "7:30 PM"),
+        start: thisYear("5-25", "5:30 AM"),
+        end: thisYear("5-28", "7:30 PM"),
         options: {
           showDayOfWeek: true
         },
         result: "Sat May 25, 5:30 AM - Tue May 28, 7:30 PM"
       });
       test("should show day of week, specify day of week format", {
-        start: thisYear("8/25", "5:30 AM"),
-        end: thisYear("8/28", "7:30 PM"),
+        start: thisYear("8-25", "5:30 AM"),
+        end: thisYear("8-28", "7:30 PM"),
         options: {
           showDayOfWeek: true,
           weekdayFormat: 'dddd'
@@ -1114,16 +1114,16 @@
         result: "Sunday Aug 25, 5:30 AM - Wednesday Aug 28, 7:30 PM"
       });
       test("collapses show day of week", {
-        start: thisYear("5/25", "5:30 AM"),
-        end: thisYear("5/25", "7:30 PM"),
+        start: thisYear("5-25", "5:30 AM"),
+        end: thisYear("5-25", "7:30 PM"),
         options: {
           showDayOfWeek: true
         },
         result: "Sat May 25, 5:30 AM - 7:30 PM"
       });
       return test("doesn't collapse with one week of separation", {
-        start: thisYear("5/25"),
-        end: thisYear("6/1"),
+        start: thisYear("5-25"),
+        end: thisYear("6-1"),
         allDay: true,
         options: {
           showDayOfWeek: true
@@ -1133,32 +1133,32 @@
     });
     return describe("goes into the morning", function() {
       test("elides late nights", {
-        start: "5/25/1982 5:00 PM",
-        end: "5/26/1982 2:00 AM",
+        start: "1982-5-25 5:00 PM",
+        end: "1982-5-26 2:00 AM",
         options: {
           lastNightEndsAt: 5
         },
         result: "May 25, 1982, 5 PM - 2 AM"
       });
       test("keeps late mornings", {
-        start: "5/25/1982 5:00 PM",
-        end: "5/26/1982 10:00 AM",
+        start: "1982-5-25 5:00 PM",
+        end: "1982-5-26 10:00 AM",
         options: {
           lastNightEndsAt: 5
         },
         result: "May 25, 5 PM - May 26, 10 AM, 1982"
       });
       test("morning start is adjustable", {
-        start: "5/25/1982 5:00 PM",
-        end: "5/26/1982 10:00 AM",
+        start: "1982-5-25 5:00 PM",
+        end: "1982-5-26 10:00 AM",
         options: {
           lastNightEndsAt: 11
         },
         result: "May 25, 1982, 5 PM - 10 AM"
       });
       test("doesn't elide if you start in the AM", {
-        start: "5/25/1982 5:00 AM",
-        end: "5/26/1982 4:00 AM",
+        start: "1982-5-25 5:00 AM",
+        end: "1982-5-26 4:00 AM",
         options: {
           lastNightEndsAt: 5
         },
@@ -1166,8 +1166,8 @@
       });
       return describe("and we're trying to hide the date", function() {
         test("elides the date too for early mornings", {
-          start: "5/25/1982 5:00 PM",
-          end: "5/26/1982 2:00 AM",
+          start: "1982-5-25 5:00 PM",
+          end: "1982-5-26 2:00 AM",
           options: {
             lastNightEndsAt: 5,
             showDate: false
@@ -1175,8 +1175,8 @@
           result: "5 PM - 2 AM"
         });
         return test("doesn't elide if the morning ends late", {
-          start: "5/25/1982 5:00 PM",
-          end: "5/26/1982 10:00 AM",
+          start: "1982-5-25 5:00 PM",
+          end: "1982-5-26 10:00 AM",
           options: {
             lastNightEndsAt: 5
           },
