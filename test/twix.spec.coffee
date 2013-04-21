@@ -115,10 +115,10 @@ describe "length()", ->
 
   describe "other", ->
     it "returns the right number for a years", ->
-      assertEqual 16, moment("1996-2-17").twix("2012-8-14").length("years")
+      assertEqual 16, moment("1996-02-17").twix("2012-08-14").length("years")
 
     it "returns the right number for a months", ->
-      assertEqual 197, moment("1996-2-17").twix("2012-8-14").length("months")
+      assertEqual 197, moment("1996-02-17").twix("2012-08-14").length("months")
 
 describe "count()", ->
 
@@ -484,19 +484,31 @@ describe "overlaps()", ->
 
     it "returns true for an engulfing event", ->
       assertOverlap someTime, thatDay "4:30", "9:30"
-
+      
+    it "returns false for an event that starts immediately afterwards", ->
+      assertNoOverlap someTime, thatDay "8:30", "9:30"
+      
+    it "returns false for an event that ends immediately before", ->
+      assertNoOverlap someTime, thatDay "4:30", "5:30"
+       
   describe "one all-day event", ->
     it "returns true for a partially later event", ->
       assertOverlap thatDay(), new Twix("5/25/1982 20:00", "5/26/1982 5:00")
 
     it "returns true for a partially earlier event", ->
-      assertOverlap thatDay(), new Twix("5/24/1982", "20:00", "5/25/1982 7:00")
+      assertOverlap thatDay(), new Twix("5/24/1982 20:00", "5/25/1982 7:00")
 
     it "returns true for an engulfed event", ->
       assertOverlap thatDay(), someTime
 
     it "returns true for an engulfing event", ->
       assertOverlap thatDay(), new Twix("5/24/1982 20:00", "5/26/1982 5:00")
+      
+    it "returns true for an event which starts on the same day", ->
+      assertOverlap thatDay(), new Twix("5/25/1982", "5/27/1982");
+      
+    it "returns true for an event which ends on the same day", ->
+      assertOverlap thatDay(), new Twix("5/23/1982", "5/25/1982", true);
 
   describe "two all-day events", ->
     it "returns false for a later event", ->
