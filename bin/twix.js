@@ -113,7 +113,7 @@
     };
 
     Twix.prototype.overlaps = function(other) {
-      return !(this._trueEnd() < other._trueStart() || this._trueStart() > other._trueEnd());
+      return this._trueEnd().isAfter(other._trueStart()) && this._trueStart().isBefore(other._trueEnd());
     };
 
     Twix.prototype.engulfs = function(other) {

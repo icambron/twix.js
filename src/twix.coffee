@@ -72,7 +72,7 @@ class Twix
     @_trueStart() <= mom && @_trueEnd() >= mom
 
   # -- WORK WITH MULTIPLE RANGES --
-  overlaps: (other) -> !(@_trueEnd() < other._trueStart() || @_trueStart() > other._trueEnd())
+  overlaps: (other) -> (@_trueEnd().isAfter(other._trueStart()) && @_trueStart().isBefore(other._trueEnd()))
 
   engulfs: (other) -> @_trueStart() <= other._trueStart() && @_trueEnd() >= other._trueEnd()
 

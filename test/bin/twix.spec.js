@@ -169,10 +169,10 @@
     });
     return describe("other", function() {
       it("returns the right number for a years", function() {
-        return assertEqual(16, moment("1996-2-17").twix("2012-8-14").length("years"));
+        return assertEqual(16, moment("1996-02-17").twix("2012-08-14").length("years"));
       });
       return it("returns the right number for a months", function() {
-        return assertEqual(197, moment("1996-2-17").twix("2012-8-14").length("months"));
+        return assertEqual(197, moment("1996-02-17").twix("2012-08-14").length("months"));
       });
     });
   });
@@ -659,8 +659,14 @@
       it("returns true for an engulfed event", function() {
         return assertOverlap(someTime, thatDay("6:30", "7:30"));
       });
-      return it("returns true for an engulfing event", function() {
+      it("returns true for an engulfing event", function() {
         return assertOverlap(someTime, thatDay("4:30", "9:30"));
+      });
+      it("returns false for an event that starts immediately afterwards", function() {
+        return assertNoOverlap(someTime, thatDay("8:30", "9:30"));
+      });
+      return it("returns false for an event that ends immediately before", function() {
+        return assertNoOverlap(someTime, thatDay("4:30", "5:30"));
       });
     });
     describe("one all-day event", function() {
@@ -668,13 +674,19 @@
         return assertOverlap(thatDay(), new Twix("5/25/1982 20:00", "5/26/1982 5:00"));
       });
       it("returns true for a partially earlier event", function() {
-        return assertOverlap(thatDay(), new Twix("5/24/1982", "20:00", "5/25/1982 7:00"));
+        return assertOverlap(thatDay(), new Twix("5/24/1982 20:00", "5/25/1982 7:00"));
       });
       it("returns true for an engulfed event", function() {
         return assertOverlap(thatDay(), someTime);
       });
-      return it("returns true for an engulfing event", function() {
+      it("returns true for an engulfing event", function() {
         return assertOverlap(thatDay(), new Twix("5/24/1982 20:00", "5/26/1982 5:00"));
+      });
+      it("returns true for an event which starts on the same day", function() {
+        return assertOverlap(thatDay(), new Twix("5/25/1982", "5/27/1982"));
+      });
+      return it("returns true for an event which ends on the same day", function() {
+        return assertOverlap(thatDay(), new Twix("5/23/1982", "5/25/1982", true));
       });
     });
     return describe("two all-day events", function() {
