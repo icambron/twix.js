@@ -4,7 +4,7 @@
 
   if (typeof module !== "undefined") {
     moment = require("moment");
-    Twix = require("../../bin/twix/twix");
+    Twix = require("../../bin/twix");
   } else {
     moment = window.moment;
     Twix = window.Twix;
