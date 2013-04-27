@@ -589,6 +589,10 @@ describe "engulfs()", ->
     it "returns true for an engulfing event", ->
       assertNotEngulfing someDays, new Twix("1982-5-22", "1982-5-28", true)
 
+describe "merge()", ->
+  it "calls union()", ->
+    assertTwixEqual new Twix("1982-5-24", "1982-5-26"), new Twix("1982-5-24", "1982-5-25").merge(new Twix("1982-5-25", "1982-5-26"))
+
 describe "union()", ->
 
   someTime = thatDay "5:30", "8:30"

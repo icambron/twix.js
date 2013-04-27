@@ -275,6 +275,7 @@ class Twix
   daysIn: (minHours) -> @iterate 'days', minHours
   past: -> @isPast()
   duration: -> @humanizeLength()
+  merge: (other) -> @union other
 
   # -- INTERNAL
   _trueStart: -> if @allDay then @start.clone().startOf("day") else @start
