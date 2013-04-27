@@ -76,8 +76,6 @@ class Twix
 
   engulfs: (other) -> @_trueStart() <= other._trueStart() && @_trueEnd() >= other._trueEnd()
 
-  # Union of two ranges
-  # See Union (set theory) http://en.wikipedia.org/wiki/Union_(set_theory)
   union: (other) ->
     allDay = @allDay && other.allDay
     if allDay
@@ -89,8 +87,6 @@ class Twix
 
     new Twix(newStart, newEnd, allDay)
 
-  # Intersection of two ranges
-  # See Intersection (set theory) http://en.wikipedia.org/wiki/Intersection_(set_theory)
   intersection: (other) ->
     newStart = if @start > other.start then @start else other.start
     if @allDay
