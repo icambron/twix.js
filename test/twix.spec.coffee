@@ -589,7 +589,7 @@ describe "engulfs()", ->
     it "returns true for an engulfing event", ->
       assertNotEngulfing someDays, new Twix("1982-5-22", "1982-5-28", true)
 
-describe "merge()", ->
+describe "union()", ->
 
   someTime = thatDay "5:30", "8:30"
   someDays = new Twix "1982-5-24", "1982-5-25", true
@@ -597,56 +597,118 @@ describe "merge()", ->
   describe "non-all-day events", ->
 
     it "spans a later time", ->
-      assertTwixEqual thatDay("5:30", "11:30"), someTime.merge(thatDay "9:30", "11:30")
+      assertTwixEqual thatDay("5:30", "11:30"), someTime.union(thatDay "9:30", "11:30")
 
     it "spans an earlier time", ->
-      assertTwixEqual thatDay("3:30", "8:30"), someTime.merge(thatDay "3:30", "4:30")
+      assertTwixEqual thatDay("3:30", "8:30"), someTime.union(thatDay "3:30", "4:30")
 
     it "spans a partially later event", ->
-      assertTwixEqual thatDay("5:30", "11:30"), someTime.merge(thatDay "8:00", "11:30")
+      assertTwixEqual thatDay("5:30", "11:30"), someTime.union(thatDay "8:00", "11:30")
 
     it "spans a partially earlier event", ->
-      assertTwixEqual thatDay("4:30", "8:30"), someTime.merge(thatDay "4:30", "6:30")
+      assertTwixEqual thatDay("4:30", "8:30"), someTime.union(thatDay "4:30", "6:30")
 
     it "isn't affected by engulfed events", ->
-      assertTwixEqual someTime, someTime.merge(thatDay "6:30", "7:30")
+      assertTwixEqual someTime, someTime.union(thatDay "6:30", "7:30")
 
     it "becomes an engulfing event", ->
-      assertTwixEqual thatDay("4:30", "9:30"), someTime.merge(thatDay "4:30", "9:30")
+      assertTwixEqual thatDay("4:30", "9:30"), someTime.union(thatDay "4:30", "9:30")
 
   describe "one all-day event", ->
     it "spans a later time", ->
-      assertTwixEqual new Twix("1982-5-24 00:00", "1982-5-26 7:00"), someDays.merge(new Twix("1982-5-24 20:00", "1982-5-26 7:00"))
+      assertTwixEqual new Twix("1982-5-24 00:00", "1982-5-26 7:00"), someDays.union(new Twix("1982-5-24 20:00", "1982-5-26 7:00"))
 
     it "spans an earlier time", ->
-      assertTwixEqual new Twix("1982-5-23 8:00", moment("1982-5-25").endOf('day')), someDays.merge(new Twix("1982-5-23 8:00", "1982-5-25 7:00"))
+      assertTwixEqual new Twix("1982-5-23 8:00", moment("1982-5-25").endOf('day')), someDays.union(new Twix("1982-5-23 8:00", "1982-5-25 7:00"))
 
     #i'm tempted to just say this is wrong...shouldn't it get to stay an all-day event?
     it "isn't affected by engulfing events", ->
-      assertTwixEqual new Twix("1982-5-24 00:00", moment("1982-5-25").endOf('day')), someDays.merge(someTime)
+      assertTwixEqual new Twix("1982-5-24 00:00", moment("1982-5-25").endOf('day')), someDays.union(someTime)
 
     it "becomes an engulfing event", ->
-      assertTwixEqual new Twix("1982-5-23 20:00", "1982-5-26 8:30"), someDays.merge(new Twix("1982-5-23 20:00", "1982-5-26 8:30"))
+      assertTwixEqual new Twix("1982-5-23 20:00", "1982-5-26 8:30"), someDays.union(new Twix("1982-5-23 20:00", "1982-5-26 8:30"))
 
   describe "two all-day events", ->
 
     it "spans a later time", ->
-      assertTwixEqual new Twix("1982-5-24", "1982-5-28", true), someDays.merge(new Twix("1982-5-27", "1982-5-28", true))
+      assertTwixEqual new Twix("1982-5-24", "1982-5-28", true), someDays.union(new Twix("1982-5-27", "1982-5-28", true))
 
     it "spans an earlier time", ->
-      assertTwixEqual new Twix("1982-5-21", "1982-5-25", true), someDays.merge(new Twix("1982-5-21", "1982-5-22", true))
+      assertTwixEqual new Twix("1982-5-21", "1982-5-25", true), someDays.union(new Twix("1982-5-21", "1982-5-22", true))
 
     it "spans a partially later time", ->
-      assertTwixEqual new Twix("1982-5-24", "1982-5-26", true), someDays.merge(new Twix("1982-5-25", "1982-5-26", true))
+      assertTwixEqual new Twix("1982-5-24", "1982-5-26", true), someDays.union(new Twix("1982-5-25", "1982-5-26", true))
 
     it "spans a partially earlier time", ->
-      assertTwixEqual new Twix("1982-5-23", "1982-5-25", true), someDays.merge(new Twix("1982-5-23", "1982-5-25", true))
+      assertTwixEqual new Twix("1982-5-23", "1982-5-25", true), someDays.union(new Twix("1982-5-23", "1982-5-25", true))
 
     it "isn't affected by engulfing events", ->
-      assertTwixEqual someDays, someDays.merge(thatDay())
+      assertTwixEqual someDays, someDays.union(thatDay())
 
     it "becomes an engulfing event", ->
-      assertTwixEqual someDays, thatDay().merge(someDays)
+      assertTwixEqual someDays, thatDay().union(someDays)
+
+describe "intersection()", ->
+
+  someTime = thatDay "5:30", "8:30"
+  someDays = new Twix "1982-5-24", "1982-5-25", true
+
+  describe "non-all-day events", ->
+
+    it "does not intersect with a later time", ->
+      assertTwixEqual thatDay("9:30", "8:30"), someTime.intersection(thatDay "9:30", "11:30")
+      # Check that the range is invalid
+
+    it "does not intersect with an earlier time", ->
+      assertTwixEqual thatDay("5:30", "4:30"), someTime.intersection(thatDay "3:30", "4:30")
+      # Check that the range is invalid
+
+    it "intersects with a partially later event", ->
+      assertTwixEqual thatDay("8:00", "8:30"), someTime.intersection(thatDay "8:00", "11:30")
+
+    it "intersects with a partially earlier event", ->
+      assertTwixEqual thatDay("5:30", "6:30"), someTime.intersection(thatDay "4:30", "6:30")
+
+    it "intersects with an engulfed event", ->
+      assertTwixEqual thatDay("6:30", "7:30"), someTime.intersection(thatDay "6:30", "7:30")
+
+    it "intersects with an engulfing event", ->
+      assertTwixEqual thatDay("5:30", "8:30"), someTime.intersection(thatDay "4:30", "9:30")
+
+  describe "one all-day event", ->
+    it "intersects with a later time", ->
+      assertTwixEqual new Twix("1982-5-24 20:00", "1982-5-25 23:59:59:999"), someDays.intersection(new Twix("1982-5-24 20:00", "1982-5-26 7:00"))
+
+    it "intersects with an earlier time", ->
+      assertTwixEqual new Twix("1982-5-24 00:00", "1982-5-25 7:00"), someDays.intersection(new Twix("1982-5-23 8:00", "1982-5-25 7:00"))
+
+    it "intersects with an engulfed event", ->
+      assertTwixEqual new Twix("1982-5-25 05:30", "1982-5-25 08:30"), someDays.intersection(someTime)
+
+    it "intersects with an engulfing event", ->
+      assertTwixEqual new Twix("1982-5-24 00:00", "1982-5-25 23:59:59:999"), someDays.intersection(new Twix("1982-5-23 20:00", "1982-5-26 8:30"))
+
+  describe "two all-day events", ->
+
+    it "does not intersect with a later time", ->
+      assertTwixEqual new Twix("1982-5-27", "1982-5-25", true), someDays.intersection(new Twix("1982-5-27", "1982-5-28", true))
+      # Check that the range is invalid
+
+    it "does not intersect with an earlier time", ->
+      assertTwixEqual new Twix("1982-5-24", "1982-5-22", true), someDays.intersection(new Twix("1982-5-21", "1982-5-22", true))
+      # Check that the range is invalid
+
+    it "intersects with a partially later time", ->
+      assertTwixEqual new Twix("1982-5-25", "1982-5-25", true), someDays.intersection(new Twix("1982-5-25", "1982-5-26", true))
+
+    it "intersects with a partially earlier time", ->
+      assertTwixEqual new Twix("1982-5-24", "1982-5-25", true), someDays.intersection(new Twix("1982-5-23", "1982-5-25", true))
+
+    it "intersects with an engulfed event", ->
+      assertTwixEqual thatDay(), someDays.intersection(thatDay())
+
+    it "intersects with an engulfing event", ->
+      assertTwixEqual thatDay(), thatDay().intersection(someDays)
 
 describe "simpleFormat()", ->
   it "it provides a simple string when provided no options", ->
