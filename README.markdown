@@ -35,7 +35,7 @@ You can also run the tests in-browser by building and then loading `test/test.ht
 ##Contributing##
 
  * Submit pull requests to the `develop` branch. I merge develop to master when we cut a release.
- * Don't include your changes to the `.js` files; they're much harder to merge. I'll generate them when I cut the release.
+ * Don't include your changes to the generated `.js` files in the patch; they're much harder to merge. I'll generate them when I cut the release.
 
 ##Changelog##
 
