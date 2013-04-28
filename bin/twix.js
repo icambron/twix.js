@@ -120,7 +120,7 @@
       return this._trueStart() <= other._trueStart() && this._trueEnd() >= other._trueEnd();
     };
 
-    Twix.prototype.merge = function(other) {
+    Twix.prototype.union = function(other) {
       var allDay, newEnd, newStart;
 
       allDay = this.allDay && other.allDay;
@@ -131,6 +131,26 @@
         newStart = this._trueStart() < other._trueStart() ? this._trueStart() : other._trueStart();
         newEnd = this._trueEnd() > other._trueEnd() ? this._trueEnd() : other._trueEnd();
       }
+      return new Twix(newStart, newEnd, allDay);
+    };
+
+    Twix.prototype.intersection = function(other) {
+      var allDay, end, newEnd, newStart;
+
+      newStart = this.start > other.start ? this.start : other.start;
+      if (this.allDay) {
+        end = moment(this.end);
+        end.add('days', 1);
+        end.subtract(1, "millisecond");
+        if (other.allDay) {
+          newEnd = end < other.end ? this.end : other.end;
+        } else {
+          newEnd = end < other.end ? end : other.end;
+        }
+      } else {
+        newEnd = this.end < other.end ? this.end : other.end;
+      }
+      allDay = this.allDay && other.allDay;
       return new Twix(newStart, newEnd, allDay);
     };
 
@@ -374,6 +394,10 @@
 
     Twix.prototype.duration = function() {
       return this.humanizeLength();
+    };
+
+    Twix.prototype.merge = function(other) {
+      return this.union(other);
     };
 
     Twix.prototype._trueStart = function() {
