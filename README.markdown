@@ -32,10 +32,14 @@ Note that the source is `src/twix.coffee`; the output is `bin/twix.js`. You can 
     
 You can also run the tests in-browser by building and then loading `test/test.html`.
 
+##Contributing##
+
+ * Submit pull requests to the `develop` branch. I merge develop to master when we cut a release.
+ * Don't include your changes to the `.js` files; they're much harder to merge. I'll generate them when I cut the release.
 
 ##Changelog##
 
- * ***0.2.1**: Added `countInner`, `contains`, `iterateInner`, and `length`
+ * **0.2.1**: Added `countInner`, `contains`, `iterateInner`, and `length`
 
  * **0.2.0**: Deprecated `sameDay`, `sameYear`, `countDays`, `daysIn`, `past`, and `duration`. Added `isSame`, `humanizeLength`, `asDuration`, `isPast`, `isFuture`, `isCurrent`. Added duration methods. Emphasized moment() monkey patch methods over Twix() constructor. Some bug fixes.
 
