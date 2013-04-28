@@ -1,4 +1,4 @@
-#Twix [![Build Status](https://secure.travis-ci.org/icambron/twix.js.png?branch=master)](http://travis-ci.org/icambron/twix.js)#
+#Twix [![Build Status](https://secure.travis-ci.org/icambron/twix.js.png?branch=develop)](http://travis-ci.org/icambron/twix.js)#
 
 Twix is a simple but opinionated JS library for working with date ranges, and includes a customizable smart formatter. It's written in CoffeeScript and it depends on [Moment.js](http://momentjs.com/).
 
