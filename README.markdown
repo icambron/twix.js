@@ -32,6 +32,10 @@ Note that the source is `src/twix.coffee`; the output is `bin/twix.js`. You can 
     
 You can also run the tests in-browser by building and then loading `test/test.html`.
 
+##Contributing##
+
+ * Submit pull requests to the `develop` branch. I merge develop to master when we cut a release.
+ * Don't include your changes to the generated `.js` files in the patch; they're much harder to merge. I'll generate them when I cut the release.
 
 ##Changelog##
 
