@@ -15,8 +15,8 @@ thisYear = (partial, time) ->
 
 nextYear = (partial, time) -> thisYear(partial, time).add(1, "year")
 
-yesterday = -> moment().subtract(1, 'day').startOf 'day'
-tomorrow = -> moment().add(1, 'day').startOf 'day'
+yesterday = -> moment().subtract(1, "day").startOf "day"
+tomorrow = -> moment().add(1, "day").startOf "day"
 
 thatDay = (start, end) ->
   if start
@@ -221,7 +221,7 @@ describe "iterate()", ->
 
     it "provides 366 days if the range is a year", ->
       start = thisYear "05-25", "16:00"
-      end = thisYear("05-25", "03:00").add 1, 'year'
+      end = thisYear("05-25", "03:00").add 1, "year"
       iter = start.twix(end).iterate "days"
       results = while iter.hasNext()
         iter.next()
@@ -348,7 +348,7 @@ describe "isPast()", ->
       assertEqual true, yesterday().twix(yesterday(), true).isPast()
 
     it "returns false for today", ->
-      today = moment().startOf 'day'
+      today = moment().startOf "day"
       assertEqual false, today.twix(today, true).isPast()
 
     it "returns false for days in the future", ->
@@ -356,13 +356,13 @@ describe "isPast()", ->
 
   describe "non-all-day events", ->
     it "returns true for the past", ->
-      past = moment().subtract 3, 'hours'
-      nearerPast = moment().subtract 2, 'hours'
+      past = moment().subtract 3, "hours"
+      nearerPast = moment().subtract 2, "hours"
       assertEqual true, past.twix(nearerPast).isPast()
 
     it "returns false for the future", ->
-      future = moment().add 2, 'hours'
-      furtherFuture = moment().add 3, 'hours'
+      future = moment().add 2, "hours"
+      furtherFuture = moment().add 3, "hours"
       assertEqual false, future.twix(furtherFuture).isPast()
 
 describe "isFuture()", ->
@@ -371,7 +371,7 @@ describe "isFuture()", ->
       assertEqual false, yesterday().twix(yesterday(), true).isFuture()
 
     it "returns false for today", ->
-      today = moment().startOf 'day'
+      today = moment().startOf "day"
       assertEqual false, today.twix(today, true).isFuture()
 
     it "returns true for days in the future", ->
@@ -379,13 +379,13 @@ describe "isFuture()", ->
 
   describe "non-all-day events", ->
     it "returns false for the past", ->
-      past = moment().subtract 3, 'hours'
-      nearerPast = moment().subtract 3, 'hours'
+      past = moment().subtract 3, "hours"
+      nearerPast = moment().subtract 3, "hours"
       assertEqual false, past.twix(nearerPast).isFuture()
 
     it "returns true for the future", ->
-      future = moment().add 2, 'hours'
-      furtherFuture = moment().add 3, 'hours'
+      future = moment().add 2, "hours"
+      furtherFuture = moment().add 3, "hours"
       assertEqual true, future.twix(furtherFuture).isFuture()
 
 describe "isCurrent()", ->
@@ -394,7 +394,7 @@ describe "isCurrent()", ->
       assertEqual false, yesterday().twix(yesterday(), true).isCurrent()
 
     it "returns true for today", ->
-      today = moment().startOf 'day'
+      today = moment().startOf "day"
       assertEqual true, today.twix(today, true).isCurrent()
 
     it "returns false for days in the future", ->
@@ -402,13 +402,13 @@ describe "isCurrent()", ->
 
   describe "non-all-day events", ->
     it "returns false for the past", ->
-      past = moment().subtract 3, 'hours'
-      nearerPast = moment().subtract 2, 'hours'
+      past = moment().subtract 3, "hours"
+      nearerPast = moment().subtract 2, "hours"
       assertEqual false, past.twix(nearerPast).isCurrent()
 
     it "returns false for the future", ->
-      future = moment().add 2, 'hours'
-      furtherFuture = moment().add 3, 'hours'
+      future = moment().add 2, "hours"
+      furtherFuture = moment().add 3, "hours"
       assertEqual false, future.twix(furtherFuture).isCurrent()
 
 describe "contains()", ->
@@ -623,11 +623,11 @@ describe "union()", ->
       assertTwixEqual new Twix("1982-05-24 00:00", "1982-05-26 07:00"), someDays.union(new Twix("1982-05-24 20:00", "1982-05-26 07:00"))
 
     it "spans an earlier time", ->
-      assertTwixEqual new Twix("1982-05-23 08:00", moment("1982-05-25").endOf('day')), someDays.union(new Twix("1982-05-23 08:00", "1982-05-25 07:00"))
+      assertTwixEqual new Twix("1982-05-23 08:00", moment("1982-05-25").endOf("day")), someDays.union(new Twix("1982-05-23 08:00", "1982-05-25 07:00"))
 
     #i'm tempted to just say this is wrong...shouldn't it get to stay an all-day event?
     it "isn't affected by engulfing events", ->
-      assertTwixEqual new Twix("1982-05-24 00:00", moment("1982-05-25").endOf('day')), someDays.union(someTime)
+      assertTwixEqual new Twix("1982-05-24 00:00", moment("1982-05-25").endOf("day")), someDays.union(someTime)
 
     it "becomes an engulfing event", ->
       assertTwixEqual new Twix("1982-05-23 20:00", "1982-05-26 08:30"), someDays.union(new Twix("1982-05-23 20:00", "1982-05-26 08:30"))
@@ -745,12 +745,12 @@ describe "format()", ->
     test "different year, different day shows everything",
       start: "1982-05-25 05:30"
       end: "1983-05-26 15:30"
-      result: 'May 25, 1982, 5:30 AM - May 26, 1983, 3:30 PM'
+      result: "May 25, 1982, 5:30 AM - May 26, 1983, 3:30 PM"
 
     test "this year, different day skips year",
       start: thisYear("05-25", "05:30")
       end: thisYear("05-26", "15:30")
-      result: 'May 25, 5:30 AM - May 26, 3:30 PM'
+      result: "May 25, 5:30 AM - May 26, 3:30 PM"
 
     test "this year, different day shows year if requested",
       start: thisYear("05-25", "05:30")
@@ -761,25 +761,25 @@ describe "format()", ->
     test "same day, different times shows date once",
       start: "1982-05-25 05:30"
       end: "1982-05-25 15:30"
-      result: 'May 25, 1982, 5:30 AM - 3:30 PM'
+      result: "May 25, 1982, 5:30 AM - 3:30 PM"
 
     test "same day, different times, same meridian shows date and meridiem once",
       start: "1982-05-25 05:30"
       end: "1982-05-25 06:30"
-      result: 'May 25, 1982, 5:30 - 6:30 AM'
+      result: "May 25, 1982, 5:30 - 6:30 AM"
 
     test "custom month format for regular event",
       start: "2010-08-25 05:30"
       end: "2010-08-25 06:30"
       options: {monthFormat: "MMMM"}
-      result: 'August 25, 2010, 5:30 - 6:30 AM'
+      result: "August 25, 2010, 5:30 - 6:30 AM"
 
     test "custom month format for all day event",
       start: "2010-08-25"
       end: "2010-08-25"
       allDay: true
       options: {monthFormat: "MMMM"}
-      result: 'August 25, 2010'
+      result: "August 25, 2010"
 
   describe "rounded times", ->
     test "round hour doesn't show :00",
@@ -922,7 +922,7 @@ describe "format()", ->
     test "should show day of week, specify day of week format",
       start: thisYear "08-25", "05:30"
       end: thisYear "08-28", "19:30"
-      options: {showDayOfWeek: true, weekdayFormat: 'dddd'}
+      options: {showDayOfWeek: true, weekdayFormat: "dddd"}
       result: "Sunday Aug 25, 5:30 AM - Wednesday Aug 28, 7:30 PM"
 
     test "collapses show day of week",
