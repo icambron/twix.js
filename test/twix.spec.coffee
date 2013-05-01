@@ -13,10 +13,10 @@ thisYear = (partial, time) ->
   fullDate += " #{time}" if time
   moment fullDate
 
-nextYear = (partial, time) -> thisYear(partial, time).add("years", 1)
+nextYear = (partial, time) -> thisYear(partial, time).add(1, "year")
 
-yesterday = -> moment().subtract('days', 1).startOf 'day'
-tomorrow = -> moment().add('days', 1).startOf 'day'
+yesterday = -> moment().subtract(1, 'day').startOf 'day'
+tomorrow = -> moment().add(1, 'day').startOf 'day'
 
 thatDay = (start, end) ->
   if start
@@ -221,7 +221,7 @@ describe "iterate()", ->
 
     it "provides 366 days if the range is a year", ->
       start = thisYear "05-25", "16:00"
-      end = thisYear("05-25", "03:00").add 'years', 1
+      end = thisYear("05-25", "03:00").add 1, 'year'
       iter = start.twix(end).iterate "days"
       results = while iter.hasNext()
         iter.next()
@@ -356,13 +356,13 @@ describe "isPast()", ->
 
   describe "non-all-day events", ->
     it "returns true for the past", ->
-      past = moment().subtract 'hours', 3
-      nearerPast = moment().subtract 'hours', 2
+      past = moment().subtract 3, 'hours'
+      nearerPast = moment().subtract 2, 'hours'
       assertEqual true, past.twix(nearerPast).isPast()
 
     it "returns false for the future", ->
-      future = moment().add 'hours', 2
-      furtherFuture = moment().add 'hours', 3
+      future = moment().add 2, 'hours'
+      furtherFuture = moment().add 3, 'hours'
       assertEqual false, future.twix(furtherFuture).isPast()
 
 describe "isFuture()", ->
@@ -379,13 +379,13 @@ describe "isFuture()", ->
 
   describe "non-all-day events", ->
     it "returns false for the past", ->
-      past = moment().subtract 'hours', 3
-      nearerPast = moment().subtract 'hours', 2
+      past = moment().subtract 3, 'hours'
+      nearerPast = moment().subtract 3, 'hours'
       assertEqual false, past.twix(nearerPast).isFuture()
 
     it "returns true for the future", ->
-      future = moment().add 'hours', 2
-      furtherFuture = moment().add 'hours', 3
+      future = moment().add 2, 'hours'
+      furtherFuture = moment().add 3, 'hours'
       assertEqual true, future.twix(furtherFuture).isFuture()
 
 describe "isCurrent()", ->
@@ -402,13 +402,13 @@ describe "isCurrent()", ->
 
   describe "non-all-day events", ->
     it "returns false for the past", ->
-      past = moment().subtract 'hours', 3
-      nearerPast = moment().subtract 'hours', 2
+      past = moment().subtract 3, 'hours'
+      nearerPast = moment().subtract 2, 'hours'
       assertEqual false, past.twix(nearerPast).isCurrent()
 
     it "returns false for the future", ->
-      future = moment().add 'hours', 2
-      furtherFuture = moment().add 'hours', 3
+      future = moment().add 2, 'hours'
+      furtherFuture = moment().add 3, 'hours'
       assertEqual false, future.twix(furtherFuture).isCurrent()
 
 describe "contains()", ->
