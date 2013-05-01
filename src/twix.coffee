@@ -45,7 +45,7 @@ class Twix
       if @isSame "day"
         "all day"
       else
-        @start.from(@end.clone().add('days', 1), true)
+        @start.from(@end.clone().add(1, "day"), true)
     else
       @start.from(@end, true)
 
@@ -91,7 +91,7 @@ class Twix
     newStart = if @start > other.start then @start else other.start
     if @allDay
       end = moment @end # Clone @end
-      end.add('days', 1)
+      end.add(1, "day")
       end.subtract(1, "millisecond")
       if other.allDay
         newEnd = if end < other.end then @end else other.end
@@ -150,7 +150,7 @@ class Twix
     goesIntoTheMorning =
       options.lastNightEndsAt > 0 &&
       !@allDay &&
-      @end.clone().startOf('day').valueOf() == @start.clone().add('days', 1).startOf("day").valueOf() &&
+      @end.clone().startOf("day").valueOf() == @start.clone().add(1, "day").startOf("day").valueOf() &&
       @start.hours() > 12 &&
       @end.hours() < options.lastNightEndsAt
 
@@ -272,7 +272,7 @@ class Twix
   sameDay: -> @isSame "day"
   sameYear: -> @isSame "year"
   countDays: -> @countOuter "days"
-  daysIn: (minHours) -> @iterate 'days', minHours
+  daysIn: (minHours) -> @iterate "days", minHours
   past: -> @isPast()
   duration: -> @humanizeLength()
   merge: (other) -> @union other
@@ -287,14 +287,14 @@ class Twix
         null
       else
         val = iter.clone()
-        iter.add(period, 1)
+        iter.add(1, period)
         val
     hasNext: hasNext
 
   _inner: (period) ->
     start = @start.clone().startOf(period)
     end = @end.clone().startOf(period)
-    (if @allDay then end else start).add(1, period)
+    (if @allDay then end else start).add(period, 1)
     [start, end]
 
 extend = (first, second) ->
