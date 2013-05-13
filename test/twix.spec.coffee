@@ -484,13 +484,13 @@ describe "overlaps()", ->
 
     it "returns true for an engulfing event", ->
       assertOverlap someTime, thatDay "04:30", "09:30"
-      
+
     it "returns false for an event that starts immediately afterwards", ->
       assertNoOverlap someTime, thatDay "08:30", "09:30"
-      
+
     it "returns false for an event that ends immediately before", ->
       assertNoOverlap someTime, thatDay "04:30", "05:30"
-       
+
   describe "one all-day event", ->
     it "returns true for a partially later event", ->
       assertOverlap thatDay(), new Twix("1982-05-25 20:00", "1982-05-26 05:00")
@@ -503,10 +503,10 @@ describe "overlaps()", ->
 
     it "returns true for an engulfing event", ->
       assertOverlap thatDay(), new Twix("1982-05-24 20:00", "1982-05-26 05:00")
-      
+
     it "returns true for an event which starts on the same day", ->
       assertOverlap thatDay(), new Twix("1982-05-25", "1982-05-27")
-      
+
     it "returns true for an event which ends on the same day", ->
       assertOverlap thatDay(), new Twix("1982-05-23", "1982-05-25", true)
 
@@ -660,12 +660,14 @@ describe "intersection()", ->
   describe "non-all-day events", ->
 
     it "does not intersect with a later time", ->
-      assertTwixEqual thatDay("09:30", "08:30"), someTime.intersection(thatDay "09:30", "11:30")
-      # Check that the range is invalid
+      intersection = someTime.intersection(thatDay "09:30", "11:30")
+      assertTwixEqual thatDay("09:30", "08:30"), intersection
+      assertEqual false, intersection.isValid()
 
     it "does not intersect with an earlier time", ->
-      assertTwixEqual thatDay("05:30", "04:30"), someTime.intersection(thatDay "03:30", "04:30")
-      # Check that the range is invalid
+      intersection = someTime.intersection(thatDay "03:30", "04:30")
+      assertTwixEqual thatDay("05:30", "04:30"), intersection
+      assertEqual false, intersection.isValid()
 
     it "intersects with a partially later event", ->
       assertTwixEqual thatDay("08:00", "08:30"), someTime.intersection(thatDay "08:00", "11:30")
@@ -695,12 +697,14 @@ describe "intersection()", ->
   describe "two all-day events", ->
 
     it "does not intersect with a later time", ->
-      assertTwixEqual new Twix("1982-05-27", "1982-05-25", true), someDays.intersection(new Twix("1982-05-27", "1982-05-28", true))
-      # Check that the range is invalid
+      intersection = someDays.intersection(new Twix("1982-05-27", "1982-05-28", true))
+      assertTwixEqual new Twix("1982-05-27", "1982-05-25", true), intersection
+      assertEqual false, intersection.isValid()
 
     it "does not intersect with an earlier time", ->
-      assertTwixEqual new Twix("1982-05-24", "1982-05-22", true), someDays.intersection(new Twix("1982-05-21", "1982-05-22", true))
-      # Check that the range is invalid
+      intersection = someDays.intersection(new Twix("1982-05-21", "1982-05-22", true))
+      assertTwixEqual new Twix("1982-05-24", "1982-05-22", true), intersection
+      assertEqual false, intersection.isValid()
 
     it "intersects with a partially later time", ->
       assertTwixEqual new Twix("1982-05-25", "1982-05-25", true), someDays.intersection(new Twix("1982-05-25", "1982-05-26", true))
@@ -714,8 +718,30 @@ describe "intersection()", ->
     it "intersects with an engulfing event", ->
       assertTwixEqual thatDay(), thatDay().intersection(someDays)
 
+describe "isValid()", ->
+  it "should validate an interval with an earlier start", ->
+    assertEqual true, new Twix("1982-05-24", "1982-05-26").isValid()
+    assertEqual true, new Twix("1982-05-24", "1982-05-26", true).isValid()
+    assertEqual true, new Twix("1982-05-24 20:00", "1982-05-26 07:00").isValid()
+    assertEqual true, new Twix("1982-05-24 20:00", "1982-05-26 07:00", true).isValid()
+
+  it "should validate an interval without range", ->
+    assertEqual true, new Twix("1982-05-24", "1982-05-24").isValid()
+    assertEqual true, new Twix("1982-05-24", "1982-05-24", true).isValid()
+    assertEqual true, new Twix("1982-05-24 20:00", "1982-05-24 20:00").isValid()
+    assertEqual true, new Twix("1982-05-24 20:00", "1982-05-24 20:00", true).isValid()
+
+  it "should not validate an interval with a later start", ->
+    assertEqual false, new Twix("1982-05-26", "1982-05-24").isValid()
+    assertEqual false, new Twix("1982-05-26", "1982-05-24", true).isValid()
+    assertEqual false, new Twix("1982-05-26 07:00", "1982-05-24 20:00").isValid()
+    assertEqual false, new Twix("1982-05-26 07:00", "1982-05-24 20:00", true).isValid()
+
+  it "should validate a same day interval with a later start", ->
+    assertEqual true, new Twix("1982-05-24 20:00", "1982-05-24 00:00", true).isValid()
+
 describe "simpleFormat()", ->
-  it "it provides a simple string when provided no options", ->
+  it "provides a simple string when provided no options", ->
     s = yesterday().twix(tomorrow()).simpleFormat()
     assertEqual true, s.indexOf(" - ") > -1
 
