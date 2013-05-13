@@ -484,13 +484,13 @@ describe "overlaps()", ->
 
     it "returns true for an engulfing event", ->
       assertOverlap someTime, thatDay "04:30", "09:30"
-      
+
     it "returns false for an event that starts immediately afterwards", ->
       assertNoOverlap someTime, thatDay "08:30", "09:30"
-      
+
     it "returns false for an event that ends immediately before", ->
       assertNoOverlap someTime, thatDay "04:30", "05:30"
-       
+
   describe "one all-day event", ->
     it "returns true for a partially later event", ->
       assertOverlap thatDay(), new Twix("1982-05-25 20:00", "1982-05-26 05:00")
@@ -503,10 +503,10 @@ describe "overlaps()", ->
 
     it "returns true for an engulfing event", ->
       assertOverlap thatDay(), new Twix("1982-05-24 20:00", "1982-05-26 05:00")
-      
+
     it "returns true for an event which starts on the same day", ->
       assertOverlap thatDay(), new Twix("1982-05-25", "1982-05-27")
-      
+
     it "returns true for an event which ends on the same day", ->
       assertOverlap thatDay(), new Twix("1982-05-23", "1982-05-25", true)
 
