@@ -715,7 +715,7 @@ describe "intersection()", ->
       assertTwixEqual thatDay(), thatDay().intersection(someDays)
 
 describe "simpleFormat()", ->
-  it "it provides a simple string when provided no options", ->
+  it "provides a simple string when provided no options", ->
     s = yesterday().twix(tomorrow()).simpleFormat()
     assertEqual true, s.indexOf(" - ") > -1
 
