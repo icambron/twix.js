@@ -103,6 +103,9 @@ class Twix
     allDay = @allDay && other.allDay
     new Twix(newStart, newEnd, allDay)
 
+  isValid: ->
+    @_trueStart() <= @_trueEnd()
+
   equals: (other) ->
     (other instanceof Twix) &&
       @allDay == other.allDay &&
