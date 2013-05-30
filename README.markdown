@@ -39,6 +39,8 @@ You can also run the tests in-browser by building and then loading `test/test.ht
 
 ##Changelog##
 
+ * **0.2.2**: Added `isValid` and `intersection`, fixed `overlaps` for adjacent times, renamed `merge` to `union`, added deprecation warnings.
+
  * **0.2.1**: Added `countInner`, `contains`, `iterateInner`, and `length`
 
  * **0.2.0**: Deprecated `sameDay`, `sameYear`, `countDays`, `daysIn`, `past`, and `duration`. Added `isSame`, `humanizeLength`, `asDuration`, `isPast`, `isFuture`, `isCurrent`. Added duration methods. Emphasized moment() monkey patch methods over Twix() constructor. Some bug fixes.
