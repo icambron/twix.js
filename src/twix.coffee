@@ -271,15 +271,6 @@ class Twix
 
     fold common_bucket
 
-  # -- DEPRECATED METHODS --
-  sameDay: -> @isSame "day"
-  sameYear: -> @isSame "year"
-  countDays: -> @countOuter "days"
-  daysIn: (minHours) -> @iterate "days", minHours
-  past: -> @isPast()
-  duration: -> @humanizeLength()
-  merge: (other) -> @union other
-
   # -- INTERNAL
   _trueStart: -> if @allDay then @start.clone().startOf("day") else @start
   _trueEnd: -> if @allDay then @end.clone().endOf("day") else @end
@@ -299,6 +290,19 @@ class Twix
     end = @end.clone().startOf(period)
     (if @allDay then end else start).add(period, 1)
     [start, end]
+
+  _deprecate: (name, instead, fn) ->
+    console.warn "##{name} is deprecated. Use ##{instead} instead." if console && console.warn
+    fn.apply @
+
+  # -- DEPRECATED METHODS --
+  sameDay: -> @_deprecate "sameDay", "isSame('day')", -> @isSame "day"
+  sameYear: -> @_deprecate "sameYear", "isSame('year')", -> @isSame "year"
+  countDays: -> @_deprecate "countDays", "countOuter('days')", -> @countOuter "days"
+  daysIn: (minHours) -> @_deprecate "daysIn", "iterate('days' [,minHours])", -> @iterate 'days', minHours
+  past: -> @_deprecate "past", "isPast()", -> @isPast()
+  duration: -> @_deprecate "duration", "humanizeLength()", -> @humanizeLength()
+  merge: (other) -> @_deprecate "merge", "union(other)", -> @union other
 
 extend = (first, second) ->
   for attr of second
