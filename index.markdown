@@ -243,7 +243,7 @@ Produce a range that has the minimum start time and the maximum end time of the 
 var range1 = moment("5/25/1982").twix("5/30/1982");
 var range2 = moment("5/27/1982").twix("6/13/1982");
 
-range1.union(range2); //=> 5/25/82 - 5/30/1982
+range1.union(range2); //=> 5/25/82 - 6/13/1982
 ```
 
 ###intersection()
