@@ -73,7 +73,7 @@
         if (this.isSame("day")) {
           return "all day";
         } else {
-          return this.start.from(this.end.clone().add('days', 1), true);
+          return this.start.from(this.end.clone().add(1, "day"), true);
         }
       } else {
         return this.start.from(this.end, true);
@@ -140,7 +140,7 @@
       newStart = this.start > other.start ? this.start : other.start;
       if (this.allDay) {
         end = moment(this.end);
-        end.add('days', 1);
+        end.add(1, "day");
         end.subtract(1, "millisecond");
         if (other.allDay) {
           newEnd = end < other.end ? this.end : other.end;
@@ -152,6 +152,10 @@
       }
       allDay = this.allDay && other.allDay;
       return new Twix(newStart, newEnd, allDay);
+    };
+
+    Twix.prototype.isValid = function() {
+      return this._trueStart() <= this._trueEnd();
     };
 
     Twix.prototype.equals = function(other) {
@@ -208,7 +212,7 @@
       if (options.twentyFourHour) {
         options.hourFormat = options.hourFormat.replace("h", "H");
       }
-      goesIntoTheMorning = options.lastNightEndsAt > 0 && !this.allDay && this.end.clone().startOf('day').valueOf() === this.start.clone().add('days', 1).startOf("day").valueOf() && this.start.hours() > 12 && this.end.hours() < options.lastNightEndsAt;
+      goesIntoTheMorning = options.lastNightEndsAt > 0 && !this.allDay && this.end.clone().startOf("day").valueOf() === this.start.clone().add(1, "day").startOf("day").valueOf() && this.start.hours() > 12 && this.end.hours() < options.lastNightEndsAt;
       needDate = options.showDate || (!this.isSame("day") && !goesIntoTheMorning);
       if (this.allDay && this.isSame("day") && (!options.showDate || options.explicitAllDay)) {
         fs.push({
@@ -372,34 +376,6 @@
       return fold(common_bucket);
     };
 
-    Twix.prototype.sameDay = function() {
-      return this.isSame("day");
-    };
-
-    Twix.prototype.sameYear = function() {
-      return this.isSame("year");
-    };
-
-    Twix.prototype.countDays = function() {
-      return this.countOuter("days");
-    };
-
-    Twix.prototype.daysIn = function(minHours) {
-      return this.iterate('days', minHours);
-    };
-
-    Twix.prototype.past = function() {
-      return this.isPast();
-    };
-
-    Twix.prototype.duration = function() {
-      return this.humanizeLength();
-    };
-
-    Twix.prototype.merge = function(other) {
-      return this.union(other);
-    };
-
     Twix.prototype._trueStart = function() {
       if (this.allDay) {
         return this.start.clone().startOf("day");
@@ -427,7 +403,7 @@
             return null;
           } else {
             val = iter.clone();
-            iter.add(period, 1);
+            iter.add(1, period);
             return val;
           }
         },
@@ -440,8 +416,57 @@
 
       start = this.start.clone().startOf(period);
       end = this.end.clone().startOf(period);
-      (this.allDay ? end : start).add(1, period);
+      (this.allDay ? end : start).add(period, 1);
       return [start, end];
+    };
+
+    Twix.prototype._deprecate = function(name, instead, fn) {
+      if (console && console.warn) {
+        console.warn("#" + name + " is deprecated. Use #" + instead + " instead.");
+      }
+      return fn.apply(this);
+    };
+
+    Twix.prototype.sameDay = function() {
+      return this._deprecate("sameDay", "isSame('day')", function() {
+        return this.isSame("day");
+      });
+    };
+
+    Twix.prototype.sameYear = function() {
+      return this._deprecate("sameYear", "isSame('year')", function() {
+        return this.isSame("year");
+      });
+    };
+
+    Twix.prototype.countDays = function() {
+      return this._deprecate("countDays", "countOuter('days')", function() {
+        return this.countOuter("days");
+      });
+    };
+
+    Twix.prototype.daysIn = function(minHours) {
+      return this._deprecate("daysIn", "iterate('days' [,minHours])", function() {
+        return this.iterate('days', minHours);
+      });
+    };
+
+    Twix.prototype.past = function() {
+      return this._deprecate("past", "isPast()", function() {
+        return this.isPast();
+      });
+    };
+
+    Twix.prototype.duration = function() {
+      return this._deprecate("duration", "humanizeLength()", function() {
+        return this.humanizeLength();
+      });
+    };
+
+    Twix.prototype.merge = function(other) {
+      return this._deprecate("merge", "union(other)", function() {
+        return this.union(other);
+      });
     };
 
     return Twix;

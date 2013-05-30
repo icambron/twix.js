@@ -33,15 +33,15 @@
   };
 
   nextYear = function(partial, time) {
-    return thisYear(partial, time).add("years", 1);
+    return thisYear(partial, time).add(1, "year");
   };
 
   yesterday = function() {
-    return moment().subtract('days', 1).startOf('day');
+    return moment().subtract(1, "day").startOf("day");
   };
 
   tomorrow = function() {
-    return moment().add('days', 1).startOf('day');
+    return moment().add(1, "day").startOf("day");
   };
 
   thatDay = function(start, end) {
@@ -313,7 +313,7 @@
         var end, iter, results, start;
 
         start = thisYear("05-25", "16:00");
-        end = thisYear("05-25", "03:00").add('years', 1);
+        end = thisYear("05-25", "03:00").add(1, "year");
         iter = start.twix(end).iterate("days");
         results = (function() {
           var _results;
@@ -489,7 +489,7 @@
       it("returns false for today", function() {
         var today;
 
-        today = moment().startOf('day');
+        today = moment().startOf("day");
         return assertEqual(false, today.twix(today, true).isPast());
       });
       return it("returns false for days in the future", function() {
@@ -500,15 +500,15 @@
       it("returns true for the past", function() {
         var nearerPast, past;
 
-        past = moment().subtract('hours', 3);
-        nearerPast = moment().subtract('hours', 2);
+        past = moment().subtract(3, "hours");
+        nearerPast = moment().subtract(2, "hours");
         return assertEqual(true, past.twix(nearerPast).isPast());
       });
       return it("returns false for the future", function() {
         var furtherFuture, future;
 
-        future = moment().add('hours', 2);
-        furtherFuture = moment().add('hours', 3);
+        future = moment().add(2, "hours");
+        furtherFuture = moment().add(3, "hours");
         return assertEqual(false, future.twix(furtherFuture).isPast());
       });
     });
@@ -522,7 +522,7 @@
       it("returns false for today", function() {
         var today;
 
-        today = moment().startOf('day');
+        today = moment().startOf("day");
         return assertEqual(false, today.twix(today, true).isFuture());
       });
       return it("returns true for days in the future", function() {
@@ -533,15 +533,15 @@
       it("returns false for the past", function() {
         var nearerPast, past;
 
-        past = moment().subtract('hours', 3);
-        nearerPast = moment().subtract('hours', 2);
+        past = moment().subtract(3, "hours");
+        nearerPast = moment().subtract(3, "hours");
         return assertEqual(false, past.twix(nearerPast).isFuture());
       });
       return it("returns true for the future", function() {
         var furtherFuture, future;
 
-        future = moment().add('hours', 2);
-        furtherFuture = moment().add('hours', 3);
+        future = moment().add(2, "hours");
+        furtherFuture = moment().add(3, "hours");
         return assertEqual(true, future.twix(furtherFuture).isFuture());
       });
     });
@@ -555,7 +555,7 @@
       it("returns true for today", function() {
         var today;
 
-        today = moment().startOf('day');
+        today = moment().startOf("day");
         return assertEqual(true, today.twix(today, true).isCurrent());
       });
       return it("returns false for days in the future", function() {
@@ -566,15 +566,15 @@
       it("returns false for the past", function() {
         var nearerPast, past;
 
-        past = moment().subtract('hours', 3);
-        nearerPast = moment().subtract('hours', 2);
+        past = moment().subtract(3, "hours");
+        nearerPast = moment().subtract(2, "hours");
         return assertEqual(false, past.twix(nearerPast).isCurrent());
       });
       return it("returns false for the future", function() {
         var furtherFuture, future;
 
-        future = moment().add('hours', 2);
-        furtherFuture = moment().add('hours', 3);
+        future = moment().add(2, "hours");
+        furtherFuture = moment().add(3, "hours");
         return assertEqual(false, future.twix(furtherFuture).isCurrent());
       });
     });
@@ -814,10 +814,10 @@
         return assertTwixEqual(new Twix("1982-05-24 00:00", "1982-05-26 07:00"), someDays.union(new Twix("1982-05-24 20:00", "1982-05-26 07:00")));
       });
       it("spans an earlier time", function() {
-        return assertTwixEqual(new Twix("1982-05-23 08:00", moment("1982-05-25").endOf('day')), someDays.union(new Twix("1982-05-23 08:00", "1982-05-25 07:00")));
+        return assertTwixEqual(new Twix("1982-05-23 08:00", moment("1982-05-25").endOf("day")), someDays.union(new Twix("1982-05-23 08:00", "1982-05-25 07:00")));
       });
       it("isn't affected by engulfing events", function() {
-        return assertTwixEqual(new Twix("1982-05-24 00:00", moment("1982-05-25").endOf('day')), someDays.union(someTime));
+        return assertTwixEqual(new Twix("1982-05-24 00:00", moment("1982-05-25").endOf("day")), someDays.union(someTime));
       });
       return it("becomes an engulfing event", function() {
         return assertTwixEqual(new Twix("1982-05-23 20:00", "1982-05-26 08:30"), someDays.union(new Twix("1982-05-23 20:00", "1982-05-26 08:30")));
@@ -852,10 +852,18 @@
     someDays = new Twix("1982-05-24", "1982-05-25", true);
     describe("non-all-day events", function() {
       it("does not intersect with a later time", function() {
-        return assertTwixEqual(thatDay("09:30", "08:30"), someTime.intersection(thatDay("09:30", "11:30")));
+        var intersection;
+
+        intersection = someTime.intersection(thatDay("09:30", "11:30"));
+        assertTwixEqual(thatDay("09:30", "08:30"), intersection);
+        return assertEqual(false, intersection.isValid());
       });
       it("does not intersect with an earlier time", function() {
-        return assertTwixEqual(thatDay("05:30", "04:30"), someTime.intersection(thatDay("03:30", "04:30")));
+        var intersection;
+
+        intersection = someTime.intersection(thatDay("03:30", "04:30"));
+        assertTwixEqual(thatDay("05:30", "04:30"), intersection);
+        return assertEqual(false, intersection.isValid());
       });
       it("intersects with a partially later event", function() {
         return assertTwixEqual(thatDay("08:00", "08:30"), someTime.intersection(thatDay("08:00", "11:30")));
@@ -886,10 +894,18 @@
     });
     return describe("two all-day events", function() {
       it("does not intersect with a later time", function() {
-        return assertTwixEqual(new Twix("1982-05-27", "1982-05-25", true), someDays.intersection(new Twix("1982-05-27", "1982-05-28", true)));
+        var intersection;
+
+        intersection = someDays.intersection(new Twix("1982-05-27", "1982-05-28", true));
+        assertTwixEqual(new Twix("1982-05-27", "1982-05-25", true), intersection);
+        return assertEqual(false, intersection.isValid());
       });
       it("does not intersect with an earlier time", function() {
-        return assertTwixEqual(new Twix("1982-05-24", "1982-05-22", true), someDays.intersection(new Twix("1982-05-21", "1982-05-22", true)));
+        var intersection;
+
+        intersection = someDays.intersection(new Twix("1982-05-21", "1982-05-22", true));
+        assertTwixEqual(new Twix("1982-05-24", "1982-05-22", true), intersection);
+        return assertEqual(false, intersection.isValid());
       });
       it("intersects with a partially later time", function() {
         return assertTwixEqual(new Twix("1982-05-25", "1982-05-25", true), someDays.intersection(new Twix("1982-05-25", "1982-05-26", true)));
@@ -906,8 +922,32 @@
     });
   });
 
+  describe("isValid()", function() {
+    it("should validate an interval with an earlier start", function() {
+      assertEqual(true, new Twix("1982-05-24", "1982-05-26").isValid());
+      assertEqual(true, new Twix("1982-05-24", "1982-05-26", true).isValid());
+      assertEqual(true, new Twix("1982-05-24 20:00", "1982-05-26 07:00").isValid());
+      return assertEqual(true, new Twix("1982-05-24 20:00", "1982-05-26 07:00", true).isValid());
+    });
+    it("should validate an interval without range", function() {
+      assertEqual(true, new Twix("1982-05-24", "1982-05-24").isValid());
+      assertEqual(true, new Twix("1982-05-24", "1982-05-24", true).isValid());
+      assertEqual(true, new Twix("1982-05-24 20:00", "1982-05-24 20:00").isValid());
+      return assertEqual(true, new Twix("1982-05-24 20:00", "1982-05-24 20:00", true).isValid());
+    });
+    it("should not validate an interval with a later start", function() {
+      assertEqual(false, new Twix("1982-05-26", "1982-05-24").isValid());
+      assertEqual(false, new Twix("1982-05-26", "1982-05-24", true).isValid());
+      assertEqual(false, new Twix("1982-05-26 07:00", "1982-05-24 20:00").isValid());
+      return assertEqual(false, new Twix("1982-05-26 07:00", "1982-05-24 20:00", true).isValid());
+    });
+    return it("should validate a same day interval with a later start", function() {
+      return assertEqual(true, new Twix("1982-05-24 20:00", "1982-05-24 00:00", true).isValid());
+    });
+  });
+
   describe("simpleFormat()", function() {
-    it("it provides a simple string when provided no options", function() {
+    it("provides a simple string when provided no options", function() {
       var s;
 
       s = yesterday().twix(tomorrow()).simpleFormat();
@@ -958,12 +998,12 @@
       test("different year, different day shows everything", {
         start: "1982-05-25 05:30",
         end: "1983-05-26 15:30",
-        result: 'May 25, 1982, 5:30 AM - May 26, 1983, 3:30 PM'
+        result: "May 25, 1982, 5:30 AM - May 26, 1983, 3:30 PM"
       });
       test("this year, different day skips year", {
         start: thisYear("05-25", "05:30"),
         end: thisYear("05-26", "15:30"),
-        result: 'May 25, 5:30 AM - May 26, 3:30 PM'
+        result: "May 25, 5:30 AM - May 26, 3:30 PM"
       });
       test("this year, different day shows year if requested", {
         start: thisYear("05-25", "05:30"),
@@ -976,12 +1016,12 @@
       test("same day, different times shows date once", {
         start: "1982-05-25 05:30",
         end: "1982-05-25 15:30",
-        result: 'May 25, 1982, 5:30 AM - 3:30 PM'
+        result: "May 25, 1982, 5:30 AM - 3:30 PM"
       });
       test("same day, different times, same meridian shows date and meridiem once", {
         start: "1982-05-25 05:30",
         end: "1982-05-25 06:30",
-        result: 'May 25, 1982, 5:30 - 6:30 AM'
+        result: "May 25, 1982, 5:30 - 6:30 AM"
       });
       test("custom month format for regular event", {
         start: "2010-08-25 05:30",
@@ -989,7 +1029,7 @@
         options: {
           monthFormat: "MMMM"
         },
-        result: 'August 25, 2010, 5:30 - 6:30 AM'
+        result: "August 25, 2010, 5:30 - 6:30 AM"
       });
       return test("custom month format for all day event", {
         start: "2010-08-25",
@@ -998,7 +1038,7 @@
         options: {
           monthFormat: "MMMM"
         },
-        result: 'August 25, 2010'
+        result: "August 25, 2010"
       });
     });
     describe("rounded times", function() {
@@ -1176,7 +1216,7 @@
         end: thisYear("08-28", "19:30"),
         options: {
           showDayOfWeek: true,
-          weekdayFormat: 'dddd'
+          weekdayFormat: "dddd"
         },
         result: "Sunday Aug 25, 5:30 AM - Wednesday Aug 28, 7:30 PM"
       });
