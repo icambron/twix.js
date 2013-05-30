@@ -95,14 +95,25 @@ moment('5/25/1982').twix('5/26/1982', true);
 
 ##<a id="basicOperations"></a>Basic operations
 
-###same()
+###isValid()
+
+Returns false if the range's start time is after the end time, and true
+otherwise.
+
+```js
+moment().twix(moment()).isValid();                    //=> true
+moment().twix(moment().add(1, "day")).isValid();      //=> true
+moment().twix(moment().subtract(1, "day")).isValid(); //=> false
+```
+
+###isSame()
 
 Does the event begin and end on the same minute/hour/day/month/year? Any time period understood by moment will work.
 
 ```js
-moment("5/25/1982 5:00").twix("5/26/1982 6:00").same("day");  //=> false
-moment("5/25/1982 5:00").twix("5/25/1982 6:00").same("day");  //=> true
-moment("5/25/1982 5:00").twix("5/25/1982 6:00").same("year"); //=> true
+moment("5/25/1982 5:00").twix("5/26/1982 6:00").isSame("day");  //=> false
+moment("5/25/1982 5:00").twix("5/25/1982 6:00").isSame("day");  //=> true
+moment("5/25/1982 5:00").twix("5/25/1982 6:00").isSame("year"); //=> true
 ```
 
 ###isPast()
@@ -225,14 +236,24 @@ range1.equals(range2); //=> true
 range2.equals(range1); //=> true
 ```
 
-###merge()
+###union()
 Produce a range that has the minimum start time and the maximum end time of the two ranges.
 
 ```js
 var range1 = moment("5/25/1982").twix("5/30/1982");
 var range2 = moment("5/27/1982").twix("6/13/1982");
 
-range1.merge(range2); //=> 5/25/82 - 6/13/1982
+range1.union(range2); //=> 5/27/82 - 5/30/1982
+```
+
+###intersection()
+Produce a range that has the maximum start time and the minimum end time of the two ranges.
+
+```js
+var range1 = moment("5/25/1982").twix("5/30/1982");
+var range2 = moment("5/27/1982").twix("6/13/1982");
+
+range1.intersection(range2); //=> 5/27/82 - 5/30/1982
 ```
 
 ##<a id="momentDurations"></a>Working with Moment durations
