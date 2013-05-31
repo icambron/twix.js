@@ -68,7 +68,7 @@ To specify the dates, you can pass in anything that can be processed by moment's
 
  * A JS Date object
  * A moment object
- * Anything parsable by the Date() constructor. This includes most obvious date formats.
+ * Anything parsable by the `Date()` constructor. This includes most obvious date formats.
 
 
 If you want more complicated parsing, just use moment for that:
@@ -81,9 +81,9 @@ var range = startTime.twix(endTime); //=> from July 1 to August 1
 
 ###All day ranges
 
-Regular events last from a specific moment in time to another specific moment in time. All-day events, on the other hand, capture the concept of the entire day. It's an important distinction in several respects:
+Regular ranges last from a specific moment in time to another specific moment in time. All-day ranges, on the other hand, capture the concept of the entire day. It's an important distinction in several respects:
 
- * The ranges are actually different times. A regular event from 5/25 - 5/26 is from 5/25, 12:00 AM to 5/26, 12:00, where as the all day event is over both days.
+ * The ranges are actually different times. A regular range from 5/25 - 5/26 is from 5/25, 12:00 AM to 5/26, 12:00, where as the all day range is over both days.
  * All of Twix's functions respect the all-day semantics when comparing or
  * The time range is formatted to differently -- see [below](#formattingAllDay) for more information.
 
@@ -108,7 +108,7 @@ moment().twix(moment().subtract(1, "day")).isValid(); //=> false
 
 ###isSame()
 
-Does the event begin and end on the same minute/hour/day/month/year? Any time period understood by moment will work.
+Does the range begin and end on the same minute/hour/day/month/year? Any time period understood by moment will work.
 
 ```js
 moment("5/25/1982 5:00").twix("5/26/1982 6:00").isSame("day");  //=> false
@@ -341,7 +341,7 @@ The most important feature is formatting. By default, Twix tries to make brief, 
 
 ###The basics
 
-Twix's `format` method returns a string showing the range. Called with no arguments it uses the default options for how to do that. The most important part of that is that it elides as much redundant information as it can. For example, if the event begins and ends today, it doesn't specify today's date twice. This makes for short, natural-looking time ranges.
+Twix's `format` method returns a string showing the range. Called with no arguments it uses the default options for how to do that. The most important part of that is that it elides as much redundant information as it can. For example, if the range begins and ends today, it doesn't specify today's date twice. This makes for short, natural-looking time ranges.
 
 ```js
 moment("1/25/1982 9:00 AM").twix("1/25/1982 11:00 AM").format();  //=> 'Jan 25, 1982, 9 - 11 AM'
@@ -435,7 +435,7 @@ moment("5/25/2012 8:00").twix("5/25/2012 17:00").format({showDate: false}); //=>
 
 This doesn't affect ranges that span multiple days; they still show the dates.
 
-If you combine an all-day event with `showDate:false`, you get this:
+If you combine an all-day range with `showDate:false`, you get this:
 
 ```js
 moment("1/25/2012").twix("1/25/2012", true).format({showDate: false}); //=> All day
