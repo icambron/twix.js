@@ -333,8 +333,6 @@ range.simpleFormat(null, {allDay: "-- all day! --"}); //=> '1982-05-25T00:00:00-
 range.simpleFormat(null, {allDay: null}); //=> '1982-05-25T00:00:00-04:00 - 1982-05-26T00:00:00-04:00'
 ```
 
-It appends some extra stuff 
-
 ##<a id="smartFormatting"></a>Smart formatting
 
 The most important feature is formatting. By default, Twix tries to make brief, readable strings.
