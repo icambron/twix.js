@@ -76,7 +76,7 @@ If you want more complicated parsing, just use moment for that:
 ```js
 var startTime = moment('2012 juillet', 'YYYY MMM', 'fr');
 var endTime = moment('2012 August', 'YYYY MMM', 'en');
-var range = moment.twix(startTime, endTime); //=> from July 1 to August 1
+var range = startTime.twix(endTime); //=> from July 1 to August 1
 ```
 
 ###All day ranges
