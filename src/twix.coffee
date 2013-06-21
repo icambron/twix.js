@@ -320,7 +320,7 @@ extend = (first, second) ->
   for attr of second
     first[attr] = second[attr] unless typeof second[attr] == "undefined"
 
-extend(moment.fn._lang.__proto__,
+extend(Object.getPrototypeOf(moment.fn._lang),
   twix_fn: (name, options)->
     @_twix[name].fn(options)
   twix_slot: (name)->
