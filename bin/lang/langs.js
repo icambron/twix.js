@@ -6,7 +6,7 @@
       allDayMonth: {
         fn: function(options) {
           return function(date) {
-            return date.format(" " + options.dayFormat + " " + options.monthFormat);
+            return date.format("" + options.dayFormat + " " + options.monthFormat);
           };
         },
         slot: 3
@@ -29,7 +29,7 @@
       allDayMonth: {
         fn: function(options) {
           return function(date) {
-            return date.format(" " + options.dayFormat + " " + options.monthFormat);
+            return date.format("" + options.dayFormat + " " + options.monthFormat);
           };
         },
         slot: 3
