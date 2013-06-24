@@ -11,6 +11,9 @@ class Twix
     @start = moment start
     @end = moment end
     @allDay = allDay || false
+    @langData = @start.lang()
+    if @langData._abbr != @end.lang()._abbr
+      @end.lang(@langData._abbr)
 
   @defaults:
     twentyFourHour: false
@@ -175,7 +178,7 @@ class Twix
       spaceBeforeMeridiem: true
       showDate: true
       showDayOfWeek: false
-      twentyFourHour: moment.langData()._twix.twentyFourHour
+      twentyFourHour: @langData._twix.twentyFourHour
       implicitMinutes: true
       implicitYear: true
       yearFormat: "YYYY"
@@ -328,16 +331,16 @@ class Twix
     [start, end]
 
   _twix_fn: (name, options) ->
-    moment.langData()._twix[name].fn(options)
+    @langData._twix[name].fn(options)
 
   _twix_slot: (name) ->
-    moment.langData()._twix[name].slot
+    @langData._twix[name].slot
 
   _twix_pre: (name, options) ->
-    if typeof moment.langData()._twix[name].pre == "function"
-      moment.langData()._twix[name].pre(options)
+    if typeof @langData._twix[name].pre == "function"
+      @langData._twix[name].pre(options)
     else
-      moment.langData()._twix[name].pre
+      @langData._twix[name].pre
 
   _deprecate: (name, instead, fn) ->
     console.warn "##{name} is deprecated. Use ##{instead} instead." if console && console.warn
