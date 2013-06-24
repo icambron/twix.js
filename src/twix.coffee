@@ -15,7 +15,7 @@ class Twix
   @defaults:
     twentyFourHour: false
     allDaySimple:
-      fn: (options) -> options.allDay
+      fn: (options) -> () -> options.allDay
       slot: 0
       pre: " "
     dayOfWeek:
@@ -188,59 +188,59 @@ class Twix
     if @allDay && @isSame("day") && (!options.showDate || options.explicitAllDay)
       fs.push
         name: "all day simple"
-        fn: -> moment.langData().twix_fn('allDaySimple', options)
-        pre: moment.langData().twix_pre('allDaySimple', options)
-        slot: moment.langData().twix_slot('allDaySimple')
+        fn: @_twix_fn('allDaySimple', options)
+        pre: @_twix_pre('allDaySimple', options)
+        slot: @_twix_slot('allDaySimple')
 
     if needDate && (!options.implicitYear || @start.year() != moment().year() || !@isSame("year"))
       fs.push
         name: "year",
-        fn: moment.langData().twix_fn('year', options)
-        pre: moment.langData().twix_pre('year', options)
-        slot: moment.langData().twix_slot('year')
+        fn: @_twix_fn('year', options)
+        pre: @_twix_pre('year', options)
+        slot: @_twix_slot('year')
 
     if !@allDay && needDate
       fs.push
         name: "all day month"
-        fn: moment.langData().twix_fn('allDayMonth', options)
+        fn: @_twix_fn('allDayMonth', options)
         ignoreEnd: -> goesIntoTheMorning
-        pre: moment.langData().twix_pre('allDayMonth', options)
-        slot: moment.langData().twix_slot('allDayMonth')
+        pre: @_twix_pre('allDayMonth', options)
+        slot: @_twix_slot('allDayMonth')
 
     if @allDay && needDate
       fs.push
         name: "month"
-        fn: moment.langData().twix_fn('month', options)
-        pre: moment.langData().twix_pre('month', options)
-        slot: moment.langData().twix_slot('month')
+        fn: @_twix_fn('month', options)
+        pre: @_twix_pre('month', options)
+        slot: @_twix_slot('month')
 
     if @allDay && needDate
       fs.push
         name: "date"
-        fn: moment.langData().twix_fn('date', options)
-        pre: moment.langData().twix_pre('date', options)
-        slot: moment.langData().twix_slot('date')
+        fn: @_twix_fn('date', options)
+        pre: @_twix_pre('date', options)
+        slot: @_twix_slot('date')
 
     if needDate && options.showDayOfWeek
       fs.push
         name: "day of week",
-        fn: moment.langData().twix_fn('dayOfWeek', options)
-        pre: moment.langData().twix_pre('dayOfWeek', options)
-        slot: moment.langData().twix_slot('dayOfWeek')
+        fn: @_twix_fn('dayOfWeek', options)
+        pre: @_twix_pre('dayOfWeek', options)
+        slot: @_twix_slot('dayOfWeek')
 
     if options.groupMeridiems && !options.twentyFourHour && !@allDay
       fs.push
         name: "meridiem",
-        fn: moment.langData().twix_fn('meridiem', options)
-        pre: moment.langData().twix_pre('meridiem', options)
-        slot: moment.langData().twix_slot('meridiem')
+        fn: @_twix_fn('meridiem', options)
+        pre: @_twix_pre('meridiem', options)
+        slot: @_twix_slot('meridiem')
 
     if !@allDay
       fs.push
         name: "time",
-        fn: moment.langData().twix_fn('time', options)
-        pre: moment.langData().twix_pre('time', options)
-        slot: moment.langData().twix_slot('time')
+        fn: @_twix_fn('time', options)
+        pre: @_twix_pre('time', options)
+        slot: @_twix_slot('time')
 
     start_bucket = []
     end_bucket = []
@@ -316,20 +316,23 @@ class Twix
     (if @allDay then end else start).add(1, period)
     [start, end]
 
+  _twix_fn: (name, options) ->
+    moment.langData()._twix[name].fn(options)
+
+  _twix_slot: (name) ->
+    moment.langData()._twix[name].slot
+
+  _twix_pre: (name, options) ->
+    if typeof moment.langData()._twix[name].pre == "function"
+      moment.langData()._twix[name].pre(options)
+    else
+      moment.langData()._twix[name].pre
+
 extend = (first, second) ->
   for attr of second
     first[attr] = second[attr] unless typeof second[attr] == "undefined"
 
 extend(moment.fn._lang.__proto__,
-  twix_fn: (name, options)->
-    @_twix[name].fn(options)
-  twix_slot: (name)->
-    @_twix[name].slot
-  twix_pre: (name, options)->
-    if typeof @_twix[name].pre == "function"
-      @_twix[name].pre(options)
-    else
-      @_twix[name].pre
   _twix: Twix.defaults
 )
 
