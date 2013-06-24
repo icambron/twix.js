@@ -90,7 +90,7 @@ class Twix
       if @isSame "day"
         "all day"
       else
-        @start.from(@end.clone().add('days', 1), true)
+        @start.from(@end.clone().add(1, "day"), true)
     else
       @start.from(@end, true)
 
@@ -117,11 +117,11 @@ class Twix
     @_trueStart() <= mom && @_trueEnd() >= mom
 
   # -- WORK WITH MULTIPLE RANGES --
-  overlaps: (other) -> !(@_trueEnd() < other._trueStart() || @_trueStart() > other._trueEnd())
+  overlaps: (other) -> (@_trueEnd().isAfter(other._trueStart()) && @_trueStart().isBefore(other._trueEnd()))
 
   engulfs: (other) -> @_trueStart() <= other._trueStart() && @_trueEnd() >= other._trueEnd()
 
-  merge: (other) ->
+  union: (other) ->
     allDay = @allDay && other.allDay
     if allDay
       newStart = if @start < other.start then @start else other.start
@@ -131,6 +131,25 @@ class Twix
       newEnd = if @_trueEnd() > other._trueEnd() then @_trueEnd() else other._trueEnd()
 
     new Twix(newStart, newEnd, allDay)
+
+  intersection: (other) ->
+    newStart = if @start > other.start then @start else other.start
+    if @allDay
+      end = moment @end # Clone @end
+      end.add(1, "day")
+      end.subtract(1, "millisecond")
+      if other.allDay
+        newEnd = if end < other.end then @end else other.end
+      else
+        newEnd = if end < other.end then end else other.end
+    else
+      newEnd = if @end < other.end then @end else other.end
+
+    allDay = @allDay && other.allDay
+    new Twix(newStart, newEnd, allDay)
+
+  isValid: ->
+    @_trueStart() <= @_trueEnd()
 
   equals: (other) ->
     (other instanceof Twix) &&
@@ -179,7 +198,7 @@ class Twix
     goesIntoTheMorning =
       options.lastNightEndsAt > 0 &&
       !@allDay &&
-      @end.clone().startOf('day').valueOf() == @start.clone().add('days', 1).startOf("day").valueOf() &&
+      @end.clone().startOf("day").valueOf() == @start.clone().add(1, "day").startOf("day").valueOf() &&
       @start.hours() > 12 &&
       @end.hours() < options.lastNightEndsAt
 
@@ -288,14 +307,6 @@ class Twix
 
     fold common_bucket
 
-  # -- DEPRECATED METHODS --
-  sameDay: -> @isSame "day"
-  sameYear: -> @isSame "year"
-  countDays: -> @countOuter "days"
-  daysIn: (minHours) -> @iterate 'days', minHours
-  past: -> @isPast()
-  duration: -> @humanizeLength()
-
   # -- INTERNAL
   _trueStart: -> if @allDay then @start.clone().startOf("day") else @start
   _trueEnd: -> if @allDay then @end.clone().endOf("day") else @end
@@ -306,14 +317,14 @@ class Twix
         null
       else
         val = iter.clone()
-        iter.add(period, 1)
+        iter.add(1, period)
         val
     hasNext: hasNext
 
   _inner: (period) ->
     start = @start.clone().startOf(period)
     end = @end.clone().startOf(period)
-    (if @allDay then end else start).add(1, period)
+    (if @allDay then end else start).add(period, 1)
     [start, end]
 
   _twix_fn: (name, options) ->
@@ -327,6 +338,19 @@ class Twix
       moment.langData()._twix[name].pre(options)
     else
       moment.langData()._twix[name].pre
+
+  _deprecate: (name, instead, fn) ->
+    console.warn "##{name} is deprecated. Use ##{instead} instead." if console && console.warn
+    fn.apply @
+
+  # -- DEPRECATED METHODS --
+  sameDay: -> @_deprecate "sameDay", "isSame('day')", -> @isSame "day"
+  sameYear: -> @_deprecate "sameYear", "isSame('year')", -> @isSame "year"
+  countDays: -> @_deprecate "countDays", "countOuter('days')", -> @countOuter "days"
+  daysIn: (minHours) -> @_deprecate "daysIn", "iterate('days' [,minHours])", -> @iterate 'days', minHours
+  past: -> @_deprecate "past", "isPast()", -> @isPast()
+  duration: -> @_deprecate "duration", "humanizeLength()", -> @humanizeLength()
+  merge: (other) -> @_deprecate "merge", "union(other)", -> @union other
 
 extend = (first, second) ->
   for attr of second

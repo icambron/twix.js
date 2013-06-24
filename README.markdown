@@ -1,4 +1,4 @@
-#Twix [![Build Status](https://secure.travis-ci.org/icambron/twix.js.png?branch=master)](http://travis-ci.org/icambron/twix.js)#
+#Twix [![Build Status](https://secure.travis-ci.org/icambron/twix.js.png?branch=develop)](http://travis-ci.org/icambron/twix.js)#
 
 Twix is a simple but opinionated JS library for working with date ranges, and includes a customizable smart formatter. It's written in CoffeeScript and it depends on [Moment.js](http://momentjs.com/).
 
@@ -9,7 +9,7 @@ var t = new moment("1/25/1982 9:30 AM").twix("1/25/1982 1:30 PM");
 
 t.format();  //=> Jan 25, 1982, 9:30 AM - 1:30 PM
 
-t.same("day"); //=> true
+t.isSame("day"); //=> true
 t.humanizeDuration(); //=> "4 hours"
 t.count("days"); //=> 1
 ```
@@ -32,8 +32,16 @@ Note that the source is `src/twix.coffee`; the output is `bin/twix.js`. You can 
     
 You can also run the tests in-browser by building and then loading `test/test.html`.
 
+##Contributing##
+
+ * Submit pull requests to the `develop` branch. I merge develop to master when we cut a release.
+ * Don't include your changes to the generated `.js` files in the patch; they're much harder to merge. I'll generate them when I cut the release.
 
 ##Changelog##
+
+ * **0.2.2**: Added `isValid` and `intersection`, fixed `overlaps` for adjacent times, renamed `merge` to `union`, added deprecation warnings.
+
+ * **0.2.1**: Added `countInner`, `contains`, `iterateInner`, and `length`
 
  * **0.2.0**: Deprecated `sameDay`, `sameYear`, `countDays`, `daysIn`, `past`, and `duration`. Added `isSame`, `humanizeLength`, `asDuration`, `isPast`, `isFuture`, `isCurrent`. Added duration methods. Emphasized moment() monkey patch methods over Twix() constructor. Some bug fixes.
 
