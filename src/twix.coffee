@@ -1,19 +1,25 @@
-if typeof module != "undefined"
-  moment = require('moment')
-else moment = @moment
+hasModule = module? && module.exports?
 
-#ensure we can find moment
-if typeof moment == "undefined"
-  throw "Can't find moment"
+if hasModule
+  moment = require 'moment'
+else
+  moment = @moment
+
+throw "Can't find moment" unless moment?
+
+knownLanguages = ['en']
 
 class Twix
   constructor: (start, end, allDay) ->
     @start = moment start
     @end = moment end
     @allDay = allDay || false
-    @langData = @start.lang()
-    if @langData._abbr != @end.lang()._abbr
-      @end.lang(@langData._abbr)
+
+  @_extend: (first, others...) ->
+    for other in others
+      for attr of other
+        first[attr] = other[attr] unless typeof other[attr] == "undefined"
+    first
 
   @defaults:
     twentyFourHour: false
@@ -166,13 +172,15 @@ class Twix
   simpleFormat: (momentOpts, inopts) ->
     options = allDay: "(all day)"
 
-    extend options, (inopts || {})
+    Twix._extend options, (inopts || {})
 
     s = "#{@start.format(momentOpts)} - #{@end.format(momentOpts)}"
     s += " #{options.allDay}" if @allDay && options.allDay
     s
 
   format: (inopts) ->
+    @_lazyLang()
+
     options =
       groupMeridiems: true
       spaceBeforeMeridiem: true
@@ -192,7 +200,7 @@ class Twix
       explicitAllDay: false
       lastNightEndsAt: 0
 
-    extend options, (inopts || {})
+    Twix._extend options, (inopts || {})
 
     fs = []
 
@@ -210,59 +218,59 @@ class Twix
     if @allDay && @isSame("day") && (!options.showDate || options.explicitAllDay)
       fs.push
         name: "all day simple"
-        fn: @_twix_fn('allDaySimple', options)
-        pre: @_twix_pre('allDaySimple', options)
-        slot: @_twix_slot('allDaySimple')
+        fn: @_format_fn('allDaySimple', options)
+        pre: @_format_pre('allDaySimple', options)
+        slot: @_format_slot('allDaySimple')
 
     if needDate && (!options.implicitYear || @start.year() != moment().year() || !@isSame("year"))
       fs.push
         name: "year",
-        fn: @_twix_fn('year', options)
-        pre: @_twix_pre('year', options)
-        slot: @_twix_slot('year')
+        fn: @_format_fn('year', options)
+        pre: @_format_pre('year', options)
+        slot: @_format_slot('year')
 
     if !@allDay && needDate
       fs.push
         name: "all day month"
-        fn: @_twix_fn('allDayMonth', options)
+        fn: @_format_fn('allDayMonth', options)
         ignoreEnd: -> goesIntoTheMorning
-        pre: @_twix_pre('allDayMonth', options)
-        slot: @_twix_slot('allDayMonth')
+        pre: @_format_pre('allDayMonth', options)
+        slot: @_format_slot('allDayMonth')
 
     if @allDay && needDate
       fs.push
         name: "month"
-        fn: @_twix_fn('month', options)
-        pre: @_twix_pre('month', options)
-        slot: @_twix_slot('month')
+        fn: @_format_fn('month', options)
+        pre: @_format_pre('month', options)
+        slot: @_format_slot('month')
 
     if @allDay && needDate
       fs.push
         name: "date"
-        fn: @_twix_fn('date', options)
-        pre: @_twix_pre('date', options)
-        slot: @_twix_slot('date')
+        fn: @_format_fn('date', options)
+        pre: @_format_pre('date', options)
+        slot: @_format_slot('date')
 
     if needDate && options.showDayOfWeek
       fs.push
         name: "day of week",
-        fn: @_twix_fn('dayOfWeek', options)
-        pre: @_twix_pre('dayOfWeek', options)
-        slot: @_twix_slot('dayOfWeek')
+        fn: @_format_fn('dayOfWeek', options)
+        pre: @_format_pre('dayOfWeek', options)
+        slot: @_format_slot('dayOfWeek')
 
     if options.groupMeridiems && !options.twentyFourHour && !@allDay
       fs.push
         name: "meridiem",
-        fn: @_twix_fn('meridiem', options)
-        pre: @_twix_pre('meridiem', options)
-        slot: @_twix_slot('meridiem')
+        fn: @_format_fn('meridiem', options)
+        pre: @_format_pre('meridiem', options)
+        slot: @_format_slot('meridiem')
 
     if !@allDay
       fs.push
         name: "time",
-        fn: @_twix_fn('time', options)
-        pre: @_twix_pre('time', options)
-        slot: @_twix_slot('time')
+        fn: @_format_fn('time', options)
+        pre: @_format_pre('time', options)
+        slot: @_format_slot('time')
 
     start_bucket = []
     end_bucket = []
@@ -330,13 +338,31 @@ class Twix
     (if @allDay then end else start).add(period, 1)
     [start, end]
 
-  _twix_fn: (name, options) ->
+  _lazyLang: ->
+    langData = @start.lang()
+
+    @end.lang(langData._abbr) unless @end.lang()._abbr == langData._abbr
+
+    return if @langData? && @langData._abbr == langData
+
+    if hasModule && !(langData._abbr in knownLanguages)
+      try
+        lang = require "./lang/#{langData._abbr}"
+        lang moment, Twix
+      catch e
+        console.log "Can't find Twix language definition for #{langData._abbr}; using en formatting."
+
+      knownLanguages.push langData._abbr
+
+    @langData = langData
+
+  _format_fn: (name, options) ->
     @langData._twix[name].fn(options)
 
-  _twix_slot: (name) ->
+  _format_slot: (name) ->
     @langData._twix[name].slot
 
-  _twix_pre: (name, options) ->
+  _format_pre: (name, options) ->
     if typeof @langData._twix[name].pre == "function"
       @langData._twix[name].pre(options)
     else
@@ -355,18 +381,14 @@ class Twix
   duration: -> @_deprecate "duration", "humanizeLength()", -> @humanizeLength()
   merge: (other) -> @_deprecate "merge", "union(other)", -> @union other
 
-extend = (first, second) ->
-  for attr of second
-    first[attr] = second[attr] unless typeof second[attr] == "undefined"
-
-extend(Object.getPrototypeOf(moment.fn._lang),
+Twix._extend(Object.getPrototypeOf(moment.fn._lang),
   _twix: Twix.defaults
 )
 
-if typeof module != "undefined"
+if module?
   module.exports = Twix
 else
-  window.Twix = Twix
+  @Twix = Twix
 
 moment.twix = -> new Twix(arguments...)
 moment.fn.twix = -> new Twix(this, arguments...)

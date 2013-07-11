@@ -1,9 +1,11 @@
-if typeof module != "undefined"
+if module?
   moment = require "moment"
   Twix = require "../../bin/twix"
 else
   moment = window.moment
   Twix = window.Twix
+
+moment.lang 'en'
 
 assertEqual = (a, b) -> throw new Error("Found #{b}, expected #{a}") unless a == b
 assertTwixEqual = (a, b) -> throw new Error("Found #{b.toString()}, expected #{a.toString()}") unless a.equals b
@@ -1003,3 +1005,16 @@ describe "format()", ->
         end: "1982-05-26 10:00"
         options: {lastNightEndsAt: 5},
         result: "May 25, 5 PM - May 26, 10 AM, 1982"
+
+describe "internationalization", ->
+  it "uses alternative language when specified by moment", ->
+    start = moment("1982-05-25").lang "fr"
+    range = start.twix(start.clone().add 1, 'days')
+
+    assertEqual '25 mai, 0:00 - 26 mai, 0:00, 1982', range.format()
+
+  it "uses English formatting rules when there's no format for the specified language", ->
+    start = moment("1982-10-14").lang "de"
+    range = start.twix(start.clone().add 1, 'days')
+
+    assertEqual 'Okt. 14, 12 AM - Okt. 15, 12 AM, 1982', range.format()
