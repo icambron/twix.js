@@ -34,8 +34,18 @@ You can also run the tests in-browser by building and then loading `test/test.ht
 
 ##Contributing##
 
+Patches are welcome!
+
  * Submit pull requests to the `develop` branch. I merge develop to master when we cut a release.
  * Don't include your changes to the generated `.js` files in the patch; they're much harder to merge. I'll generate them when I cut the release.
+
+Contributors to the project as of 0.2.2:
+
+    96  Isaac Cambron           80.0%
+    16	Tanguy Krotoff          13.3%
+     5	Edmund von der Burg     4.2%
+     2	Suzanne Hamilton        1.7%
+     1	andresmoschini          0.8%
 
 ##Changelog##
 
