@@ -2,7 +2,7 @@
   "name": "twix",
   "version": "0.2.2",
   "dependencies": {
-    "timrwood/moment": "*"
+    "moment/moment": "*"
   },
   "scripts": ["bin/twix.js"],
   "main": "bin/twix.js",
