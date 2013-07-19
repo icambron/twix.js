@@ -15,7 +15,7 @@
   },
   "main": "bin/twix",
   "scripts": {
-    "test": "make test"
+    "test": "cake test"
   },
   "engines": {
     "node": "*"

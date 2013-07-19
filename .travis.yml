@@ -10,4 +10,4 @@ before_install:
   - git submodule update --init --recursive
 
 before_script:
-  - make build
+  - cake build

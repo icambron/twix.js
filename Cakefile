@@ -3,6 +3,11 @@ path = require "path"
 coffee = require "coffee-script"
 Uglify = require "uglify-js"
 Mocha = require "mocha"
+{exec} = require "child_process"
+
+task "configure", ->
+  exec "npm install"
+  exec "git submodule update --init --recursive"
 
 task "build", ->
   invoke "ensure-directories"
