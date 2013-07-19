@@ -83,8 +83,8 @@ eachFile = (dir, callback) ->
     else
       eachFile path, callback
 
-exists = (path) ->
+exists = (dir) ->
   if fs.existsSync
-    fs.existsSync path
+    fs.existsSync dir
   else
-    path.existsSync path
+    path.existsSync dir
