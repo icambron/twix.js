@@ -72,7 +72,11 @@ wrapLang = (content) ->
 
     if module? && module.exports?
       module.exports = lang
-    else
+
+    if typeof(define) == "function" && define.amd
+      define ["twix"], (Twix) -> lang(Twix)
+
+    if @Twix
       lang Twix
   """
 

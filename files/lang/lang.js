@@ -40,7 +40,15 @@
 
   if ((typeof module !== "undefined" && module !== null) && (module.exports != null)) {
     module.exports = lang;
-  } else {
+  }
+
+  if (typeof define === "function" && define.amd) {
+    define(["twix"], function(Twix) {
+      return lang(Twix);
+    });
+  }
+
+  if (this.Twix) {
     lang(Twix);
   }
 
