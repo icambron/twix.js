@@ -1,4 +1,5 @@
 fs = require "fs"
+path = require "path"
 coffee = require "coffee-script"
 Uglify = require "uglify-js"
 Mocha = require "mocha"
@@ -18,7 +19,7 @@ task "test", ->
 
 task "ensure-directories", ->
   for dir in ["files", "files/lang", "test/files"]
-    fs.mkdirSync dir unless fs.existsSync(dir)
+    fs.mkdirSync dir unless exists dir
 
 task "build-twix", -> compileFile "src/twix.coffee", "files/twix.js"
 
@@ -81,3 +82,9 @@ eachFile = (dir, callback) ->
       callback path
     else
       eachFile path, callback
+
+exists = (path) ->
+  if fs.existsSync
+    fs.existsSync path
+  else
+    path.existsSync path
