@@ -356,7 +356,6 @@ makeTwix = (moment) ->
           lang = require "./lang/#{langData._abbr}"
           lang Twix
         catch e
-          console.log "Can't find Twix language definition for #{langData._abbr}; using en formatting: #{e}"
 
         knownLanguages.push langData._abbr
 

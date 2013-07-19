@@ -486,9 +486,18 @@
 
       Twix.prototype._inner = function(period) {
         var end, start;
-        start = this.start.clone().startOf(period);
-        end = this.end.clone().startOf(period);
-        (this.allDay ? end : start).add(period, 1);
+        start = this.start.clone();
+        end = this.end.clone();
+        if (this.allDay) {
+          start.startOf('day');
+          end.startOf('day').add(1, "days");
+        }
+        if (start > start.clone().startOf(period)) {
+          start.startOf(period).add(1, period);
+        }
+        if (end < end.clone().endOf(period)) {
+          end.startOf(period);
+        }
         return [start, end];
       };
 
@@ -507,7 +516,6 @@
             lang(Twix);
           } catch (_error) {
             e = _error;
-            console.log("Can't find Twix language definition for " + langData._abbr + "; using en formatting: " + e);
           }
           knownLanguages.push(langData._abbr);
         }
