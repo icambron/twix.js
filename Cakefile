@@ -25,7 +25,7 @@ task "build-twix", -> compileFile "src/twix.coffee", "files/twix.js"
 task "build-langs", ->
   allContent = ""
   for file in fs.readdirSync "src/lang"
-    content = fs.readFileSync "src/lang/#{file}", {encoding: "utf8"}
+    content = fs.readFileSync "src/lang/#{file}", "utf8"
     allContent += "\n" + content
 
     output = compile wrapLang content
@@ -56,7 +56,7 @@ compile = (code) ->
     throw e.toString()
 
 compileFile = (src, dest) ->
-  content = fs.readFileSync src, {encoding: "utf8"}
+  content = fs.readFileSync src, "utf8"
   output = compile content
   fs.writeFileSync dest, output
 
