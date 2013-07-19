@@ -41,15 +41,15 @@ Patches are welcome!
 
 Contributors to the project as of 0.3.0:
 
-   123	Isaac Cambron           76.9%
-    16	Tanguy Krotoff          10.0%
-     8	Léo S                   5.0%
-     5	Edmund von der Burg     3.1%
-     3	Nathan White            1.9%
-     2	Suzanne Hamilton        1.2%
-     1	andresmoschini          0.6%
-     1	Thomas Durin            0.6%
-     1	Andrew Wirick           0.6%
+    123	Isaac Cambron           76.9%
+     16	Tanguy Krotoff          10.0%
+      8	Léo S                   5.0%
+      5	Edmund von der Burg     3.1%
+      3	Nathan White            1.9%
+      2	Suzanne Hamilton        1.2%
+      1	andresmoschini          0.6%
+      1	Thomas Durin            0.6%
+      1	Andrew Wirick           0.6%
 
 ##Changelog##
 
