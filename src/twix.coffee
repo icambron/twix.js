@@ -1,13 +1,13 @@
 hasModule = module? && module.exports?
 
 if hasModule
-  moment = require 'moment'
+  moment = require "moment"
 else
   moment = @moment
 
 throw "Can't find moment" unless moment?
 
-knownLanguages = ['en']
+knownLanguages = ["en"]
 
 class Twix
   constructor: (start, end, allDay) ->
@@ -186,7 +186,7 @@ class Twix
       spaceBeforeMeridiem: true
       showDate: true
       showDayOfWeek: false
-      twentyFourHour: @langData._twix.twentyFourHour
+      twentyFourHour: @langData.twentyFourHour
       implicitMinutes: true
       implicitYear: true
       yearFormat: "YYYY"
@@ -218,59 +218,59 @@ class Twix
     if @allDay && @isSame("day") && (!options.showDate || options.explicitAllDay)
       fs.push
         name: "all day simple"
-        fn: @_format_fn('allDaySimple', options)
-        pre: @_format_pre('allDaySimple', options)
-        slot: @_format_slot('allDaySimple')
+        fn: @_formatFn('allDaySimple', options)
+        pre: @_formatPre('allDaySimple', options)
+        slot: @_formatSlot('allDaySimple')
 
     if needDate && (!options.implicitYear || @start.year() != moment().year() || !@isSame("year"))
       fs.push
         name: "year",
-        fn: @_format_fn('year', options)
-        pre: @_format_pre('year', options)
-        slot: @_format_slot('year')
+        fn: @_formatFn('year', options)
+        pre: @_formatPre('year', options)
+        slot: @_formatSlot('year')
 
     if !@allDay && needDate
       fs.push
         name: "all day month"
-        fn: @_format_fn('allDayMonth', options)
+        fn: @_formatFn('allDayMonth', options)
         ignoreEnd: -> goesIntoTheMorning
-        pre: @_format_pre('allDayMonth', options)
-        slot: @_format_slot('allDayMonth')
+        pre: @_formatPre('allDayMonth', options)
+        slot: @_formatSlot('allDayMonth')
 
     if @allDay && needDate
       fs.push
         name: "month"
-        fn: @_format_fn('month', options)
-        pre: @_format_pre('month', options)
-        slot: @_format_slot('month')
+        fn: @_formatFn('month', options)
+        pre: @_formatPre('month', options)
+        slot: @_formatSlot('month')
 
     if @allDay && needDate
       fs.push
         name: "date"
-        fn: @_format_fn('date', options)
-        pre: @_format_pre('date', options)
-        slot: @_format_slot('date')
+        fn: @_formatFn('date', options)
+        pre: @_formatPre('date', options)
+        slot: @_formatSlot('date')
 
     if needDate && options.showDayOfWeek
       fs.push
         name: "day of week",
-        fn: @_format_fn('dayOfWeek', options)
-        pre: @_format_pre('dayOfWeek', options)
-        slot: @_format_slot('dayOfWeek')
+        fn: @_formatFn('dayOfWeek', options)
+        pre: @_formatPre('dayOfWeek', options)
+        slot: @_formatSlot('dayOfWeek')
 
     if options.groupMeridiems && !options.twentyFourHour && !@allDay
       fs.push
         name: "meridiem",
-        fn: @_format_fn('meridiem', options)
-        pre: @_format_pre('meridiem', options)
-        slot: @_format_slot('meridiem')
+        fn: @_formatFn('meridiem', options)
+        pre: @_formatPre('meridiem', options)
+        slot: @_formatSlot('meridiem')
 
     if !@allDay
       fs.push
         name: "time",
-        fn: @_format_fn('time', options)
-        pre: @_format_pre('time', options)
-        slot: @_format_slot('time')
+        fn: @_formatFn('time', options)
+        pre: @_formatPre('time', options)
+        slot: @_formatSlot('time')
 
     start_bucket = []
     end_bucket = []
@@ -341,9 +341,9 @@ class Twix
   _lazyLang: ->
     langData = @start.lang()
 
-    @end.lang(langData._abbr) unless @end.lang()._abbr == langData._abbr
+    @end.lang(langData._abbr) if langData? && @end.lang()._abbr != langData._abbr
 
-    return if @langData? && @langData._abbr == langData
+    return if @langData? && @langData._abbr == langData._abbr
 
     if hasModule && !(langData._abbr in knownLanguages)
       try
@@ -354,19 +354,19 @@ class Twix
 
       knownLanguages.push langData._abbr
 
-    @langData = langData
+    @langData = langData?._twix || Twix.defaults
 
-  _format_fn: (name, options) ->
-    @langData._twix[name].fn(options)
+  _formatFn: (name, options) ->
+    @langData[name].fn(options)
 
-  _format_slot: (name) ->
-    @langData._twix[name].slot
+  _formatSlot: (name) ->
+    @langData[name].slot
 
-  _format_pre: (name, options) ->
-    if typeof @langData._twix[name].pre == "function"
-      @langData._twix[name].pre(options)
+  _formatPre: (name, options) ->
+    if typeof @langData[name].pre == "function"
+      @langData[name].pre(options)
     else
-      @langData._twix[name].pre
+      @langData[name].pre
 
   _deprecate: (name, instead, fn) ->
     console.warn "##{name} is deprecated. Use ##{instead} instead." if console && console.warn

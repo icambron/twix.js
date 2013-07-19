@@ -10,7 +10,8 @@
   },
   "devDependencies": {
     "mocha" : "1.8.2",
-    "uglify-js" : ">= 1.2.5"
+    "uglify-js" : "*",
+    "coffee-script" : "*"
   },
   "main": "bin/twix",
   "scripts": {

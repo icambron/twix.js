@@ -1,6 +1,6 @@
 if module?
   moment = require "moment"
-  Twix = require "../../bin/twix"
+  Twix = require "../../files/twix"
 else
   moment = window.moment
   Twix = window.Twix

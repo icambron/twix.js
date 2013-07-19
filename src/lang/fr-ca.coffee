@@ -1,4 +1,3 @@
-lang = (moment, Twix) ->
 moment.lang 'fr-ca', twix:  twix: Twix._extend {}, Twix.defaults,
   twentyFourHour: true
   allDayMonth:
@@ -8,8 +7,3 @@ moment.lang 'fr-ca', twix:  twix: Twix._extend {}, Twix.defaults,
     slot: 3
   date:
     slot: 2
-
-if module? && module.exports?
-  module.exports = lang
-else
-  lang(moment, Twix)
