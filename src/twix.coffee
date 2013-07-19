@@ -332,9 +332,16 @@ makeTwix = (moment) ->
       hasNext: hasNext
 
     _inner: (period) ->
-      start = @start.clone().startOf(period)
-      end = @end.clone().startOf(period)
-      (if @allDay then end else start).add(period, 1)
+      start = @start.clone()
+      end = @end.clone()
+
+      if @allDay
+        start.startOf('day')
+        end.startOf('day').add(1, "days")
+
+      start.startOf(period).add(1, period) if start > start.clone().startOf(period)
+      end.startOf(period) if end < end.clone().endOf(period)
+
       [start, end]
 
     _lazyLang: ->

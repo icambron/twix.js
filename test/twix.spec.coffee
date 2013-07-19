@@ -177,6 +177,12 @@ test = (moment, Twix) ->
         range = moment(start).twix end
         assertEqual 1, range.countInner("days")
 
+      it "returns 1 if the range includes one full day barely", ->
+        start = thisYear "05-24"
+        end = thisYear "05-25"
+        range = moment(start).twix end
+        assertEqual 1, range.countInner("days")
+
       it "returns 2 if the range includes two full days", ->
         start = thisYear "05-23", "16:00"
         end = thisYear "05-26", "17:00"
