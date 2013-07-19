@@ -1,25 +1,25 @@
 <html>
   <head>
-    <link rel="stylesheet" href="../lib/test/mocha.css" />
+    <link rel="stylesheet" href="../vendor/test/mocha.css" />
 
   <body>
     <div id="mocha"></div>
 
-    <script src="../lib/test/mocha.js"></script>
+    <script src="../vendor/test/mocha.js"></script>
     <script>mocha.setup('bdd')</script>
 
-    <script src="../lib/test/require.js"></script>
+    <script src="../vendor/test/require.js"></script>
 
     <script>
       require.config({
         paths: {
           moment: "../vendor/moment/moment",
           momentLang: "../vendor/moment/min/lang",
-          twixes: "../files"
+          twixes: "../bin"
         }
       });
 
-      require(["moment", "momentLang/de", "momentLang/fr", "twixes/twix", "twixes/lang/fr", "./files/twix.spec.js"], function(moment){
+      require(["moment", "momentLang/de", "momentLang/fr", "twixes/twix", "twixes/lang/fr", "./bin/twix.spec.js"], function(moment){
         mocha.run();
       })
     </script>

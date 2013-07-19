@@ -16,17 +16,17 @@ task "build", ->
   invoke "build-tests"
   invoke "minify"
 
-task "clean", -> eachFile "files", fs.unlinkSync
+task "clean", -> eachFile "bin", fs.unlinkSync
 
 task "test", ->
   invoke "build"
   invoke "test-node"
 
 task "ensure-directories", ->
-  for dir in ["files", "files/lang", "test/files"]
+  for dir in ["bin", "bin/lang", "test/bin"]
     fs.mkdirSync dir unless exists dir
 
-task "build-twix", -> compileFile "src/twix.coffee", "files/twix.js"
+task "build-twix", -> compileFile "src/twix.coffee", "bin/twix.js"
 
 task "build-langs", ->
   allContent = ""
@@ -35,15 +35,15 @@ task "build-langs", ->
     allContent += "\n" + content
 
     output = compile wrapLang content
-    fs.writeFileSync "files/lang/#{file.split(".")[0]}.js", output
+    fs.writeFileSync "bin/lang/#{file.split(".")[0]}.js", output
 
   output = compile wrapLang allContent
-  fs.writeFileSync "files/lang/lang.js", output
+  fs.writeFileSync "bin/lang/lang.js", output
 
-task "build-tests", -> compileFile "test/twix.spec.coffee", "test/files/twix.spec.js"
+task "build-tests", -> compileFile "test/twix.spec.coffee", "test/bin/twix.spec.js"
 
 task "minify", ->
-  eachFile "files", (path, file) ->
+  eachFile "bin", (path, file) ->
     return if path.indexOf(".min.js") > -1
 
     output = Uglify.minify(path).code
@@ -52,7 +52,7 @@ task "minify", ->
 
 task "test-node", ->
   mocha = new Mocha reporter: "spec"
-  mocha.addFile "test/files/twix.spec.js"
+  mocha.addFile "test/bin/twix.spec.js"
   mocha.run (failures) -> process.exit failures
 
 compile = (code) ->
