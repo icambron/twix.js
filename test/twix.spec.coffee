@@ -1018,7 +1018,7 @@ if module?
   Twix = require "../../files/twix"
   test moment, Twix
 
-if define?
+else if define?
   define ["moment", "twix"], (moment, Twix) ->
     test moment, Twix
 
