@@ -66,6 +66,8 @@ class Twix
       pre: (options)->
         if options.spaceBeforeMeridiem then " " else ""
 
+  @registerLang: (name, options) -> moment.lang name, twix: Twix._extend {}, Twix.defaults, options
+
   # -- INFORMATIONAL --
   isSame: (period) -> @start.isSame @end, period
 
@@ -348,9 +350,9 @@ class Twix
     if hasModule && !(langData._abbr in knownLanguages)
       try
         lang = require "./lang/#{langData._abbr}"
-        lang moment, Twix
+        lang Twix
       catch e
-        console.log "Can't find Twix language definition for #{langData._abbr}; using en formatting."
+        console.log "Can't find Twix language definition for #{langData._abbr}; using en formatting: #{e}"
 
       knownLanguages.push langData._abbr
 

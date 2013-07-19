@@ -1,4 +1,4 @@
-moment.lang 'fr', twix: Twix._extend {}, Twix.defaults,
+Twix.registerLang "fr",
   twentyFourHour: true
   allDayMonth:
     fn: (options) -> (date) -> date.format "#{options.dayFormat} #{options.monthFormat}"

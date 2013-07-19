@@ -129,6 +129,12 @@
       }
     };
 
+    Twix.registerLang = function(name, options) {
+      return moment.lang(name, {
+        twix: Twix._extend({}, Twix.defaults, options)
+      });
+    };
+
     Twix.prototype.isSame = function(period) {
       return this.start.isSame(this.end, period);
     };
@@ -502,10 +508,10 @@
       if (hasModule && !(_ref = langData._abbr, __indexOf.call(knownLanguages, _ref) >= 0)) {
         try {
           lang = require("./lang/" + langData._abbr);
-          lang(moment, Twix);
+          lang(Twix);
         } catch (_error) {
           e = _error;
-          console.log("Can't find Twix language definition for " + langData._abbr + "; using en formatting.");
+          console.log("Can't find Twix language definition for " + langData._abbr + "; using en formatting: " + e);
         }
         knownLanguages.push(langData._abbr);
       }

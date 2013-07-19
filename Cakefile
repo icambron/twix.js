@@ -67,13 +67,13 @@ compileFile = (src, dest) ->
   fs.writeFileSync dest, output
 
 wrapLang = (content) ->
-  begin = "lang = (moment, Twix) ->\n"
+  begin = "lang = (Twix) ->\n"
   end = """
 
     if module? && module.exports?
-      module.exports =  lang
+      module.exports = lang
     else
-      lang moment, Twix
+      lang Twix
   """
 
   endented = ("\t#{line}" for line in content.toString().split("\n")).join("\n")
