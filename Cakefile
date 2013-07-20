@@ -46,7 +46,10 @@ task "minify", ->
   eachFile "bin", (path, file) ->
     return if path.indexOf(".min.js") > -1
 
-    output = Uglify.minify(path).code
+    output = Uglify.minify(path,
+      output:
+        comments: (comment, token) -> token.line == 1
+    ).code
     outputPath = path.replace ".js", ".min.js"
     fs.writeFileSync outputPath, output
 
