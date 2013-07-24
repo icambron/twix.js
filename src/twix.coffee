@@ -1,5 +1,4 @@
 hasModule = module? && module.exports?
-isAMD = typeof(define) == "function"
 
 makeTwix = (moment) ->
   throw "Can't find moment" unless moment?
@@ -319,7 +318,15 @@ makeTwix = (moment) ->
 
     # -- INTERNAL
     _trueStart: -> if @allDay then @start.clone().startOf("day") else @start
-    _trueEnd: -> if @allDay then @end.clone().endOf("day") else @end
+
+    _trueEnd: (diffableEnd = false) ->
+      if @allDay
+        if diffableEnd
+          @end.clone().add(1, "day")
+        else
+          @end.clone().endOf("day")
+      else
+        @end
 
     _iterateHelper: (period, iter, hasNext) ->
       next: =>
@@ -332,12 +339,8 @@ makeTwix = (moment) ->
       hasNext: hasNext
 
     _inner: (period) ->
-      start = @start.clone()
-      end = @end.clone()
-
-      if @allDay
-        start.startOf('day')
-        end.startOf('day').add(1, "days")
+      start = @_trueStart()
+      end = @_trueEnd true
 
       start.startOf(period).add(1, period) if start > start.clone().startOf(period)
       end.startOf(period) if end < end.clone().endOf(period)
@@ -400,12 +403,9 @@ makeTwix = (moment) ->
   Twix
 
 # -- MAKE AVAILABLE
-if hasModule
-  module.exports = makeTwix(require "moment")
+module.exports = makeTwix(require "moment") if hasModule
 
-if isAMD
+if  typeof(define) == "function"
   define "twix", ["moment"], (moment) -> makeTwix(moment)
 
-if @moment
-  @Twix = makeTwix(@moment)
-
+@Twix = makeTwix(@moment) if @moment
