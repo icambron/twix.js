@@ -362,7 +362,7 @@ makeTwix = (moment) ->
 
         knownLanguages.push langData._abbr
 
-      @langData = langData?._twix || Twix.defaults
+      @langData = langData?._twix ? Twix.defaults
 
     _formatFn: (name, options) ->
       @langData[name].fn(options)
@@ -377,7 +377,7 @@ makeTwix = (moment) ->
         @langData[name].pre
 
     _deprecate: (name, instead, fn) ->
-      console.warn "##{name} is deprecated. Use ##{instead} instead." if console && console.warn
+      console.warn "##{name} is deprecated. Use ##{instead} instead." if console? && console.warn?
       fn.apply @
 
     # -- DEPRECATED METHODS --
@@ -408,4 +408,4 @@ module.exports = makeTwix(require "moment") if hasModule
 if  typeof(define) == "function"
   define "twix", ["moment"], (moment) -> makeTwix(moment)
 
-@Twix = makeTwix(@moment) if @moment
+@Twix = makeTwix(@moment) if @moment?

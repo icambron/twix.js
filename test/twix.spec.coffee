@@ -1019,17 +1019,9 @@ test = (moment, Twix) ->
 
       assertEqual 'Okt. 14, 12 AM - Okt. 15, 12 AM, 1982', range.format()
 
-if module?
-  moment = require "moment"
-  Twix = require "../../bin/twix"
-  test moment, Twix
-
-else if define?
-  define ["moment", "twix"], (moment, Twix) ->
-    test moment, Twix
-
+if define?
+  define(["moment", "twix"], (moment, Twix) -> test moment, Twix)
 else
-  moment = window.moment
-  Twix = window.Twix
+  moment = require?("moment") ? @moment
+  Twix = require?("../../bin/twix") ? @Twix
   test moment, Twix
-
