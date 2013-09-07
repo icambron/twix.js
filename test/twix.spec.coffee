@@ -3,6 +3,7 @@ test = (moment, Twix) ->
 
   assertEqual = (a, b) -> throw new Error("Found #{b}, expected #{a}") unless a == b
   assertTwixEqual = (a, b) -> throw new Error("Found #{b.toString()}, expected #{a.toString()}") unless a.equals b
+  assertMomentEqual = (a, b) -> throw new Error("Found #{b.format()}, expected #{a.format()}") unless a.valueOf() == b.valueOf()
 
   thisYear = (partial, time) ->
     fullDate = "#{moment().year()}-#{partial}"
@@ -153,6 +154,12 @@ test = (moment, Twix) ->
   describe "countInner()", ->
     describe "days", ->
 
+      it "defaults to milliseconds", ->
+        start = thisYear "05-25", "13:00"
+        end = thisYear "05-25", "13:01"
+        range = moment(start).twix end
+        assertEqual 60000, range.countInner()
+
       it "returns 0 inside a day", ->
         start = thisYear "05-25", "03:00"
         end = thisYear "05-25", "14:00"
@@ -200,6 +207,14 @@ test = (moment, Twix) ->
         end = thisYear "05-26"
         range = moment(start).twix end, true
         assertEqual 2, range.countInner("days")
+
+      it "doesn't muck with the twix object", ->
+        start = thisYear "05-25"
+        end = thisYear "05-26"
+        range = moment(start).twix end
+        range.countInner("years")
+        assertMomentEqual thisYear("05-25"), range.start
+        assertMomentEqual thisYear("05-26"), range.end
 
   describe "iterate()", ->
 

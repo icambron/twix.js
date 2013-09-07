@@ -454,7 +454,7 @@
         if (this.allDay) {
           return this.start.clone().startOf("day");
         } else {
-          return this.start;
+          return this.start.clone();
         }
       };
 
@@ -469,7 +469,7 @@
             return this.end.clone().endOf("day");
           }
         } else {
-          return this.end;
+          return this.end.clone();
         }
       };
 
@@ -492,6 +492,9 @@
 
       Twix.prototype._inner = function(period) {
         var end, start;
+        if (period == null) {
+          period = "milliseconds";
+        }
         start = this._trueStart();
         end = this._trueEnd(true);
         if (start > start.clone().startOf(period)) {

@@ -317,7 +317,7 @@ makeTwix = (moment) ->
       fold common_bucket
 
     # -- INTERNAL
-    _trueStart: -> if @allDay then @start.clone().startOf("day") else @start
+    _trueStart: -> if @allDay then @start.clone().startOf("day") else @start.clone()
 
     _trueEnd: (diffableEnd = false) ->
       if @allDay
@@ -326,7 +326,7 @@ makeTwix = (moment) ->
         else
           @end.clone().endOf("day")
       else
-        @end
+        @end.clone()
 
     _iterateHelper: (period, iter, hasNext) ->
       next: =>
@@ -338,7 +338,7 @@ makeTwix = (moment) ->
           val
       hasNext: hasNext
 
-    _inner: (period) ->
+    _inner: (period = "milliseconds") ->
       start = @_trueStart()
       end = @_trueEnd true
 
