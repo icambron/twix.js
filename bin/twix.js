@@ -7,7 +7,7 @@
   hasModule = (typeof module !== "undefined" && module !== null) && (module.exports != null);
 
   makeTwix = function(moment) {
-    var Twix, knownLanguages;
+    var Twix, getPrototypeOf, knownLanguages;
     if (moment == null) {
       throw "Can't find moment";
     }
@@ -595,7 +595,15 @@
       return Twix;
 
     })();
-    Twix._extend(Object.getPrototypeOf(moment.fn._lang), {
+    getPrototypeOf = function(o) {
+      if (typeof Object.getPrototypeOf === "function") {
+        Object.getPrototypeOf(o);
+      } else if ("".__proto__ === String.prototype) {
+        o.__prototo__;
+      }
+      return o.constructor.prototype;
+    };
+    Twix._extend(getPrototypeOf(moment.fn._lang), {
       _twix: Twix.defaults
     });
     moment.twix = function() {

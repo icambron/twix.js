@@ -390,7 +390,14 @@ makeTwix = (moment) ->
     merge: (other) -> @_deprecate "merge", "union(other)", -> @union other
 
   # -- PLUGIN --
-  Twix._extend(Object.getPrototypeOf(moment.fn._lang),
+  getPrototypeOf = (o) ->
+    if typeof Object.getPrototypeOf == "function"
+      Object.getPrototypeOf o
+    else if "".__proto__ == String.prototype
+      o.__prototo__
+    o.constructor.prototype
+
+  Twix._extend(getPrototypeOf(moment.fn._lang),
     _twix: Twix.defaults
   )
 
