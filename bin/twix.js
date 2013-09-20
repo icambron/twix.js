@@ -599,7 +599,7 @@
       if (typeof Object.getPrototypeOf === "function") {
         Object.getPrototypeOf(o);
       } else if ("".__proto__ === String.prototype) {
-        o.__prototo__;
+        o.__proto__;
       }
       return o.constructor.prototype;
     };
