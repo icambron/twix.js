@@ -597,11 +597,12 @@
     })();
     getPrototypeOf = function(o) {
       if (typeof Object.getPrototypeOf === "function") {
-        Object.getPrototypeOf(o);
+        return Object.getPrototypeOf(o);
       } else if ("".__proto__ === String.prototype) {
-        o.__proto__;
+        return o.__proto__;
+      } else {
+        return o.constructor.prototype;
       }
-      return o.constructor.prototype;
     };
     Twix._extend(getPrototypeOf(moment.fn._lang), {
       _twix: Twix.defaults
