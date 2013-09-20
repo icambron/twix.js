@@ -394,7 +394,7 @@ makeTwix = (moment) ->
     if typeof Object.getPrototypeOf == "function"
       Object.getPrototypeOf o
     else if "".__proto__ == String.prototype
-      o.__prototo__
+      o.__proto__
     o.constructor.prototype
 
   Twix._extend(getPrototypeOf(moment.fn._lang),
