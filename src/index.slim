@@ -307,8 +307,8 @@ html
             var range1 = moment("5/25/1982").twix("8/30/1982");
             var range2 = moment("5/27/1982").twix("6/13/1982");
 
-            range1.overlaps(range2); //=> true
-            range2.overlaps(range1); //=> false
+            range1.engulfs(range2); //=> true
+            range2.engulfs(range1); //=> false
             ```
 
             ###equals()
