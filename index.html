@@ -147,8 +147,8 @@ otherwise.</p>
 <div class="highlight"><pre><span class="kd">var</span> <span class="nx">range1</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/1982&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;8/30/1982&quot;</span><span class="p">);</span>
 <span class="kd">var</span> <span class="nx">range2</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/27/1982&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;6/13/1982&quot;</span><span class="p">);</span>
 
-<span class="nx">range1</span><span class="p">.</span><span class="nx">overlaps</span><span class="p">(</span><span class="nx">range2</span><span class="p">);</span> <span class="c1">//=&gt; true</span>
-<span class="nx">range2</span><span class="p">.</span><span class="nx">overlaps</span><span class="p">(</span><span class="nx">range1</span><span class="p">);</span> <span class="c1">//=&gt; false</span>
+<span class="nx">range1</span><span class="p">.</span><span class="nx">engulfs</span><span class="p">(</span><span class="nx">range2</span><span class="p">);</span> <span class="c1">//=&gt; true</span>
+<span class="nx">range2</span><span class="p">.</span><span class="nx">engulfs</span><span class="p">(</span><span class="nx">range1</span><span class="p">);</span> <span class="c1">//=&gt; false</span>
 </pre></div>
 <h3>equals()</h3>
 
