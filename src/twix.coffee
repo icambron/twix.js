@@ -80,17 +80,18 @@ makeTwix = (moment) ->
       return 0 if start >= end
       end.diff(start, period)
 
-    iterate: (period, minHours) ->
+    iterate: (period, minHours, intervalAmount = 1) ->
+      # where interval amount allows for iterations per 2 days or 20 minutes, etc...
       start = @start.clone().startOf period
       end = @end.clone().startOf period
       hasNext = => start <= end && (!minHours || start.valueOf() != end.valueOf() || @end.hours() > minHours || @allDay)
-      @_iterateHelper period, start, hasNext
+      @_iterateHelper period, start, hasNext, intervalAmount
 
-    iterateInner: (period) ->
-      [start, end] = @_inner period
+    iterateInner: (period, intervalAmount = 1) ->
+      [start, end] = @_inner period, intervalAmount
       hasNext = -> start < end
 
-      @_iterateHelper period, start, hasNext
+      @_iterateHelper period, start, hasNext, intervalAmount
 
     humanizeLength: ->
       if @allDay
@@ -328,22 +329,33 @@ makeTwix = (moment) ->
       else
         @end.clone()
 
-    _iterateHelper: (period, iter, hasNext) ->
+    _iterateHelper: (period, iter, hasNext, intervalAmount = 1) ->
       next: =>
         unless hasNext()
           null
         else
           val = iter.clone()
-          iter.add(1, period)
+          iter.add(intervalAmount, period)
           val
       hasNext: hasNext
 
-    _inner: (period = "milliseconds") ->
+    _inner: (period = "milliseconds", intervalAmount = 1) ->
       start = @_trueStart()
       end = @_trueEnd true
 
-      start.startOf(period).add(1, period) if start > start.clone().startOf(period)
+      start.startOf(period).add(intervalAmount, period) if start > start.clone().startOf(period)
       end.startOf(period) if end < end.clone().endOf(period)
+
+      # handle end times where interval amount is not 0
+      # i.e. if twix is 7 hours, with 2-hour intervals,
+      # end time should be 6 hours from start time as opposed to 7
+      # to exclude the last 1-hour time interval
+      durationPeriod = start.twix(end).asDuration period
+      durationCount = durationPeriod.get(period)
+
+      modulus = durationCount % intervalAmount
+
+      end.subtract(modulus, period)
 
       [start, end]
 
