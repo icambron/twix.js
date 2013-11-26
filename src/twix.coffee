@@ -81,16 +81,15 @@ makeTwix = (moment) ->
       end.diff(start, period)
 
     iterate: (intervalAmount = 1, period, minHours) ->
-
       [intervalAmount, period, minHours] = @_prepIterateInputs intervalAmount, period, minHours if typeof intervalAmount isnt 'number'
 
       start = @start.clone().startOf period
       end = @end.clone().startOf period
       hasNext = => start <= end && (!minHours || start.valueOf() != end.valueOf() || @end.hours() > minHours || @allDay)
+
       @_iterateHelper period, start, hasNext, intervalAmount
 
     iterateInner: (intervalAmount = 1, period) ->
-
       [intervalAmount, period] = @_prepIterateInputs intervalAmount, period if typeof intervalAmount isnt 'number'
 
       [start, end] = @_inner period, intervalAmount
@@ -360,9 +359,7 @@ makeTwix = (moment) ->
 
       [start, end]
 
-
     _prepIterateInputs: (inputs...)->
-
       if typeof inputs[0] is 'string'
         period = inputs.shift()
         intervalAmount = inputs.pop() ? 1
