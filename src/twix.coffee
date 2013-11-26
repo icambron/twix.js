@@ -80,17 +80,22 @@ makeTwix = (moment) ->
       return 0 if start >= end
       end.diff(start, period)
 
-    iterate: (period, minHours) ->
+    iterate: (intervalAmount = 1, period, minHours) ->
+      [intervalAmount, period, minHours] = @_prepIterateInputs intervalAmount, period, minHours if typeof intervalAmount isnt 'number'
+
       start = @start.clone().startOf period
       end = @end.clone().startOf period
       hasNext = => start <= end && (!minHours || start.valueOf() != end.valueOf() || @end.hours() > minHours || @allDay)
-      @_iterateHelper period, start, hasNext
 
-    iterateInner: (period) ->
-      [start, end] = @_inner period
+      @_iterateHelper period, start, hasNext, intervalAmount
+
+    iterateInner: (intervalAmount = 1, period) ->
+      [intervalAmount, period] = @_prepIterateInputs intervalAmount, period if typeof intervalAmount isnt 'number'
+
+      [start, end] = @_inner period, intervalAmount
       hasNext = -> start < end
 
-      @_iterateHelper period, start, hasNext
+      @_iterateHelper period, start, hasNext, intervalAmount
 
     humanizeLength: ->
       if @allDay
@@ -328,24 +333,45 @@ makeTwix = (moment) ->
       else
         @end.clone()
 
-    _iterateHelper: (period, iter, hasNext) ->
+    _iterateHelper: (period, iter, hasNext, intervalAmount = 1) ->
       next: =>
         unless hasNext()
           null
         else
           val = iter.clone()
-          iter.add(1, period)
+          iter.add(intervalAmount, period)
           val
       hasNext: hasNext
 
-    _inner: (period = "milliseconds") ->
+    _inner: (period = "milliseconds", intervalAmount = 1) ->
       start = @_trueStart()
       end = @_trueEnd true
 
-      start.startOf(period).add(1, period) if start > start.clone().startOf(period)
+      start.startOf(period).add(intervalAmount, period) if start > start.clone().startOf(period)
       end.startOf(period) if end < end.clone().endOf(period)
 
+      durationPeriod = start.twix(end).asDuration period
+      durationCount = durationPeriod.get(period)
+
+      modulus = durationCount % intervalAmount
+
+      end.subtract(modulus, period)
+
       [start, end]
+
+    _prepIterateInputs: (inputs...)->
+      if typeof inputs[0] is 'string'
+        period = inputs.shift()
+        intervalAmount = inputs.pop() ? 1
+
+        if inputs.length
+          minHours = inputs[0] ? false
+
+      if moment.isDuration inputs[0]
+        period = 'milliseconds'
+        intervalAmount = inputs[0].as period
+
+      [intervalAmount, period, minHours]
 
     _lazyLang: ->
       langData = @start.lang()

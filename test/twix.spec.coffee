@@ -218,6 +218,43 @@ test = (moment, Twix) ->
 
   describe "iterate()", ->
 
+    describe "duration", ->
+      assertSameMinute = (first, second) -> assertEqual true, first.isSame(second, "minute")
+
+      it "provides 4 periods of 20 minutes (as duration) if the range is 1 hour", ->
+        start = thisYear "05-25", "03:00"
+        end = thisYear "05-25", "04:00"
+        duration = moment.duration 20, 'minutes'
+        iter = start.twix(end).iterate(duration)
+        results = while iter.hasNext()
+          iter.next()
+        assertSameMinute start.clone().add('minutes', 20), results[1]
+        assertEqual(4, results.length)
+
+
+      it "provides 5 periods of 2 hours, 30 minutes and 20 seconds if the range is 10 hours and 2 minutes", ->
+        start = thisYear "05-25", "03:00"
+        end = thisYear "05-25", "13:01:20"
+        duration = moment.duration hours: 2, minutes: 30, seconds: 20
+        iter = start.twix(end).iterate(duration)
+        results = while iter.hasNext()
+          iter.next()
+        assertSameMinute start.clone().add('minutes', 30).add('hours', 2).add('seconds',20), results[1]
+        assertEqual(5, results.length)
+
+    describe "minutes", ->
+      assertSameMinute = (first, second) -> assertEqual true, first.isSame(second, "minute")
+
+      it "provides 4 periods of 20 minutes if the range is 1 hour", ->
+        start = thisYear "05-25", "03:00"
+        end = thisYear "05-25", "04:00"
+        iter = start.twix(end).iterate(20, "minutes", 0)
+        results = while iter.hasNext()
+          iter.next()
+        assertSameMinute start.clone().add('minutes', 20), results[1]
+        assertEqual(4, results.length)
+
+
     describe "days", ->
       assertSameDay = (first, second) -> assertEqual true, first.isSame(second, "day")
 
@@ -295,6 +332,64 @@ test = (moment, Twix) ->
         assertEqual null, iter.next()
 
   describe "iterateInner()", ->
+
+    describe "duration", ->
+      assertSameMinute = (first, second) -> assertEqual true, first.isSame(second, "minute")
+
+      it "provides 3 periods of 20 minutes (as duration) if the range is 1 hour", ->
+        start = thisYear "05-25", "03:00"
+        end = thisYear "05-25", "04:00"
+        duration = moment.duration 20, 'minutes'
+        iter = start.twix(end).iterateInner(duration)
+        results = while iter.hasNext()
+          iter.next()
+        assertSameMinute start.clone().add('minutes', 20), results[1]
+        assertEqual(3, results.length)
+
+
+      it "provides 4 periods of 2 hours, 30 minutes and 20 seconds if the range is 10 hours and 1 minute 20 seconds", ->
+        start = thisYear "05-25", "03:00"
+        end = thisYear "05-25", "13:01:20"
+        duration = moment.duration hours: 2, minutes: 30, seconds: 20
+        iter = start.twix(end).iterateInner(duration)
+        results = while iter.hasNext()
+          iter.next()
+        assertSameMinute start.clone().add('minutes', 30).add('hours', 2).add('seconds',20), results[1]
+        assertEqual(4, results.length)
+
+
+    describe "minutes", ->
+      assertSameMinute = (first, second) -> assertEqual true, first.isSame(second, "minute")
+
+      it "provides 3 periods of 20 minutes if the range is 1 hour", ->
+        start = thisYear "05-25", "03:00"
+        end = thisYear "05-25", "04:00"
+        iter = start.twix(end).iterateInner("minutes", 20)
+        results = while iter.hasNext()
+          iter.next()
+        assertSameMinute start.clone().add('minutes', 20), results[1]
+        assertEqual(3, results.length)
+
+      it "provides 24 periods of 60 minutes if the range is 24 hours", ->
+        start = thisYear "05-25", "03:00"
+        end = thisYear "05-26", "03:00"
+        iter = start.twix(end).iterateInner("minutes", 60)
+        results = while iter.hasNext()
+          iter.next()
+        assertEqual(24, results.length)
+
+
+    describe "hours", ->
+      assertSameHour = (first, second) -> assertEqual true, first.isSame(second, "hour")
+
+      it "provides 3 periods of 2 hours if the range is 7 hours", ->
+        start = thisYear "05-25", "03:00"
+        end = thisYear "05-25", "10:00"
+        iter = start.twix(end).iterateInner("hours", 2)
+        results = while iter.hasNext()
+          iter.next()
+        assertSameHour start.clone().add('hours', 2), results[1]
+        assertEqual(3, results.length)
 
     describe "days", ->
 
