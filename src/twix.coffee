@@ -80,14 +80,19 @@ makeTwix = (moment) ->
       return 0 if start >= end
       end.diff(start, period)
 
-    iterate: (period, minHours, intervalAmount = 1) ->
-      # where interval amount allows for iterations per 2 days or 20 minutes, etc...
+    iterate: (intervalAmount = 1, period, minHours) ->
+
+      [intervalAmount, period, minHours] = @_prepIterateInputs intervalAmount, period, minHours if typeof intervalAmount isnt 'number'
+
       start = @start.clone().startOf period
       end = @end.clone().startOf period
       hasNext = => start <= end && (!minHours || start.valueOf() != end.valueOf() || @end.hours() > minHours || @allDay)
       @_iterateHelper period, start, hasNext, intervalAmount
 
-    iterateInner: (period, intervalAmount = 1) ->
+    iterateInner: (intervalAmount = 1, period) ->
+
+      [intervalAmount, period] = @_prepIterateInputs intervalAmount, period if typeof intervalAmount isnt 'number'
+
       [start, end] = @_inner period, intervalAmount
       hasNext = -> start < end
 
@@ -346,10 +351,6 @@ makeTwix = (moment) ->
       start.startOf(period).add(intervalAmount, period) if start > start.clone().startOf(period)
       end.startOf(period) if end < end.clone().endOf(period)
 
-      # handle end times where interval amount is not 0
-      # i.e. if twix is 7 hours, with 2-hour intervals,
-      # end time should be 6 hours from start time as opposed to 7
-      # to exclude the last 1-hour time interval
       durationPeriod = start.twix(end).asDuration period
       durationCount = durationPeriod.get(period)
 
@@ -358,6 +359,22 @@ makeTwix = (moment) ->
       end.subtract(modulus, period)
 
       [start, end]
+
+
+    _prepIterateInputs: (inputs...)->
+
+      if typeof inputs[0] is 'string'
+        period = inputs.shift()
+        intervalAmount = inputs.pop() ? 1
+
+        if inputs.length
+          minHours = inputs[0] ? false
+
+      if moment.isDuration inputs[0]
+        period = 'milliseconds'
+        intervalAmount = inputs[0].as period
+
+      [intervalAmount, period, minHours]
 
     _lazyLang: ->
       langData = @start.lang()
