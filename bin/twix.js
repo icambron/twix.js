@@ -154,24 +154,32 @@
         return end.diff(start, period);
       };
 
-      Twix.prototype.iterate = function(period, minHours) {
-        var end, hasNext, start,
+      Twix.prototype.iterate = function(intervalAmount, period, minHours) {
+        var end, hasNext, start, _ref,
           _this = this;
+        if (intervalAmount == null) {
+          intervalAmount = 1;
+        }
+        _ref = this._prepIterateInputs(intervalAmount, period, minHours), intervalAmount = _ref[0], period = _ref[1], minHours = _ref[2];
         start = this.start.clone().startOf(period);
         end = this.end.clone().startOf(period);
         hasNext = function() {
           return start <= end && (!minHours || start.valueOf() !== end.valueOf() || _this.end.hours() > minHours || _this.allDay);
         };
-        return this._iterateHelper(period, start, hasNext);
+        return this._iterateHelper(period, start, hasNext, intervalAmount);
       };
 
-      Twix.prototype.iterateInner = function(period) {
-        var end, hasNext, start, _ref;
-        _ref = this._inner(period), start = _ref[0], end = _ref[1];
+      Twix.prototype.iterateInner = function(intervalAmount, period) {
+        var end, hasNext, start, _ref, _ref1;
+        if (intervalAmount == null) {
+          intervalAmount = 1;
+        }
+        _ref = this._prepIterateInputs(intervalAmount, period), intervalAmount = _ref[0], period = _ref[1];
+        _ref1 = this._inner(period, intervalAmount), start = _ref1[0], end = _ref1[1];
         hasNext = function() {
           return start < end;
         };
-        return this._iterateHelper(period, start, hasNext);
+        return this._iterateHelper(period, start, hasNext, intervalAmount);
       };
 
       Twix.prototype.humanizeLength = function() {
@@ -473,8 +481,11 @@
         }
       };
 
-      Twix.prototype._iterateHelper = function(period, iter, hasNext) {
+      Twix.prototype._iterateHelper = function(period, iter, hasNext, intervalAmount) {
         var _this = this;
+        if (intervalAmount == null) {
+          intervalAmount = 1;
+        }
         return {
           next: function() {
             var val;
@@ -482,7 +493,7 @@
               return null;
             } else {
               val = iter.clone();
-              iter.add(1, period);
+              iter.add(intervalAmount, period);
               return val;
             }
           },
@@ -490,19 +501,46 @@
         };
       };
 
-      Twix.prototype._inner = function(period) {
-        var end, start;
+      Twix.prototype._prepIterateInputs = function() {
+        var inputs, intervalAmount, minHours, period, _ref, _ref1;
+        inputs = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+        if (typeof inputs[0] === 'number') {
+          return inputs;
+        }
+        if (typeof inputs[0] === 'string') {
+          period = inputs.shift();
+          intervalAmount = (_ref = inputs.pop()) != null ? _ref : 1;
+          if (inputs.length) {
+            minHours = (_ref1 = inputs[0]) != null ? _ref1 : false;
+          }
+        }
+        if (moment.isDuration(inputs[0])) {
+          period = 'milliseconds';
+          intervalAmount = inputs[0].as(period);
+        }
+        return [intervalAmount, period, minHours];
+      };
+
+      Twix.prototype._inner = function(period, intervalAmount) {
+        var durationCount, durationPeriod, end, modulus, start;
         if (period == null) {
           period = "milliseconds";
+        }
+        if (intervalAmount == null) {
+          intervalAmount = 1;
         }
         start = this._trueStart();
         end = this._trueEnd(true);
         if (start > start.clone().startOf(period)) {
-          start.startOf(period).add(1, period);
+          start.startOf(period).add(intervalAmount, period);
         }
         if (end < end.clone().endOf(period)) {
           end.startOf(period);
         }
+        durationPeriod = start.twix(end).asDuration(period);
+        durationCount = durationPeriod.get(period);
+        modulus = durationCount % intervalAmount;
+        end.subtract(modulus, period);
         return [start, end];
       };
 

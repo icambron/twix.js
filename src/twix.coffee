@@ -81,7 +81,7 @@ makeTwix = (moment) ->
       end.diff(start, period)
 
     iterate: (intervalAmount = 1, period, minHours) ->
-      [intervalAmount, period, minHours] = @_prepIterateInputs intervalAmount, period, minHours if typeof intervalAmount isnt 'number'
+      [intervalAmount, period, minHours] = @_prepIterateInputs intervalAmount, period, minHours
 
       start = @start.clone().startOf period
       end = @end.clone().startOf period
@@ -90,7 +90,7 @@ makeTwix = (moment) ->
       @_iterateHelper period, start, hasNext, intervalAmount
 
     iterateInner: (intervalAmount = 1, period) ->
-      [intervalAmount, period] = @_prepIterateInputs intervalAmount, period if typeof intervalAmount isnt 'number'
+      [intervalAmount, period] = @_prepIterateInputs intervalAmount, period
 
       [start, end] = @_inner period, intervalAmount
       hasNext = -> start < end
@@ -343,6 +343,22 @@ makeTwix = (moment) ->
           val
       hasNext: hasNext
 
+    _prepIterateInputs: (inputs...)->
+      return inputs if typeof inputs[0] is 'number'
+
+      if typeof inputs[0] is 'string'
+        period = inputs.shift()
+        intervalAmount = inputs.pop() ? 1
+
+        if inputs.length
+          minHours = inputs[0] ? false
+
+      if moment.isDuration inputs[0]
+        period = 'milliseconds'
+        intervalAmount = inputs[0].as period
+
+      [intervalAmount, period, minHours]
+
     _inner: (period = "milliseconds", intervalAmount = 1) ->
       start = @_trueStart()
       end = @_trueEnd true
@@ -358,20 +374,6 @@ makeTwix = (moment) ->
       end.subtract(modulus, period)
 
       [start, end]
-
-    _prepIterateInputs: (inputs...)->
-      if typeof inputs[0] is 'string'
-        period = inputs.shift()
-        intervalAmount = inputs.pop() ? 1
-
-        if inputs.length
-          minHours = inputs[0] ? false
-
-      if moment.isDuration inputs[0]
-        period = 'milliseconds'
-        intervalAmount = inputs[0].as period
-
-      [intervalAmount, period, minHours]
 
     _lazyLang: ->
       langData = @start.lang()
