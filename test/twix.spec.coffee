@@ -1052,29 +1052,29 @@ test = (moment, Twix) ->
     describe "show day of week", ->
 
       test "should show day of week",
-        start: thisYear "05-25", "05:30"
-        end: thisYear "05-28", "19:30"
-        options: {showDayOfWeek: true},
-        result: "Sat May 25, 5:30 AM - Tue May 28, 7:30 PM"
+        start: "2013-05-25T05:30"
+        end: "2013-05-28T19:30"
+        options: {showDayOfWeek: true}
+        result: "Sat May 25, 5:30 AM - Tue May 28, 7:30 PM, 2013"
 
       test "should show day of week, specify day of week format",
-        start: thisYear "08-25", "05:30"
-        end: thisYear "08-28", "19:30"
+        start: "2013-08-25T05:30"
+        end: "2013-08-28T19:30"
         options: {showDayOfWeek: true, weekdayFormat: "dddd"}
-        result: "Sunday Aug 25, 5:30 AM - Wednesday Aug 28, 7:30 PM"
+        result: "Sunday Aug 25, 5:30 AM - Wednesday Aug 28, 7:30 PM, 2013"
 
       test "collapses show day of week",
-        start: thisYear "05-25", "05:30"
-        end: thisYear "05-25", "19:30"
-        options: {showDayOfWeek: true},
-        result: "Sat May 25, 5:30 AM - 7:30 PM"
+        start: "2013-05-25T05:30"
+        end: "2013-05-25T19:30"
+        options: {showDayOfWeek: true}
+        result: "Sat May 25, 2013, 5:30 AM - 7:30 PM"
 
       test "doesn't collapse with one week of separation",
-        start: thisYear "05-25"
-        end: thisYear "06-01"
+        start: "2013-05-25"
+        end: "2013-06-01"
         allDay: true
-        options: {showDayOfWeek: true},
-        result: "Sat May 25 - Sat Jun 1"
+        options: {showDayOfWeek: true}
+        result: "Sat May 25 - Sat Jun 1, 2013"
 
     describe "goes into the morning", ->
 

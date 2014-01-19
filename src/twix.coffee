@@ -3,7 +3,7 @@ hasModule = module? && module.exports?
 makeTwix = (moment) ->
   throw "Can't find moment" unless moment?
 
-  knownLanguages = ["en"]
+  languagesLoaded = false
 
   class Twix
     constructor: (start, end, allDay) ->
@@ -62,7 +62,8 @@ makeTwix = (moment) ->
         pre: (options)->
           if options.spaceBeforeMeridiem then " " else ""
 
-    @registerLang: (name, options) -> moment.lang name, twix: Twix._extend {}, Twix.defaults, options
+    @registerLang: (name, options) ->
+      moment.lang name, twix: Twix._extend {}, Twix.defaults, options
 
     # -- INFORMATIONAL --
     isSame: (period) -> @start.isSame @end, period
@@ -382,13 +383,13 @@ makeTwix = (moment) ->
 
       return if @langData? && @langData._abbr == langData._abbr
 
-      if hasModule && !(langData._abbr in knownLanguages)
+      if hasModule && !(languagesLoaded || langData._abbr == "en")
         try
-          lang = require "./lang/#{langData._abbr}"
-          lang Twix
+          languages = require "./lang"
+          languages moment, Twix
         catch e
 
-        knownLanguages.push langData._abbr
+        languagesLoaded = true
 
       @langData = langData?._twix ? Twix.defaults
 

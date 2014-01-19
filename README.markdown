@@ -22,14 +22,14 @@ And much more.
 
 If you want to build Twix for yourself, you'll need to install CoffeeScript. Then clone the repo out and run this:
 
-    cake configure build
+    make configure build
 
-Configure just installs the NPMs and brings in Moment as a submodule, so you only have to do that part once. 
+Configure just installs the NPMs and brings in Moment as a submodule, so you only have to do that part once.
 
 Note that the source is `src/twix.coffee`; the output is `bin/twix.js`. You can run the tests via
 
-    cake test
-    
+    make test
+
 You can also run the tests in-browser by building and then loading `test/test.html`.
 
 ##Contributing##
