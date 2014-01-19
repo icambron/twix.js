@@ -124,6 +124,18 @@ otherwise.</p>
 <span class="nx">iter</span><span class="p">.</span><span class="nx">hasNext</span><span class="p">();</span> <span class="c1">//=&gt; false</span>
 <span class="nx">iter</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span> <span class="c1">//=&gt; null</span>
 </pre></div>
+<p>You can also iterate with more complicated periods like &quot;2 hours&quot; or &quot;4 days&quot;.</p>
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">iter</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;16&quot;</span><span class="p">,</span> <span class="s2">&quot;hh&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="nx">endTime</span><span class="p">).</span><span class="nx">iterate</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;hours&#39;</span><span class="p">);</span>
+<span class="nx">iter</span><span class="p">.</span><span class="nx">next</span><span class="p">().</span><span class="nx">format</span><span class="p">(</span><span class="s1">&#39;LT&#39;</span><span class="p">);</span> <span class="c1">//=&gt; &#39;4:00 PM&#39;</span>
+<span class="nx">iter</span><span class="p">.</span><span class="nx">next</span><span class="p">().</span><span class="nx">format</span><span class="p">(</span><span class="s1">&#39;LT&#39;</span><span class="p">);</span> <span class="c1">//=&gt; &#39;6:00 PM&#39;</span>
+</pre></div>
+<p>It also works with arbitrary durations objects:</p>
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">duration</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">.</span><span class="nx">duration</span><span class="p">({</span><span class="nx">hours</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">minutes</span><span class="o">:</span> <span class="mi">30</span><span class="p">,</span> <span class="nx">seconds</span><span class="o">:</span> <span class="mi">20</span><span class="p">});</span>
+<span class="kd">var</span> <span class="nx">iter</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;16&quot;</span><span class="p">,</span> <span class="s2">&quot;hh&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="nx">endTime</span><span class="p">).</span><span class="nx">iterate</span><span class="p">(</span><span class="nx">duration</span><span class="p">);</span>
+<span class="nx">iter</span><span class="p">.</span><span class="nx">next</span><span class="p">().</span><span class="nx">format</span><span class="p">(</span><span class="s1">&#39;LT&#39;</span><span class="p">);</span> <span class="c1">//=&gt; &#39;4:00 PM&#39;</span>
+<span class="nx">iter</span><span class="p">.</span><span class="nx">next</span><span class="p">().</span><span class="nx">format</span><span class="p">(</span><span class="s1">&#39;LT&#39;</span><span class="p">);</span> <span class="c1">//=&gt; &#39;6:30 PM&#39;</span>
+<span class="nx">iter</span><span class="p">.</span><span class="nx">next</span><span class="p">().</span><span class="nx">format</span><span class="p">(</span><span class="s1">&#39;LT&#39;</span><span class="p">);</span> <span class="c1">//=&gt; &#39;9:00 PM&#39;</span>
+</pre></div>
 <h3>iterateInner()</h3>
 
 <p>Like <a href="#iterate">iterate()</a>, but only for days completely contained in the range.</p>
@@ -133,7 +145,9 @@ otherwise.</p>
 <span class="nx">iter</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span> <span class="c1">//=&gt; moment(&quot;5/26/1982&quot;)</span>
 <span class="nx">iter</span><span class="p">.</span><span class="nx">hasNext</span><span class="p">();</span> <span class="c1">//=&gt; false</span>
 <span class="nx">iter</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span> <span class="c1">//=&gt; null</span>
-</pre></div><h2><a id="multipleRanges">Working with multiple ranges</a></h2><h3>overlaps()</h3>
+</pre></div>
+<p><code>iterateInner</code> takes all the same duration arguments as <code>iterate</code>.</p>
+<h2><a id="multipleRanges">Working with multiple ranges</a></h2><h3>overlaps()</h3>
 
 <p>Does this range overlap another range?</p>
 <div class="highlight"><pre><span class="kd">var</span> <span class="nx">range1</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;5/25/1982&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">&quot;5/30/1982&quot;</span><span class="p">);</span>
@@ -331,13 +345,12 @@ otherwise.</p>
 <p>However, when it comes to smart formatting, Twix has to make choices about what order the tokens go in, and those might not match the language. So Twix has its own language files that tell the smart formatter how to organize the range string. There are only a couple of language files right now, but will hopefully grow. <strong>This feature is experimental.</strong></p>
 <div class="highlight"><pre>  <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;1982-05-25&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;1982-05-27&quot;</span><span class="p">)).</span><span class="nx">format</span><span class="p">();</span> <span class="c1">//=&gt; &#39;25 mai, 0:00 - 27 mai, 0:00, 1982&#39;</span>
 </pre></div>
-<p>Here&#39;s how it works:</p>
+<p>Unlike Moment, Twix currently puts all the language definitions in the same file, so there&#39;s only one thing to load. Here&#39;s how it works:</p>
 
 <ul>
-<li><strong>Node</strong>: If you&#39;re using Node.js, Twix will automatically try to require the language file for whatever language Moment is set to; there&#39;s nothing for you to do. </li>
-<li><strong>Browser</strong>: The same goes for the browser, but you&#39;ll have to provide the <a href="https://github.com/icambron/twix.js/tree/master/bin/lang">language file</a>. So include it in a script tag after Moment and Twix (you will also want Moment&#39;s language file for the token translations).</li>
-<li><strong>All the languages</strong>: There&#39;s a <a href="https://github.com/icambron/twix.js/blob/develop/bin/lang/lang.js">master language file</a> that provides formatting rules for all of the languages we support.</li>
-<li><strong>AMD support</strong>: The language files also support AMD, so you can load them with RequireJS, including the master language file.</li>
+<li><strong>Node</strong>: If you&#39;re using Node.js, Twix will automatically try to load the language for whatever language Moment is set to; there&#39;s nothing for you to do.</li>
+<li><strong>Browser</strong>: The same goes for the browser, but you&#39;ll have to provide the <a href="https://github.com/icambron/twix.js/tree/master/bin/lang.js">language file</a>. So include it in a script tag after Moment and Twix (you will also want Moment&#39;s language file for the token translations).</li>
+<li><strong>AMD support</strong>: The language file also supports AMD, so you can load it with RequireJS just like you did Twix itself.</li>
 <li><strong>Defaults</strong>: If a language file isn&#39;t found for the current Moment language, it will use the default (American English) formatting.</li>
 </ul>
 <h2><a id="sourceCode">Source code</a></h2><p>Twix is open source (MIT License) and hosted on Github <a href="http://github.com/icambron/twix.js">here</a>. Instructions for building/contributing are there.</p>

@@ -274,6 +274,25 @@ html
             iter.next(); //=> null
             ```
 
+            You can also iterate with more complicated periods like "2 hours" or "4 days".
+
+
+            ```js
+            var iter = moment("16", "hh").twix(endTime).iterate(2, 'hours');
+            iter.next().format('LT'); //=> '4:00 PM'
+            iter.next().format('LT'); //=> '6:00 PM'
+            ```
+
+            It also works with arbitrary durations objects:
+
+            ```js
+            var duration = moment.duration({hours: 2, minutes: 30, seconds: 20});
+            var iter = moment("16", "hh").twix(endTime).iterate(duration);
+            iter.next().format('LT'); //=> '4:00 PM'
+            iter.next().format('LT'); //=> '6:30 PM'
+            iter.next().format('LT'); //=> '9:00 PM'
+            ```
+
             ###iterateInner()
             Like [iterate()](#iterate), but only for days completely contained in the range.
 
@@ -285,6 +304,8 @@ html
             iter.hasNext(); //=> false
             iter.next(); //=> null
             ```
+
+            `iterateInner` takes all the same duration arguments as `iterate`.
 
           h2
             a#multipleRanges Working with multiple ranges
@@ -428,7 +449,7 @@ html
             a#smartFormatting Smart formatting
 
           markdown:
-        
+
             The most important feature is formatting. By default, Twix tries to make brief, readable strings.
 
             ###The basics
@@ -578,12 +599,11 @@ html
               moment("1982-05-25").twix(moment("1982-05-27")).format(); //=> '25 mai, 0:00 - 27 mai, 0:00, 1982'
             ```
 
-            Here's how it works:
+            Unlike Moment, Twix currently puts all the language definitions in the same file, so there's only one thing to load. Here's how it works:
 
-            * **Node**: If you're using Node.js, Twix will automatically try to require the language file for whatever language Moment is set to; there's nothing for you to do. 
-            * **Browser**: The same goes for the browser, but you'll have to provide the [language file](https://github.com/icambron/twix.js/tree/master/bin/lang). So include it in a script tag after Moment and Twix (you will also want Moment's language file for the token translations).
-            * **All the languages**: There's a [master language file]( https://github.com/icambron/twix.js/blob/develop/bin/lang/lang.js) that provides formatting rules for all of the languages we support.
-            * **AMD support**: The language files also support AMD, so you can load them with RequireJS, including the master language file.
+            * **Node**: If you're using Node.js, Twix will automatically try to load the language for whatever language Moment is set to; there's nothing for you to do.
+            * **Browser**: The same goes for the browser, but you'll have to provide the [language file](https://github.com/icambron/twix.js/tree/master/bin/lang.js). So include it in a script tag after Moment and Twix (you will also want Moment's language file for the token translations).
+            * **AMD support**: The language file also supports AMD, so you can load it with RequireJS just like you did Twix itself.
             * **Defaults**: If a language file isn't found for the current Moment language, it will use the default (American English) formatting.
 
           h2
