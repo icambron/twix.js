@@ -6,8 +6,7 @@ node_js:
   - 0.6
 
 before_install:
-  - npm install -g coffee-script
-  - git submodule update --init --recursive
+  - make configure
 
 before_script:
-  - cake build
+  - make build
