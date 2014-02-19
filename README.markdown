@@ -40,6 +40,7 @@ Patches are welcome!
  * Don't include your changes to the generated `.js` files in the patch; they're much harder to merge. I'll generate them when I cut the release.
 
 Contributors to the project as of 0.4.0:
+
      145	Isaac Cambron           78.4%
       16	Tanguy Krotoff          8.6%
        8	Léo S                  4.3%
