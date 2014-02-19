@@ -593,7 +593,7 @@ html
               moment().twix(moment().add(3, "month")).simpleFormat("MMMM"); //=> 'juillet - octobre'
             ```
 
-            However, when it comes to smart formatting, Twix has to make choices about what order the tokens go in, and those might not match the language. So Twix has its own language files that tell the smart formatter how to organize the range string. There are only a couple of language files right now, but will hopefully grow. **This feature is experimental.**
+            However, when it comes to smart formatting, Twix has to make choices about what order the tokens go in, and those might not match the language. So Twix has its own language files that tell the smart formatter how to organize the range string. There are only a couple of language files right now, but will hopefully grow. **This feature is experimental and currently only includes French.**
 
             ```js
               moment("1982-05-25").twix(moment("1982-05-27")).format(); //=> '25 mai, 0:00 - 27 mai, 0:00, 1982'
@@ -604,7 +604,7 @@ html
             * **Node**: If you're using Node.js, Twix will automatically try to load the language for whatever language Moment is set to; there's nothing for you to do.
             * **Browser**: The same goes for the browser, but you'll have to provide the [language file](https://github.com/icambron/twix.js/tree/master/bin/lang.js). So include it in a script tag after Moment and Twix (you will also want Moment's language file for the token translations).
             * **AMD support**: The language file also supports AMD, so you can load it with RequireJS just like you did Twix itself.
-            * **Defaults**: If a language file isn't found for the current Moment language, it will use the default (American English) formatting.
+            * **Defaults**: If the Moment language doesn't have a corresponding Twix language, Twix will use the default (American English) formatting.
 
           h2
             a#sourceCode Source code

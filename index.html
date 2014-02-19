@@ -342,7 +342,7 @@ otherwise.</p>
 <div class="highlight"><pre>  <span class="nx">moment</span><span class="p">.</span><span class="nx">lang</span><span class="p">(</span><span class="s2">&quot;fr&quot;</span><span class="p">);</span>
   <span class="nx">moment</span><span class="p">().</span><span class="nx">twix</span><span class="p">(</span><span class="nx">moment</span><span class="p">().</span><span class="nx">add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;month&quot;</span><span class="p">)).</span><span class="nx">simpleFormat</span><span class="p">(</span><span class="s2">&quot;MMMM&quot;</span><span class="p">);</span> <span class="c1">//=&gt; &#39;juillet - octobre&#39;</span>
 </pre></div>
-<p>However, when it comes to smart formatting, Twix has to make choices about what order the tokens go in, and those might not match the language. So Twix has its own language files that tell the smart formatter how to organize the range string. There are only a couple of language files right now, but will hopefully grow. <strong>This feature is experimental.</strong></p>
+<p>However, when it comes to smart formatting, Twix has to make choices about what order the tokens go in, and those might not match the language. So Twix has its own language files that tell the smart formatter how to organize the range string. There are only a couple of language files right now, but will hopefully grow. <strong>This feature is experimental and currently only includes French.</strong></p>
 <div class="highlight"><pre>  <span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;1982-05-25&quot;</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="nx">moment</span><span class="p">(</span><span class="s2">&quot;1982-05-27&quot;</span><span class="p">)).</span><span class="nx">format</span><span class="p">();</span> <span class="c1">//=&gt; &#39;25 mai, 0:00 - 27 mai, 0:00, 1982&#39;</span>
 </pre></div>
 <p>Unlike Moment, Twix currently puts all the language definitions in the same file, so there&#39;s only one thing to load. Here&#39;s how it works:</p>
@@ -351,7 +351,7 @@ otherwise.</p>
 <li><strong>Node</strong>: If you&#39;re using Node.js, Twix will automatically try to load the language for whatever language Moment is set to; there&#39;s nothing for you to do.</li>
 <li><strong>Browser</strong>: The same goes for the browser, but you&#39;ll have to provide the <a href="https://github.com/icambron/twix.js/tree/master/bin/lang.js">language file</a>. So include it in a script tag after Moment and Twix (you will also want Moment&#39;s language file for the token translations).</li>
 <li><strong>AMD support</strong>: The language file also supports AMD, so you can load it with RequireJS just like you did Twix itself.</li>
-<li><strong>Defaults</strong>: If a language file isn&#39;t found for the current Moment language, it will use the default (American English) formatting.</li>
+<li><strong>Defaults</strong>: If the Moment language doesn&#39;t have a corresponding Twix language, Twix will use the default (American English) formatting.</li>
 </ul>
 <h2><a id="sourceCode">Source code</a></h2><p>Twix is open source (MIT License) and hosted on Github <a href="http://github.com/icambron/twix.js">here</a>. Instructions for building/contributing are there.</p>
 
