@@ -39,19 +39,6 @@ Patches are welcome!
  * Submit pull requests to the `develop` branch. I merge develop to master when we cut a release.
  * Don't include your changes to the generated `.js` files in the patch; they're much harder to merge. I'll generate them when I cut the release.
 
-Contributors to the project as of 0.4.0:
-
-     145	Isaac Cambron           78.4%
-      16	Tanguy Krotoff          8.6%
-       8	Léo S                  4.3%
-       5	Edmund von der Burg     2.7%
-       3	Nathan White            1.6%
-       3	Pikachu                 1.6%
-       2	Suzanne Hamilton        1.1%
-       1	andresmoschini          0.5%
-       1	Thomas Durin            0.5%
-       1	Andrew Wirick           0.5%
-
 ##Changelog##
 
  * **0.4.0**  Simplified internationalization support (**possibly breaking change for those few people using French support**), added more complex iteration durations. Reverted build complexity.
