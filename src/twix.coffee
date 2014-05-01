@@ -6,10 +6,18 @@ makeTwix = (moment) ->
   languagesLoaded = false
 
   class Twix
-    constructor: (start, end, allDay) ->
-      @start = moment start
-      @end = moment end
-      @allDay = allDay || false
+    constructor: (start, end, parseFormat, options = {}) ->
+
+      unless typeof parseFormat == "string"
+        options = parseFormat ? {}
+        parseFormat = null
+
+      if typeof options == "boolean"
+        options = {allDay: options}
+
+      @start = moment start, parseFormat, options.parseStrict
+      @end = moment end, parseFormat, options.parseStrict
+      @allDay = options.allDay ? false
 
     @_extend: (first, others...) ->
       for other in others
@@ -426,9 +434,7 @@ makeTwix = (moment) ->
       o.__proto__
     else o.constructor.prototype
 
-  Twix._extend(getPrototypeOf(moment.fn._lang),
-    _twix: Twix.defaults
-  )
+  Twix._extend(getPrototypeOf(moment.fn._lang), _twix: Twix.defaults)
 
   moment.twix = -> new Twix(arguments...)
   moment.fn.twix = -> new Twix(this, arguments...)

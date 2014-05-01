@@ -27,10 +27,38 @@ test = (moment, Twix) ->
         assertEqual "function", typeof moment.twix
         assertTwixEqual new Twix("1982-05-25", "1983-05-25", true), moment.twix("1982-05-25", "1983-05-25", true)
 
+      it "uses the parse format for both dates", ->
+        assertTwixEqual new Twix(moment("2012-05-25"), moment("2013-05-25"), false),
+          moment.twix("05/25/2012", "05/25/2013", "MM/DD/YYYY")
+
     describe "create from a member", ->
-      it "is the same as instantiating via the contructor", ->
+
+      it "is a function", ->
         assertEqual "function", typeof(moment().twix)
-        assertTwixEqual new Twix("1982-05-25", "1983-05-25", true), moment("1982-05-25").twix("1983-05-25", true)
+
+      it "is the same as instantiating via the contructor", ->
+        assertTwixEqual new Twix("1982-05-25", "1983-05-25", false), moment("1982-05-25").twix("1983-05-25")
+
+      it "accepts an allDay argument", ->
+        t = moment("1982-05-25").twix("1983-05-25", true)
+        assertEqual t.allDay, true
+
+      it "uses the parse format", ->
+        assertTwixEqual new Twix(moment("2012-05-25"), moment("2013-05-25"), false),
+          moment("05/25/2012").twix("05/25/2013", "MM/DD/YYYY")
+
+      it "uses a parseStrict object argument", ->
+        t = moment("05-25-1981").twix("A05/25/1982", "MM/DD/YYYY", parseStrict: true)
+        assertEqual t.end.isValid(), false
+
+        t = moment("05-25-1981").twix("05/25/1982", "MM/DD/YYYY", parseStrict: true)
+        assertEqual t.end.isValid(), true
+
+      it "uses an allDay option argument", ->
+        t = moment("05-25-1981").twix("05/25/1982", "MM/DD/YYYY", allDay: true)
+        assertEqual t.allDay, true
+        t = moment("05-25-1981").twix("1982-05-25", allDay: true)
+        assertEqual t.allDay, true
 
     describe "moment.forDuration()", ->
       it "constructs a twix", ->

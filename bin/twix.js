@@ -13,10 +13,24 @@
     }
     languagesLoaded = false;
     Twix = (function() {
-      function Twix(start, end, allDay) {
-        this.start = moment(start);
-        this.end = moment(end);
-        this.allDay = allDay || false;
+      function Twix(start, end, parseFormat, options) {
+        var _ref;
+
+        if (options == null) {
+          options = {};
+        }
+        if (typeof parseFormat !== "string") {
+          options = parseFormat != null ? parseFormat : {};
+          parseFormat = null;
+        }
+        if (typeof options === "boolean") {
+          options = {
+            allDay: options
+          };
+        }
+        this.start = moment(start, parseFormat, options.parseStrict);
+        this.end = moment(end, parseFormat, options.parseStrict);
+        this.allDay = (_ref = options.allDay) != null ? _ref : false;
       }
 
       Twix._extend = function() {
