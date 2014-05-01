@@ -1,5 +1,13 @@
 hasModule = module? && module.exports?
 
+deprecate = (name, instead, fn) ->
+  alreadyDone = false
+  (args...) ->
+    unless alreadyDone
+      console.warn "##{name} is deprecated. Use ##{instead} instead." if console? && console.warn?
+    alreadyDone = true
+    fn.apply @, args
+
 makeTwix = (moment) ->
   throw "Can't find moment" unless moment?
 
@@ -413,18 +421,14 @@ makeTwix = (moment) ->
       else
         @langData[name].pre
 
-    _deprecate: (name, instead, fn) ->
-      console.warn "##{name} is deprecated. Use ##{instead} instead." if console? && console.warn?
-      fn.apply @
-
     # -- DEPRECATED METHODS --
-    sameDay: -> @_deprecate "sameDay", "isSame('day')", -> @isSame "day"
-    sameYear: -> @_deprecate "sameYear", "isSame('year')", -> @isSame "year"
-    countDays: -> @_deprecate "countDays", "countOuter('days')", -> @countOuter "days"
-    daysIn: (minHours) -> @_deprecate "daysIn", "iterate('days' [,minHours])", -> @iterate 'days', minHours
-    past: -> @_deprecate "past", "isPast()", -> @isPast()
-    duration: -> @_deprecate "duration", "humanizeLength()", -> @humanizeLength()
-    merge: (other) -> @_deprecate "merge", "union(other)", -> @union other
+    sameDay: deprecate "sameDay", "isSame('day')", -> @isSame "day"
+    sameYear: deprecate "sameYear", "isSame('year')", -> @isSame "year"
+    countDays: deprecate "countDays", "countOuter('days')", -> @countOuter "days"
+    daysIn: deprecate "daysIn", "iterate('days' [,minHours])", (minHours) -> @iterate 'days', minHours
+    past: deprecate "past", "isPast()", -> @isPast()
+    duration: deprecate "duration", "humanizeLength()", -> @humanizeLength()
+    merge: deprecate "merge", "union(other)", (other) -> @union other
 
   # -- PLUGIN --
   getPrototypeOf = (o) ->
