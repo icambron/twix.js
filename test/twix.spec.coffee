@@ -901,6 +901,12 @@ test = (moment, Twix) ->
       s = thisYear("05-25").twix(thisYear("5-26"), true).simpleFormat null, allDay: null
       assertEqual true, s.indexOf("(all day)") == -1
 
+    it "accepts a custom template", ->
+      s = thisYear("05-25").twix(thisYear("5-26"), true).simpleFormat null,
+        template: (first, second) -> "#{first} | #{second}"
+      assertEqual true, s.indexOf("|") > -1
+
+
   describe "format()", ->
 
     test = (name, t) -> it name, ->
@@ -1143,6 +1149,13 @@ test = (moment, Twix) ->
           end: "1982-05-26 10:00"
           options: {lastNightEndsAt: 5},
           result: "May 25, 5 PM - May 26, 10 AM, 1982"
+
+      describe "other options", ->
+        it "accepts a custom format", ->
+          start: "1982-05-25 17:00"
+          end: "1982-05-26 10:00"
+          options: {template: (first, second) -> "#{first} | #{second}"}
+          result: "May 25, 5 PM | May 26, 10 AM, 1982"
 
   describe "internationalization", ->
     it "uses alternative language when specified by moment", ->

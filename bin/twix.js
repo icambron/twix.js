@@ -327,10 +327,11 @@
         var options, s;
 
         options = {
-          allDay: "(all day)"
+          allDay: "(all day)",
+          template: Twix.formatTemplate
         };
         Twix._extend(options, inopts || {});
-        s = "" + (this.start.format(momentOpts)) + " - " + (this.end.format(momentOpts));
+        s = options.template(this.start.format(momentOpts), this.end.format(momentOpts));
         if (this.allDay && options.allDay) {
           s += " " + options.allDay;
         }
@@ -359,7 +360,8 @@
           minuteFormat: "mm",
           allDay: "all day",
           explicitAllDay: false,
-          lastNightEndsAt: 0
+          lastNightEndsAt: 0,
+          template: Twix.formatTemplate
         };
         Twix._extend(options, inopts || {});
         fs = [];
@@ -461,7 +463,7 @@
                   pre: ""
                 },
                 value: function() {
-                  return "" + (fold(start_bucket)) + " -" + (fold(end_bucket, true));
+                  return options.template(fold(start_bucket), fold(end_bucket, true).trim());
                 }
               });
             }
@@ -676,6 +678,9 @@
     Twix._extend(getPrototypeOf(moment.fn._lang), {
       _twix: Twix.defaults
     });
+    Twix.formatTemplate = function(leftSide, rightSide) {
+      return "" + leftSide + " - " + rightSide;
+    };
     moment.twix = function() {
       return (function(func, args, ctor) {
         ctor.prototype = func.prototype;

@@ -190,11 +190,13 @@ makeTwix = (moment) ->
     toString: -> "{start: #{@start.format()}, end: #{@end.format()}, allDay: #{@allDay ? "true" : "false"}}"
 
     simpleFormat: (momentOpts, inopts) ->
-      options = allDay: "(all day)"
+      options =
+        allDay: "(all day)"
+        template: Twix.formatTemplate
 
       Twix._extend options, (inopts || {})
 
-      s = "#{@start.format(momentOpts)} - #{@end.format(momentOpts)}"
+      s = options.template @start.format(momentOpts), @end.format(momentOpts)
       s += " #{options.allDay}" if @allDay && options.allDay
       s
 
@@ -219,6 +221,7 @@ makeTwix = (moment) ->
         allDay: "all day"
         explicitAllDay: false
         lastNightEndsAt: 0
+        template: Twix.formatTemplate
 
       Twix._extend options, (inopts || {})
 
@@ -311,7 +314,10 @@ makeTwix = (moment) ->
         else
           if together
             together = false
-            common_bucket.push {format: {slot: format.slot, pre: ""}, value: -> "#{fold start_bucket} -#{fold end_bucket, true}"}
+            common_bucket.push {
+              format: {slot: format.slot, pre: ""}
+              value: -> options.template(fold(start_bucket), fold(end_bucket, true).trim())
+            }
 
           start_bucket.push start_group
           end_bucket.push {format: format, value: -> end_str}
@@ -363,7 +369,7 @@ makeTwix = (moment) ->
     _prepIterateInputs: (inputs...)->
       return inputs if typeof inputs[0] is 'number'
 
-      if typeof inputs[0] is 'string'
+      if typeof inputs[0] == 'string'
         period = inputs.shift()
         intervalAmount = inputs.pop() ? 1
 
@@ -439,6 +445,8 @@ makeTwix = (moment) ->
     else o.constructor.prototype
 
   Twix._extend(getPrototypeOf(moment.fn._lang), _twix: Twix.defaults)
+
+  Twix.formatTemplate = (leftSide, rightSide) -> "#{leftSide} - #{rightSide}"
 
   moment.twix = -> new Twix(arguments...)
   moment.fn.twix = -> new Twix(this, arguments...)
