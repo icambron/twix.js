@@ -453,6 +453,7 @@ makeTwix = (moment) ->
   moment.fn.forDuration = (duration, allDay) -> new Twix(this, this.clone().add(duration), allDay)
   moment.duration.fn.afterMoment = (startingTime, allDay) -> new Twix(startingTime, moment(startingTime).clone().add(this), allDay)
   moment.duration.fn.beforeMoment = (startingTime, allDay) -> new Twix(moment(startingTime).clone().subtract(this), startingTime, allDay)
+  moment.twixClass = Twix
 
   Twix
 

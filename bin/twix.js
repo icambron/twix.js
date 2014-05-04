@@ -704,6 +704,7 @@
     moment.duration.fn.beforeMoment = function(startingTime, allDay) {
       return new Twix(moment(startingTime).clone().subtract(this), startingTime, allDay);
     };
+    moment.twixClass = Twix;
     return Twix;
   };
 
