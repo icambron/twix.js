@@ -128,14 +128,20 @@ test = (moment, Twix) ->
         assertEqual true, moment("1982-05-25 05:30 AM").twix("1982-05-25 11:30 PM").isSame "day"
 
   describe "length()", ->
+
+    describe "no arguments", ->
+      it "returns milliseconds", ->
+        mom = moment()
+        assertEqual 60 * 1000, mom.twix(mom.clone().add(1, 'minute')).length()
+
     describe "days", ->
       it "returns 1 for yesterday - today", ->
         assertEqual 1, yesterday().twix(moment()).length("days")
 
-      it "returns 1 for a one-day all-day event", ->
+      it "returns 1 for a one-day all-day range", ->
         assertEqual 1, moment().twix(moment(), true).length("days")
 
-      it "returns 2 for a two-day all-day event", ->
+      it "returns 2 for a two-day all-day range", ->
         assertEqual 2, yesterday().twix(moment(), true).length("days")
 
     describe "other", ->
@@ -161,7 +167,7 @@ test = (moment, Twix) ->
         range = moment(start).twix end
         assertEqual 2, range.count("days")
 
-      it "works fine for all-day events", ->
+      it "works fine for all-day ranges", ->
         start = thisYear "05-25"
         end = thisYear "05-26"
         range = moment(start).twix end, true
@@ -224,13 +230,13 @@ test = (moment, Twix) ->
         range = moment(start).twix end
         assertEqual 2, range.countInner("days")
 
-      it "returns 1 for a one-day all-day event", ->
+      it "returns 1 for a one-day all-day range", ->
         start = thisYear "05-25"
         end = thisYear "05-25"
         range = moment(start).twix end, true
         assertEqual 1, range.countInner("days")
 
-      it "returns 2 for a two-day all-day event", ->
+      it "returns 2 for a two-day all-day range", ->
         start = thisYear "05-25"
         end = thisYear "05-26"
         range = moment(start).twix end, true
@@ -309,7 +315,7 @@ test = (moment, Twix) ->
           iter.next()
         assertEqual(366, results.length)
 
-      it "provides 1 day for an all-day event", ->
+      it "provides 1 day for an all-day range", ->
         start = thisYear "05-25"
         end = thisYear "05-25"
         iter = start.twix(end, true).iterate "days"
@@ -323,7 +329,7 @@ test = (moment, Twix) ->
         assertSameDay thisYear("05-25"), iter.next()
         assertEqual null, iter.next()
 
-      it "provides 1 day for all-day events when there's a min time", ->
+      it "provides 1 day for all-day ranges when there's a min time", ->
         start = thisYear "05-25"
         end = thisYear "05-25"
         iter = start.twix(end, true).iterate "days", 4
@@ -444,14 +450,14 @@ test = (moment, Twix) ->
         assertSameDay thisYear("05-25"), iter.next()
         assertEqual null, iter.next()
 
-      it "provides 1 day for an all-day event", ->
+      it "provides 1 day for an all-day range", ->
         start = thisYear "05-25"
         end = thisYear "05-25"
         iter = start.twix(end, true).iterateInner "days"
         assertSameDay thisYear("05-25"), iter.next()
         assertEqual null, iter.next()
 
-      it "provides 2 days for a two-day all-day event", ->
+      it "provides 2 days for a two-day all-day range", ->
         start = thisYear "05-25"
         end = thisYear "05-26"
         iter = start.twix(end, true).iterateInner "days"
@@ -462,14 +468,14 @@ test = (moment, Twix) ->
         assertEqual null, iter.next()
 
   describe "humanizeLength()", ->
-    describe "all-day events", ->
+    describe "all-day ranges", ->
       it "formats single-day correctly", ->
         assertEqual("all day", new Twix("1982-05-25", "1982-05-25", true).humanizeLength())
 
       it "formats multiday correctly", ->
         assertEqual("3 days", new Twix("1982-05-25", "1982-05-27", true).humanizeLength())
 
-    describe "non-all-day events", ->
+    describe "non-all-day ranges", ->
       it "formats single-day correctly", ->
         assertEqual("4 hours", thatDay("12:00", "16:00").humanizeLength())
 
@@ -483,7 +489,7 @@ test = (moment, Twix) ->
       assertEqual 2, duration.days()
 
   describe "isPast()", ->
-    describe "all-day events", ->
+    describe "all-day ranges", ->
       it "returns true for days in the past", ->
         assertEqual true, yesterday().twix(yesterday(), true).isPast()
 
@@ -494,7 +500,7 @@ test = (moment, Twix) ->
       it "returns false for days in the future", ->
         assertEqual false, tomorrow().twix(tomorrow(), true).isPast()
 
-    describe "non-all-day events", ->
+    describe "non-all-day ranges", ->
       it "returns true for the past", ->
         past = moment().subtract 3, "hours"
         nearerPast = moment().subtract 2, "hours"
@@ -506,7 +512,7 @@ test = (moment, Twix) ->
         assertEqual false, future.twix(furtherFuture).isPast()
 
   describe "isFuture()", ->
-    describe "all-day events", ->
+    describe "all-day ranges", ->
       it "returns false for days in the past", ->
         assertEqual false, yesterday().twix(yesterday(), true).isFuture()
 
@@ -517,7 +523,7 @@ test = (moment, Twix) ->
       it "returns true for days in the future", ->
         assertEqual true, tomorrow().twix(tomorrow(), true).isFuture()
 
-    describe "non-all-day events", ->
+    describe "non-all-day ranges", ->
       it "returns false for the past", ->
         past = moment().subtract 3, "hours"
         nearerPast = moment().subtract 3, "hours"
@@ -529,7 +535,7 @@ test = (moment, Twix) ->
         assertEqual true, future.twix(furtherFuture).isFuture()
 
   describe "isCurrent()", ->
-    describe "all-day events", ->
+    describe "all-day ranges", ->
       it "returns false for days in the past", ->
         assertEqual false, yesterday().twix(yesterday(), true).isCurrent()
 
@@ -540,7 +546,7 @@ test = (moment, Twix) ->
       it "returns false for days in the future", ->
         assertEqual false, tomorrow().twix(tomorrow(), true).isCurrent()
 
-    describe "non-all-day events", ->
+    describe "non-all-day ranges", ->
       it "returns false for the past", ->
         past = moment().subtract 3, "hours"
         nearerPast = moment().subtract 2, "hours"
@@ -605,68 +611,68 @@ test = (moment, Twix) ->
     someTime = thatDay "05:30", "08:30"
     someDays = new Twix("1982-05-24", "1982-05-25", true)
 
-    describe "non-all-day events", ->
+    describe "non-all-day ranges", ->
 
-      it "returns false for a later event", ->
+      it "returns false for a later range", ->
         assertNoOverlap someTime, thatDay "09:30", "11:30"
 
-      it "returns false for an earlier event", ->
+      it "returns false for an earlier range", ->
         assertNoOverlap someTime, thatDay "03:30", "04:30"
 
-      it "returns true for a partially later event", ->
+     it "returns true for a partially later range", ->
         assertOverlap someTime, thatDay "08:00", "11:30"
 
-      it "returns true for a partially earlier event", ->
+      it "returns true for a partially earlier range", ->
         assertOverlap someTime, thatDay "04:30", "06:30"
 
-      it "returns true for an engulfed event", ->
+      it "returns true for an engulfed range", ->
         assertOverlap someTime, thatDay "06:30", "07:30"
 
-      it "returns true for an engulfing event", ->
+      it "returns true for an engulfing range", ->
         assertOverlap someTime, thatDay "04:30", "09:30"
 
-      it "returns false for an event that starts immediately afterwards", ->
+      it "returns false for a range that starts immediately afterwards", ->
         assertNoOverlap someTime, thatDay "08:30", "09:30"
 
-      it "returns false for an event that ends immediately before", ->
+      it "returns false for a range that ends immediately before", ->
         assertNoOverlap someTime, thatDay "04:30", "05:30"
 
-    describe "one all-day event", ->
-      it "returns true for a partially later event", ->
+    describe "one all-day range", ->
+      it "returns true for a partially later range", ->
         assertOverlap thatDay(), new Twix("1982-05-25 20:00", "1982-05-26 05:00")
 
-      it "returns true for a partially earlier event", ->
+      it "returns true for a partially earlier range", ->
         assertOverlap thatDay(), new Twix("1982-05-24 20:00", "1982-05-25 07:00")
 
-      it "returns true for an engulfed event", ->
+      it "returns true for an engulfed range", ->
         assertOverlap thatDay(), someTime
 
-      it "returns true for an engulfing event", ->
+      it "returns true for an engulfing range", ->
         assertOverlap thatDay(), new Twix("1982-05-24 20:00", "1982-05-26 05:00")
 
-      it "returns true for an event which starts on the same day", ->
+      it "returns true for a range which starts on the same day", ->
         assertOverlap thatDay(), new Twix("1982-05-25", "1982-05-27")
 
-      it "returns true for an event which ends on the same day", ->
+      it "returns true for a range which ends on the same day", ->
         assertOverlap thatDay(), new Twix("1982-05-23", "1982-05-25", true)
 
-    describe "two all-day events", ->
-      it "returns false for a later event", ->
+    describe "two all-day ranges", ->
+      it "returns false for a later range", ->
         assertNoOverlap someDays, new Twix("1982-05-26", "1982-05-27", true)
 
-      it "returns false for an earlier event", ->
+      it "returns false for an earlier range", ->
         assertNoOverlap someDays, new Twix("1982-05-22", "1982-05-23", true)
 
-      it "returns true for a partially later event", ->
+      it "returns true for a partially later range", ->
         assertOverlap someDays, new Twix("1982-05-24", "1982-05-26", true)
 
-      it "returns true for a partially earlier event", ->
+      it "returns true for a partially earlier range", ->
         assertOverlap someDays, new Twix("1982-05-22", "1982-05-24", true)
 
-      it "returns true for an engulfed event", ->
+      it "returns true for an engulfed range", ->
         assertOverlap someDays, new Twix("1982-05-25", "1982-05-25", true)
 
-      it "returns true for an engulfing event", ->
+      it "returns true for an engulfing range", ->
         assertOverlap someDays, new Twix("1982-05-22", "1982-05-28", true)
 
   describe "engulfs()", ->
@@ -677,68 +683,69 @@ test = (moment, Twix) ->
     someTime = thatDay "05:30", "08:30"
     someDays = new Twix("1982-05-24", "1982-05-25", true)
 
-    describe "non-all-day events", ->
+    describe "non-all-day ranges", ->
 
-      it "returns false for a later event", ->
+      it "returns false for a later range", ->
         assertNotEngulfing someTime, thatDay "09:30", "11:30"
 
-      it "returns false for an earlier event", ->
+      it "returns false for an earlier range", ->
         assertNotEngulfing someTime, thatDay "03:30", "04:30"
 
-      it "returns true for a partially later event", ->
+      it "returns true for a partially later range", ->
         assertNotEngulfing someTime, thatDay "08:00", "11:30"
 
-      it "returns true for a partially earlier event", ->
+      it "returns true for a partially earlier range", ->
         assertNotEngulfing someTime, thatDay "04:30", "06:30"
 
-      it "returns true for an engulfed event", ->
+      it "returns true for an engulfed range", ->
         assertEngulfing someTime, thatDay "06:30", "07:30"
 
-      it "returns true for an engulfing event", ->
+      it "returns true for an engulfing range", ->
         assertNotEngulfing someTime, thatDay "04:30", "09:30"
 
-    describe "one all-day event", ->
-      it "returns true for a partially later event", ->
+    describe "one all-day range", ->
+      it "returns true for a partially later range", ->
         assertNotEngulfing thatDay(), new Twix("1982-05-25 20:00", "1982-05-26 05:00")
 
-      it "returns true for a partially earlier event", ->
+      it "returns true for a partially earlier range", ->
         assertNotEngulfing thatDay(), new Twix("1982-05-24", "20:00", "1982-05-25 07:00")
 
-      it "returns true for an engulfed event", ->
+      it "returns true for an engulfed range", ->
         assertEngulfing thatDay(), someTime
 
-      it "returns true for an engulfing event", ->
+      it "returns true for an engulfing range", ->
         assertNotEngulfing thatDay(), new Twix("1982-05-24 20:00", "1982-05-26 05:00")
 
-    describe "two all-day events", ->
-      it "returns false for a later event", ->
+    describe "two all-day ranges", ->
+      it "returns false for a later range", ->
         assertNotEngulfing someDays, new Twix("1982-05-26", "1982-05-27", true)
 
-      it "returns false for an earlier event", ->
+      it "returns false for an earlier range", ->
         assertNotEngulfing someDays, new Twix("1982-05-22", "1982-05-23", true)
 
-      it "returns true for a partially later event", ->
+      it "returns true for a partially later range", ->
         assertNotEngulfing someDays, new Twix("1982-05-24", "1982-05-26", true)
 
-      it "returns true for a partially earlier event", ->
+      it "returns true for a partially earlier range", ->
         assertNotEngulfing someDays, new Twix("1982-05-22", "1982-05-24", true)
 
-      it "returns true for an engulfed event", ->
+      it "returns true for an engulfed range", ->
         assertEngulfing someDays, new Twix("1982-05-25", "1982-05-25", true)
 
-      it "returns true for an engulfing event", ->
+      it "returns true for an engulfing range", ->
         assertNotEngulfing someDays, new Twix("1982-05-22", "1982-05-28", true)
 
   describe "merge()", ->
     it "calls union()", ->
-      assertTwixEqual new Twix("1982-05-24", "1982-05-26"), new Twix("1982-05-24", "1982-05-25").merge(new Twix("1982-05-25", "1982-05-26"))
+      assertTwixEqual new Twix("1982-05-24", "1982-05-26"),
+        new Twix("1982-05-24", "1982-05-25").merge(new Twix("1982-05-25", "1982-05-26"))
 
   describe "union()", ->
 
     someTime = thatDay "05:30", "08:30"
     someDays = new Twix "1982-05-24", "1982-05-25", true
 
-    describe "non-all-day events", ->
+    describe "non-all-day ranges", ->
 
       it "spans a later time", ->
         assertTwixEqual thatDay("05:30", "11:30"), someTime.union(thatDay "09:30", "11:30")
@@ -746,33 +753,36 @@ test = (moment, Twix) ->
       it "spans an earlier time", ->
         assertTwixEqual thatDay("03:30", "08:30"), someTime.union(thatDay "03:30", "04:30")
 
-      it "spans a partially later event", ->
+      it "spans a partially later range", ->
         assertTwixEqual thatDay("05:30", "11:30"), someTime.union(thatDay "08:00", "11:30")
 
-      it "spans a partially earlier event", ->
+      it "spans a partially earlier range", ->
         assertTwixEqual thatDay("04:30", "08:30"), someTime.union(thatDay "04:30", "06:30")
 
-      it "isn't affected by engulfed events", ->
+      it "isn't affected by engulfed ranges", ->
         assertTwixEqual someTime, someTime.union(thatDay "06:30", "07:30")
 
-      it "becomes an engulfing event", ->
+      it "becomes an engulfing range", ->
         assertTwixEqual thatDay("04:30", "09:30"), someTime.union(thatDay "04:30", "09:30")
 
-    describe "one all-day event", ->
+      it "spans adjacent ranges", ->
+        assertTwixEqual thatDay("05:30", "09:30"), someTime.union(thatDay "08:30", "09:30")
+
+    describe "one all-day range", ->
       it "spans a later time", ->
         assertTwixEqual new Twix("1982-05-24 00:00", "1982-05-26 07:00"), someDays.union(new Twix("1982-05-24 20:00", "1982-05-26 07:00"))
 
       it "spans an earlier time", ->
         assertTwixEqual new Twix("1982-05-23 08:00", moment("1982-05-25").endOf("day")), someDays.union(new Twix("1982-05-23 08:00", "1982-05-25 07:00"))
 
-      #i'm tempted to just say this is wrong...shouldn't it get to stay an all-day event?
-      it "isn't affected by engulfing events", ->
+      #i'm tempted to just say this is wrong...shouldn't it get to stay an all-day range?
+      it "isn't affected by engulfing ranges", ->
         assertTwixEqual new Twix("1982-05-24 00:00", moment("1982-05-25").endOf("day")), someDays.union(someTime)
 
-      it "becomes an engulfing event", ->
+      it "becomes an engulfing range", ->
         assertTwixEqual new Twix("1982-05-23 20:00", "1982-05-26 08:30"), someDays.union(new Twix("1982-05-23 20:00", "1982-05-26 08:30"))
 
-    describe "two all-day events", ->
+    describe "two all-day ranges", ->
 
       it "spans a later time", ->
         assertTwixEqual new Twix("1982-05-24", "1982-05-28", true), someDays.union(new Twix("1982-05-27", "1982-05-28", true))
@@ -786,10 +796,10 @@ test = (moment, Twix) ->
       it "spans a partially earlier time", ->
         assertTwixEqual new Twix("1982-05-23", "1982-05-25", true), someDays.union(new Twix("1982-05-23", "1982-05-25", true))
 
-      it "isn't affected by engulfing events", ->
+      it "isn't affected by engulfing ranges", ->
         assertTwixEqual someDays, someDays.union(thatDay())
 
-      it "becomes an engulfing event", ->
+      it "becomes an engulfing range", ->
         assertTwixEqual someDays, thatDay().union(someDays)
 
   describe "intersection()", ->
@@ -797,7 +807,7 @@ test = (moment, Twix) ->
     someTime = thatDay "05:30", "08:30"
     someDays = new Twix "1982-05-24", "1982-05-25", true
 
-    describe "non-all-day events", ->
+    describe "non-all-day ranges", ->
 
       it "does not intersect with a later time", ->
         intersection = someTime.intersection(thatDay "09:30", "11:30")
@@ -809,32 +819,35 @@ test = (moment, Twix) ->
         assertTwixEqual thatDay("05:30", "04:30"), intersection
         assertEqual false, intersection.isValid()
 
-      it "intersects with a partially later event", ->
+      it "intersects with a partially later range", ->
         assertTwixEqual thatDay("08:00", "08:30"), someTime.intersection(thatDay "08:00", "11:30")
 
-      it "intersects with a partially earlier event", ->
+      it "intersects with a partially earlier range", ->
         assertTwixEqual thatDay("05:30", "06:30"), someTime.intersection(thatDay "04:30", "06:30")
 
-      it "intersects with an engulfed event", ->
+      it "intersects with an engulfed range", ->
         assertTwixEqual thatDay("06:30", "07:30"), someTime.intersection(thatDay "06:30", "07:30")
 
-      it "intersects with an engulfing event", ->
+      it "intersects with an engulfing range", ->
         assertTwixEqual thatDay("05:30", "08:30"), someTime.intersection(thatDay "04:30", "09:30")
 
-    describe "one all-day event", ->
+      it "does not intersect an adjacent range", ->
+        assertEqual 0, someTime.intersection(thatDay "08:30", "09:30").length()
+
+    describe "one all-day range", ->
       it "intersects with a later time", ->
         assertTwixEqual new Twix("1982-05-24 20:00", "1982-05-25 23:59:59.999"), someDays.intersection(new Twix("1982-05-24 20:00", "1982-05-26 07:00"))
 
       it "intersects with an earlier time", ->
         assertTwixEqual new Twix("1982-05-24 00:00", "1982-05-25 07:00"), someDays.intersection(new Twix("1982-05-23 08:00", "1982-05-25 07:00"))
 
-      it "intersects with an engulfed event", ->
+      it "intersects with an engulfed range", ->
         assertTwixEqual new Twix("1982-05-25 05:30", "1982-05-25 08:30"), someDays.intersection(someTime)
 
-      it "intersects with an engulfing event", ->
+      it "intersects with an engulfing range", ->
         assertTwixEqual new Twix("1982-05-24 00:00", "1982-05-25 23:59:59.999"), someDays.intersection(new Twix("1982-05-23 20:00", "1982-05-26 08:30"))
 
-    describe "two all-day events", ->
+    describe "two all-day range", ->
 
       it "does not intersect with a later time", ->
         intersection = someDays.intersection(new Twix("1982-05-27", "1982-05-28", true))
@@ -852,10 +865,10 @@ test = (moment, Twix) ->
       it "intersects with a partially earlier time", ->
         assertTwixEqual new Twix("1982-05-24", "1982-05-25", true), someDays.intersection(new Twix("1982-05-23", "1982-05-25", true))
 
-      it "intersects with an engulfed event", ->
+      it "intersects with an engulfed range", ->
         assertTwixEqual thatDay(), someDays.intersection(thatDay())
 
-      it "intersects with an engulfing event", ->
+      it "intersects with an engulfing range", ->
         assertTwixEqual thatDay(), thatDay().intersection(someDays)
 
   describe "isValid()", ->
@@ -940,13 +953,13 @@ test = (moment, Twix) ->
         end: "1982-05-25 06:30"
         result: "May 25, 1982, 5:30 - 6:30 AM"
 
-      test "custom month format for regular event",
+      test "custom month format for regular range",
         start: "2010-08-25 05:30"
         end: "2010-08-25 06:30"
         options: {monthFormat: "MMMM"}
         result: "August 25, 2010, 5:30 - 6:30 AM"
 
-      test "custom month format for all day event",
+      test "custom month format for all day range",
         start: "2010-08-25"
         end: "2010-08-25"
         allDay: true
@@ -971,7 +984,7 @@ test = (moment, Twix) ->
         options: {implicitMinutes: false}
         result: "May 25, 5:00 - 7:00 AM"
 
-    describe "all day events", ->
+    describe "all day ranges", ->
 
       test "one day has no range",
         start: "2010-08-25"
@@ -1043,7 +1056,7 @@ test = (moment, Twix) ->
         options: {showDate : false}
         result: "May 25, 5:30 AM - May 27, 6:30 AM"
 
-      test "should just say 'all day' for all day events",
+      test "should just say 'all day' for all day rangess",
         start: thisYear("05-25")
         end: thisYear("05-25")
         options: {showDate : false}

@@ -20,8 +20,7 @@ makeTwix = (moment) ->
         options = parseFormat ? {}
         parseFormat = null
 
-      if typeof options == "boolean"
-        options = {allDay: options}
+      options = {allDay: options} if typeof options == "boolean"
 
       @start = moment start, parseFormat, options.parseStrict
       @end = moment end, parseFormat, options.parseStrict
@@ -84,7 +83,8 @@ makeTwix = (moment) ->
     # -- INFORMATIONAL --
     isSame: (period) -> @start.isSame @end, period
 
-    length: (period) -> @_trueEnd().add(1, "millisecond").diff @_trueStart(), period
+    length: (period) ->
+      @_trueEnd(true).diff @_trueStart(), period
 
     count: (period) ->
       start = @start.clone().startOf period
