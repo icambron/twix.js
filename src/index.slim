@@ -146,12 +146,28 @@ html
 
             ###Inputs accepted
 
-            To specify the dates, you can pass in anything that can be processed by moment's one-argument constructor. This includes:
+            TLDR, do one of these:
 
-             * A JS Date object
-             * A moment object
-             * Anything parsable by the `Date()` constructor. This includes most obvious date formats.
+            ```js
+            someMoment.twix(otherMoment);
+            someMoment.twix('2012-05-25');
+            someMoment.twix({year: 2012, month: 5, day: 25});
+            someMoment.twix("05/25/1982", "MM/DD/YYYY", {parseStrict: true})
+            ```
 
+            More comprehensively, this is the signature:
+
+            ```js
+            moment.twix(anyMomentArg, [parseString], optionsObject)
+
+            ```
+
+            That allows you to pass:
+
+             * A JS Date object: `someMoment.twix(new Date(...))`
+             * A moment object: `someMoment.twix(otherMoment)`
+             * Any other single-argument you can construct a Moment with, like an array, a POJSO, or an ISO-compliant string. See [here](http://momentjs.com).
+             * A parsable string and a parse format: `someMoment.twix('2012 August', 'YYYY MMM')`. The format is [specified by Moment](http://momentjs.com/). You can also use Moment's strict parsing by specifying the `parseStrict` option, like `someMoment.twix('2012 August', 'YYYY MMM', {parseStrict: true})`.
 
             If you want more complicated parsing, just use moment for that:
 
@@ -169,10 +185,16 @@ html
              * All of Twix's functions respect the all-day semantics when comparing or
              * The time range is formatted differently -- see [below](#formattingAllDay) for more information.
 
-            You create an all-day range by passing `true` as an extra argument to `twix()`:
+            You create an all-day range by specifying the `allDay` option:
 
             ```js
-            moment('5/25/1982').twix('5/26/1982', true);
+            moment('1982-05-25').twix('1982-05-26', {allDay: true});
+            ```
+
+            You can also pass a boolean instead of the option hash, and Twix will use it as the all-day option:
+
+            ```js
+            moment('1982-05-25').twix('1982-05-26', true);
             ```
 
           h2
@@ -195,9 +217,9 @@ html
             Does the range begin and end on the same minute/hour/day/month/year? Any time period understood by moment will work.
 
             ```js
-            moment("5/25/1982 5:00").twix("5/26/1982 6:00").isSame("day");  //=> false
-            moment("5/25/1982 5:00").twix("5/25/1982 6:00").isSame("day");  //=> true
-            moment("5/25/1982 5:00").twix("5/25/1982 6:00").isSame("year"); //=> true
+            moment("1982-05-25T05:00").twix("1982-05-26T06:00").isSame("day");  //=> false
+            moment("1982-05-25T05:00").twix("1982-05-25T06:00").isSame("day");  //=> true
+            moment("1982-05-25T05:00").twix("1982-05-25T06:00").isSame("year"); //=> true
             ```
 
             ###isPast()
@@ -205,7 +227,7 @@ html
             Does the range end in the past?
 
             ```js
-            moment("5/25/1982").twix("5/26/1982").isPast(); //=> true
+            moment("1982-05-25").twix("1982-05-26").isPast(); //=> true
             ```
 
             ###isFuture()
@@ -213,7 +235,7 @@ html
             Does the range start in the future?
 
             ```js
-            moment("5/25/2054").twix("5/26/2054").isFuture(); //=> true
+            moment("2054-05-25").twix("2054-05-26").isFuture(); //=> true
             ```
 
             ###isCurrent()
@@ -229,15 +251,15 @@ html
             Determine whether a range contains a time. You can pass in a moment object, a JS date, or a string parsable by the Date constructor. The range is considered inclusive of its endpoints.
 
             ```js
-            moment("5/25/1982").twix("5/28/1982").contains("5/26/1982"); //=> true
+            moment("1982-05-25").twix("1982-05-28").contains("1982-05-26"); //=> true
             ```
 
             ###<a id="length"></a>length()
             Calculate the length of the range in terms of minutes/hours/days/months/etc. Any time period understood by moment will work.
 
             ```js
-            moment("5/25/1982 5:30").twix("5/25/1982 6:30").length("hours")  //=> 1
-            moment("5/25/1982 5:00").twix("5/30/1982 6:00").length("days")    //=> 6
+            moment("1982-05-25T5:30").twix("1982-05-25T6:30").length("hours")  //=> 1
+            moment("1982-05-25T5:00").twix("1982-05-30T6:00").length("days")   //=> 6
             ```
 
             See also [asDuration()](#asDuration).
@@ -246,8 +268,8 @@ html
             The number of minutes/hours/days/months/years the range includes, even in part. Any time period understood by moment will work.
 
             ```js
-            moment("5/25/1982 5:00").twix("5/25/1982 6:00").count("days")  //=> 1
-            moment("5/25/1982 5:00").twix("5/26/1982 6:00").count("days")  //=> 2
+            moment("1982-05-25T5:00").twix("1982-05-25T6:00").count("days")  //=> 1
+            moment("1982-05-25T5:00").twix("1982-05-26T6:00").count("days")  //=> 2
             ```
 
             Note that this is counting sections of the calendar, not periods of time. So it asks "what dates are included by this range?" as opposed to "how many 24-hour periods are contained in this range?" For the latter, see [length()](#length).
@@ -268,8 +290,8 @@ html
             ```js
             var iter = moment("5/25/1982 5:00").twix("5/26/1982 6:00").iterate("days");
             iter.hasNext(); //=> true
-            iter.next(); //=> moment("5/25/1982")
-            iter.next(); //=> moment("5/26/1982")
+            iter.next(); //=> moment("1982-05-25")
+            iter.next(); //=> moment("1982-05-26")
             iter.hasNext(); //=> false
             iter.next(); //=> null
             ```
@@ -299,8 +321,8 @@ html
             ```js
             var iter = moment("5/24/1982 5:00").twix("5/27/1982 6:00").iterateInner("days");
             iter.hasNext(); //=> true
-            iter.next(); //=> moment("5/25/1982")
-            iter.next(); //=> moment("5/26/1982")
+            iter.next(); //=> moment("1982-05-25")
+            iter.next(); //=> moment("1982-05-26")
             iter.hasNext(); //=> false
             iter.next(); //=> null
             ```
@@ -315,7 +337,7 @@ html
             Does this range overlap another range?
 
             ```js
-            var range1 = moment("5/25/1982").twix("5/30/1982");
+            var range1 = moment("1982-05-25").twix("5/30/1982");
             var range2 = moment("5/27/1982").twix("6/13/1982");
 
             range1.overlaps(range2); //=> true
@@ -325,7 +347,7 @@ html
             Does this range have a start time before and an end time after another range?
 
             ```js
-            var range1 = moment("5/25/1982").twix("8/30/1982");
+            var range1 = moment("1982-05-25").twix("8/30/1982");
             var range2 = moment("5/27/1982").twix("6/13/1982");
 
             range1.engulfs(range2); //=> true
@@ -336,8 +358,8 @@ html
             Are these two ranges the same? Equality also requires that either both or neither ranges are all-day.
 
             ```js
-            var range1 = moment("5/25/1982").twix("8/30/1982");
-            var range2 = moment("5/25/1982").twix("8/30/1982");
+            var range1 = moment("1982-05-25").twix("8/30/1982");
+            var range2 = moment("1982-05-25").twix("8/30/1982");
 
             range1.equals(range2); //=> true
             range2.equals(range1); //=> true
@@ -347,7 +369,7 @@ html
             Produce a range that has the minimum start time and the maximum end time of the two ranges.
 
             ```js
-            var range1 = moment("5/25/1982").twix("5/30/1982");
+            var range1 = moment("1982-05-25").twix("5/30/1982");
             var range2 = moment("5/27/1982").twix("6/13/1982");
 
             range1.union(range2); //=> 5/25/82 - 6/13/1982
@@ -357,7 +379,7 @@ html
             Produce a range that has the maximum start time and the minimum end time of the two ranges.
 
             ```js
-            var range1 = moment("5/25/1982").twix("5/30/1982");
+            var range1 = moment("1982-05-25").twix("5/30/1982");
             var range2 = moment("5/27/1982").twix("6/13/1982");
 
             range1.intersection(range2); //=> 5/27/82 - 5/30/1982
@@ -375,21 +397,21 @@ html
 
             ```js
             var d = moment.duration(2, "days");
-            var range = d.afterMoment("5/25/1982"); //=> 5/25/1982 - 5/27/1982
+            var range = d.afterMoment("1982-05-25"); //=> 5/25/1982 - 5/27/1982
             ```
 
             You can also make the range extend backward by the duration:
 
             ```js
             var d = moment.duration(2, "days");
-            d.beforeMoment("5/25/1982"); //=> 5/23/1982 - 5/25/1982
+            d.beforeMoment("1982-05-25"); //=> 5/23/1982 - 5/25/1982
             ```
 
             ###<a id="asDuration"></a>Creating a duration from a range
             You can also create durations from ranges:
 
             ```js
-            var range = moment("5/25/1982").twix("5/28/1982");
+            var range = moment("1982-05-25").twix("5/28/1982");
             range.asDuration("days"); //=> duration object with {days: 3}
             ```
 
@@ -405,10 +427,10 @@ html
             Get the length of a range in human-readable terms.
 
             ```js
-            var range = moment("5/25/1982 8:00").twix("5/25/1982 10:00");
+            var range = moment("1982-05-25T8:00").twix("1982-05-25T10:00");
             range.humanizeLength(); //=> "2 hours"
 
-            range = moment("5/25/1982").twix("1/1/2013");
+            range = moment("1982-05-25").twix("2013-01-01");
             range.humanizeLength(); //=> 31 years
             ```
 
@@ -417,7 +439,7 @@ html
             Simple format produces a very simple string representation of the range. It's useful if you don't want all the cleverness of smart formatting. The signature is `simpleFormat(momentFormat, options)` and both args are optional. Here's how it works.
 
             ```js
-            var range = moment("5/25/1982 9:00").twix("5/25/1982 12:00");
+            var range = moment("1982-05-25T9:00").twix("1982-05-25T12:00");
 
             range.simpleFormat(); //=> '1982-05-25T09:00:00-04:00 - 1982-05-25T12:00:00-04:00'
             ```
@@ -431,7 +453,7 @@ html
             All-day ranges will add some extra text:
 
             ```js
-            var range = moment("5/25/1982").twix("5/26/1982", true);
+            var range = moment("1982-05-25").twix("1982-05-26", {allDay: true});
 
             range.simpleFormat(); //=> '1982-05-25T00:00:00-04:00 - 1982-05-26T00:00:00-04:00 (all day)'
             range.simpleFormat(YYYY-MM-DD); //=> '1982-05-25 - 1982-05-26 (all day)'
@@ -443,6 +465,19 @@ html
             range.simpleFormat(null, {allDay: "-- all day! --"}); //=> '1982-05-25T00:00:00-04:00 - 1982-05-26T00:00:00-04:00 -- all day! --'
 
             range.simpleFormat(null, {allDay: null}); //=> '1982-05-25T00:00:00-04:00 - 1982-05-26T00:00:00-04:00'
+            ```
+
+            You can also control the spacing and divider. You can set it on individual calls or globally:
+
+            ```js
+            range.simpleFormat("HH:mm", {template: function(left, right){return left + " | " + right;}}); //=> '16:21 | 17:21'
+            ```
+
+            Or you can set it globally:
+
+            ```js
+            moment.twixClass.formatTemplate = function(left, right){return left + " | " + right;};
+            range.simpleFormat("HH:mm"); //=> '16:29 | 17:29'
             ```
 
           h2
@@ -457,8 +492,8 @@ html
             Twix's `format` method returns a string showing the range. Called with no arguments it uses the default options for how to do that. The most important part of that is that it elides as much redundant information as it can. For example, if the range begins and ends today, it doesn't specify today's date twice. This makes for short, natural-looking time ranges.
 
             ```js
-            moment("1/25/1982 9:00 AM").twix("1/25/1982 11:00 AM").format();  //=> 'Jan 25, 1982, 9 - 11 AM'
-            moment("1/25/1982 9:00").twix("1/26/1982 13:00").format(); //=> 'Jan 25, 9 AM - Jan 26, 1 PM, 1982'
+            moment("1982-01-25T09:00").twix("1982-01-25T11:00").format();  //=> 'Jan 25, 1982, 9 - 11 AM'
+            moment("1982-01-25T9:00").twix("1982-01-26T13:00").format(); //=> 'Jan 25, 9 AM - Jan 26, 1 PM, 1982'
             ```
 
             ###<a id="formatAllDay"></a>All-day ranges
@@ -466,11 +501,11 @@ html
             All day ranges won't show times: they're just assumed to take up the full day local time.
 
             ```js
-            moment("1/25/2012").twix("1/25/2012", true).format();   //=> Jan 25
-            moment("1/25/1982").twix("1/25/1982", true).format();   //=> Jan 25, 1982
-            moment("1/25/2012").twix("1/26/2012", true).format();   //=> Jan 25 - 26
-            moment("1/25/1982").twix("2/25/1982", true).format();   //=> Jan 25 - Feb 25, 1982
-            moment("1/25/1982").twix(new Date(), true).format();    //=> Jan 25, 1982 - Jan 9, 2012
+            moment("2012-01-25").twix("2012-01-25", {allDay: true}).format();   //=> Jan 25
+            moment("1982-01-25").twix("1982-01-25", {allDay: true}).format();   //=> Jan 25, 1982
+            moment("2012-01-25").twix("2012-01-26", {allDay: true}).format();   //=> Jan 25 - 26
+            moment("1982-01-25").twix("1982-02-25", {allDay: true}).format();   //=> Jan 25 - Feb 25, 1982
+            moment("1982-01-25").twix(new Date(), {allDay: true}).format();    //=> Jan 25, 1982 - Jan 9, 2012
             ```
 
             Notice the various the different kinds of groupings and abbreviations:
@@ -484,9 +519,9 @@ html
             Unless the allDay parameter is set to true, the time is considered relevant:
 
             ```js
-            moment("1/25/1982 9:30 AM").twix("1/25/1982 1:30 PM").format();  //=> Jan 25, 1982, 9:30 AM - 1:30 PM
-            moment("1/25/1982 9:30 AM").twix(new Date()).format();           //=> Jan 25, 1982, 9:30 AM - Jan 9, 2012, 3:05 AM
-            moment("1/25/1982").twix("1/27/1982").format();                  //=> Jan 25, 12 AM - Jan 27, 12 AM, 1982
+            moment("1982-01-25T9:30").twix("1/25/1982 1:30 PM").format();  //=> Jan 25, 1982, 9:30 AM - 1:30 PM
+            moment("1982-01-25T9:30").twix(new Date()).format();           //=> Jan 25, 1982, 9:30 AM - Jan 9, 2012, 3:05 AM
+            moment("1982-01-25").twix("1982-01-27").format();              //=> Jan 25, 12 AM - Jan 27, 12 AM, 1982
             ```
 
             ### Brevity and its discontents
@@ -494,7 +529,7 @@ html
             Twix chops off the `:00` on whole hours and, where possible, only display AM/PM once. This can be turned off:
 
             ```js
-            var twix = moment("5/25/2012 9:00").twix("5/25/2012 10:00");
+            var twix = moment("2012-05-25T9:00").twix("2012-05-25T10:00");
 
             twix.format();                                                    //=> May 25, 9 - 10 AM
             twix.format({implicitMinutes: false, groupMeridiems: false});     //=> May 25, 9:00 AM - 10:00 AM
@@ -512,7 +547,7 @@ html
             Right, not everyone is American:
 
             ```js
-            moment("5/25/2012 16:00").twix("5/25/2012 17:00").format({twentyFourHour: true});
+            moment("2012-05-25T16:00").twix("2012-05-25T17:00").format({twentyFourHour: true});
             //=> May 25, 16:00 - 17:00
             ```
 
@@ -523,7 +558,7 @@ html
             I've made the format hackable, allowing you to specify the Moment formatting parameters externally -- these are what Twix uses to format the bits and pieces of text it glues together. You can use that to adjust how, say, months are displayed:
 
             ```js
-            moment("1/25/2012 8:00").twix("1/25/2012 17:00").format({
+            moment("2012-01-25T8:00").twix("2012-01-25T17:00").format({
               monthFormat: "MMMM",
               dayFormat: "Do"
             });                                                   //=> January 25th, 8 AM - 5 PM
@@ -536,14 +571,14 @@ html
             You can get rid of the space before the meridiem:
 
             ```js
-            moment("5/25/2012 8:00").twix("5/25/2012 17:00").format({spaceBeforeMeridiem: false});
+            moment("2012-05-25T8:00").twix("2012-05-25T17:00").format({spaceBeforeMeridiem: false});
             //=> May 25, 8AM - 5PM
             ```
 
             If you're showing the date somewhere else, it's sometimes useful to only show the times:
 
             ```js
-            moment("5/25/2012 8:00").twix("5/25/2012 17:00").format({showDate: false}); //=> 8 AM - 5 PM
+            moment("2012-05-25T8:00").twix("2012-05-25T17:00").format({showDate: false}); //=> 8 AM - 5 PM
             ```
 
             This doesn't affect ranges that span multiple days; they still show the dates.
@@ -551,7 +586,7 @@ html
             If you combine an all-day range with `showDate:false`, you get this:
 
             ```js
-            moment("1/25/2012").twix("1/25/2012", true).format({showDate: false}); //=> All day
+            moment("2012-01-25").twix("2012-01-25", {allDay: true}).format({showDate: false}); //=> All day
             ```
 
             That text is customizable through the `allDay` option.
