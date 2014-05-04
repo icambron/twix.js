@@ -7,7 +7,7 @@ test = (moment, Twix) ->
 
   thisYear = (partial, time) ->
     fullDate = "#{moment().year()}-#{partial}"
-    fullDate += " #{time}" if time
+    fullDate += "T#{time}" if time
     moment fullDate
 
   nextYear = (partial, time) -> thisYear(partial, time).add(1, "year")
@@ -927,9 +927,14 @@ test = (moment, Twix) ->
       assertEqual(t.result, twix.format(t.options))
 
     describe "simple ranges", ->
+      test "empty range",
+        start: "1982-05-25T05:30"
+        end: "1982-05-25T05:30"
+        result: ""
+
       test "different year, different day shows everything",
-        start: "1982-05-25 05:30"
-        end: "1983-05-26 15:30"
+        start: "1982-05-25T05:30"
+        end: "1983-05-26T15:30"
         result: "May 25, 1982, 5:30 AM - May 26, 1983, 3:30 PM"
 
       test "this year, different day skips year",
@@ -949,13 +954,13 @@ test = (moment, Twix) ->
         result: "May 25, 1982, 5:30 AM - 3:30 PM"
 
       test "same day, different times, same meridian shows date and meridiem once",
-        start: "1982-05-25 05:30"
-        end: "1982-05-25 06:30"
+        start: "1982-05-25T05:30"
+        end: "1982-05-25T06:30"
         result: "May 25, 1982, 5:30 - 6:30 AM"
 
       test "custom month format for regular range",
-        start: "2010-08-25 05:30"
-        end: "2010-08-25 06:30"
+        start: "2010-08-25T05:30"
+        end: "2010-08-25T06:30"
         options: {monthFormat: "MMMM"}
         result: "August 25, 2010, 5:30 - 6:30 AM"
 
@@ -968,13 +973,13 @@ test = (moment, Twix) ->
 
     describe "rounded times", ->
       test "round hour doesn't show :00",
-        start: "1982-05-25 05:00"
-        end: "1982-05-25 07:00"
+        start: "1982-05-25T05:00"
+        end: "1982-05-25T07:00"
         result: "May 25, 1982, 5 - 7 AM"
 
       test "mixed times still shows :30",
-        start: "1982-05-25 05:00"
-        end: "1982-05-25 05:30"
+        start: "1982-05-25T05:00"
+        end: "1982-05-25T05:30"
         result: "May 25, 1982, 5 - 5:30 AM"
 
     describe "implicit minutes", ->

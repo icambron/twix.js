@@ -203,6 +203,8 @@ makeTwix = (moment) ->
     format: (inopts) ->
       @_lazyLang()
 
+      return "" if @_trueStart().valueOf() == @_trueEnd().valueOf()
+
       options =
         groupMeridiems: true
         spaceBeforeMeridiem: true

@@ -343,6 +343,9 @@
           _this = this;
 
         this._lazyLang();
+        if (this._trueStart().valueOf() === this._trueEnd().valueOf()) {
+          return "";
+        }
         options = {
           groupMeridiems: true,
           spaceBeforeMeridiem: true,
