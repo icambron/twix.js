@@ -265,6 +265,10 @@
         return this._trueStart() <= mom && this._trueEnd() >= mom;
       };
 
+      Twix.prototype.isEmpty = function() {
+        return this._trueStart().valueOf() === this._trueEnd().valueOf();
+      };
+
       Twix.prototype.overlaps = function(other) {
         return this._trueEnd().isAfter(other._trueStart()) && this._trueStart().isBefore(other._trueEnd());
       };
@@ -343,7 +347,7 @@
           _this = this;
 
         this._lazyLang();
-        if (this._trueStart().valueOf() === this._trueEnd().valueOf()) {
+        if (this.isEmpty()) {
           return "";
         }
         options = {

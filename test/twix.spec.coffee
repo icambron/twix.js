@@ -482,6 +482,14 @@ test = (moment, Twix) ->
       it "formats multiday correctly", ->
         assertEqual("2 days", new Twix("1982-05-25", "1982-05-27").humanizeLength())
 
+  describe "isEmpty()", ->
+    it "returns true for empty ranges", ->
+      assertEqual(true, thatDay("12:00", "12:00").isEmpty())
+
+    it "returns false for empty ranges", ->
+      assertEqual(false, thatDay("12:00", "13:00").isEmpty())
+
+
   describe "asDuration()", ->
     it "returns a duration object", ->
       duration = yesterday().twix(tomorrow()).asDuration()

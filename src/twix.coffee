@@ -145,6 +145,9 @@ makeTwix = (moment) ->
       mom = moment mom
       @_trueStart() <= mom && @_trueEnd() >= mom
 
+    isEmpty: ->
+      @_trueStart().valueOf() == @_trueEnd().valueOf()
+
     # -- WORK WITH MULTIPLE RANGES --
     overlaps: (other) -> (@_trueEnd().isAfter(other._trueStart()) && @_trueStart().isBefore(other._trueEnd()))
 
@@ -203,7 +206,7 @@ makeTwix = (moment) ->
     format: (inopts) ->
       @_lazyLang()
 
-      return "" if @_trueStart().valueOf() == @_trueEnd().valueOf()
+      return "" if @isEmpty()
 
       options =
         groupMeridiems: true
