@@ -170,7 +170,7 @@
       };
 
       Twix.prototype.length = function(period) {
-        return this._trueEnd().add(1, "millisecond").diff(this._trueStart(), period);
+        return this._trueEnd(true).diff(this._trueStart(), period);
       };
 
       Twix.prototype.count = function(period) {
