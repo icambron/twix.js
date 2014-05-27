@@ -41,7 +41,9 @@ Patches are welcome!
 
 ##Changelog##
 
- * **0.4.0**  Simplified internationalization support (**possibly breaking change for those few people using French support**), added more complex iteration durations. Reverted build complexity.
+ * **0.5.0**: Fix intersection/overlap behavior (#36), expand signature, and deal with Moment deprecations.
+
+ * **0.4.0**: Simplified internationalization support (**possibly breaking change for those few people using French support**), added more complex iteration durations. Reverted build complexity.
 
  * **0.3.0**: AMD support, basic internationalization support, bug fix for `countInner` and `iterateInner`. Component and bower support. New build system and code organization.
 
