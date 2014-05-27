@@ -5,7 +5,7 @@ doctype 5
 html
   head
     title Twix.js
-    script src="http://code.jquery.com/jquery-1.9.1.min.js" type="text/javascript" 
+    script src="js/jquery.min.js" type="text/javascript" 
     script src="js/bootstrap.min.js" type="text/javascript" 
     script src="js/twix-site.js" type="text/javascript" 
     link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" 
@@ -142,7 +142,7 @@ html
             var range = moment.twix(startTime, endTime);
             ```
 
-            You can also create a range from a moment duration object. See [Creating a range from a duration](#rangeFromDuration).
+            You can also create a range from a Moment duration object. See [Creating a range from a duration](#rangeFromDuration).
 
             ###Inputs accepted
 
@@ -152,24 +152,24 @@ html
             someMoment.twix(otherMoment);
             someMoment.twix('2012-05-25');
             someMoment.twix({year: 2012, month: 5, day: 25});
-            someMoment.twix("05/25/1982", "MM/DD/YYYY", {parseStrict: true})
+            someMoment.twix("05/25/1982", "MM/DD/YYYY", {parseStrict: true});
             ```
 
             More comprehensively, this is the signature:
 
             ```js
-            moment.twix(anyMomentArg, [parseString], optionsObject)
+            moment.twix(anyMomentArg, [parseFormatString,] optionsObject);
 
             ```
 
             That allows you to pass:
 
              * A JS Date object: `someMoment.twix(new Date(...))`
-             * A moment object: `someMoment.twix(otherMoment)`
-             * Any other single-argument you can construct a Moment with, like an array, a POJSO, or an ISO-compliant string. See [here](http://momentjs.com).
-             * A parsable string and a parse format: `someMoment.twix('2012 August', 'YYYY MMM')`. The format is [specified by Moment](http://momentjs.com/). You can also use Moment's strict parsing by specifying the `parseStrict` option, like `someMoment.twix('2012 August', 'YYYY MMM', {parseStrict: true})`.
+             * A Moment object: `someMoment.twix(otherMoment)`
+             * Any other single-argument you can construct a Moment with, like an [array](http://momentjs.com/docs/#/parsing/array/), a [POJSO](http://momentjs.com/docs/#/parsing/object/), or an [ISO-compliant string](http://momentjs.com/docs/#/parsing/string/).
+             * A parsable string and a parse format: `someMoment.twix('2012 August', 'YYYY MMM')`. The format is [specified by Moment](http://momentjs.com/docs/#/parsing/string-format/). You can also use Moment's strict parsing by specifying the `parseStrict` option, like `someMoment.twix('2012 August', 'YYYY MMM', {parseStrict: true})`.
 
-            If you want more complicated parsing, just use moment for that:
+            If you want more complicated parsing, just use Moment for that:
 
             ```js
             var startTime = moment('2012 juillet', 'YYYY MMM', 'fr');
@@ -278,8 +278,8 @@ html
             The number of minutes/hours/days/months/years that are completely contained, such that both the beginning and end of the period fall inside the range. Any time period understood by moment will work.
 
             ```js
-            moment("5/25/1982 5:00").twix("5/25/1982 6:00").countInner("days")  //=> 0
-            moment("5/24/1982 5:00").twix("5/26/1982 6:00").countInner("days")  //=> 1
+            moment("1982-05-25T5:00").twix("1982-05-25T6:00").countInner("days")  //=> 0
+            moment("1982-05-24T5:00").twix("1982-05-26T6:00").countInner("days")  //=> 1
             ```
 
             See also [count()](#count) and [length()](#length).
@@ -288,7 +288,7 @@ html
             Returns an iterator that will return each a moment for each time period included in the range. Any time period understood by moment will work.
 
             ```js
-            var iter = moment("5/25/1982 5:00").twix("5/26/1982 6:00").iterate("days");
+            var iter = moment("1982-05-25T5:00").twix("1982-05-26T6:00").iterate("days");
             iter.hasNext(); //=> true
             iter.next(); //=> moment("1982-05-25")
             iter.next(); //=> moment("1982-05-26")
@@ -319,7 +319,7 @@ html
             Like [iterate()](#iterate), but only for days completely contained in the range.
 
             ```js
-            var iter = moment("5/24/1982 5:00").twix("5/27/1982 6:00").iterateInner("days");
+            var iter = moment("1982-05-24T5:00").twix("1982-05-27T6:00").iterateInner("days");
             iter.hasNext(); //=> true
             iter.next(); //=> moment("1982-05-25")
             iter.next(); //=> moment("1982-05-26")
@@ -337,8 +337,8 @@ html
             Does this range overlap another range?
 
             ```js
-            var range1 = moment("1982-05-25").twix("5/30/1982");
-            var range2 = moment("5/27/1982").twix("6/13/1982");
+            var range1 = moment("1982-05-25").twix("1982-05-30");
+            var range2 = moment("1982-05-27").twix("1982-06-13");
 
             range1.overlaps(range2); //=> true
             ```
@@ -347,8 +347,8 @@ html
             Does this range have a start time before and an end time after another range?
 
             ```js
-            var range1 = moment("1982-05-25").twix("8/30/1982");
-            var range2 = moment("5/27/1982").twix("6/13/1982");
+            var range1 = moment("1982-05-25").twix("1982-08-30");
+            var range2 = moment("1982-05-27").twix("1982-06-13");
 
             range1.engulfs(range2); //=> true
             range2.engulfs(range1); //=> false
@@ -358,8 +358,8 @@ html
             Are these two ranges the same? Equality also requires that either both or neither ranges are all-day.
 
             ```js
-            var range1 = moment("1982-05-25").twix("8/30/1982");
-            var range2 = moment("1982-05-25").twix("8/30/1982");
+            var range1 = moment("1982-05-25").twix("1982-08-30");
+            var range2 = moment("1982-05-25").twix("1982-08-30");
 
             range1.equals(range2); //=> true
             range2.equals(range1); //=> true
@@ -369,8 +369,8 @@ html
             Produce a range that has the minimum start time and the maximum end time of the two ranges.
 
             ```js
-            var range1 = moment("1982-05-25").twix("5/30/1982");
-            var range2 = moment("5/27/1982").twix("6/13/1982");
+            var range1 = moment("1982-05-25").twix("1982-05-30");
+            var range2 = moment("1982-05-27").twix("1982-06-13");
 
             range1.union(range2); //=> 5/25/82 - 6/13/1982
             ```
@@ -379,8 +379,8 @@ html
             Produce a range that has the maximum start time and the minimum end time of the two ranges.
 
             ```js
-            var range1 = moment("1982-05-25").twix("5/30/1982");
-            var range2 = moment("5/27/1982").twix("6/13/1982");
+            var range1 = moment("1982-05-25").twix("1982-05-30");
+            var range2 = moment("1982-05-27").twix("1982-06-13");
 
             range1.intersection(range2); //=> 5/27/82 - 5/30/1982
             ```
@@ -411,7 +411,7 @@ html
             You can also create durations from ranges:
 
             ```js
-            var range = moment("1982-05-25").twix("5/28/1982");
+            var range = moment("1982-05-25").twix("1982-05-28");
             range.asDuration("days"); //=> duration object with {days: 3}
             ```
 
