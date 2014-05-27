@@ -5,7 +5,7 @@ Twix is a simple but opinionated JS library for working with date ranges, and in
 It allows you to do, among other things, this:
 
 ```js
-var t = moment("1/25/1982 9:30 AM").twix("1/25/1982 1:30 PM");
+var t = moment("1982-01-25-1982T09:30").twix("1982-01-25T01:30");
 
 t.format();  //=> Jan 25, 1982, 9:30 AM - 1:30 PM
 
