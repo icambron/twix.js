@@ -10,7 +10,7 @@ var t = moment("1982-01-25T09:30").twix("1982-01-25T01:30");
 t.format();  //=> Jan 25, 1982, 9:30 AM - 1:30 PM
 
 t.isSame("day"); //=> true
-t.humanizeDuration(); //=> "4 hours"
+t.humanizeLength(); //=> "4 hours"
 t.count("days"); //=> 1
 ```
 
