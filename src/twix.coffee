@@ -164,37 +164,29 @@ makeTwix = (moment) ->
 
       new Twix(newStart, newEnd, allDay)
 
-    intersection: (others...) ->
-      results = for other in others
+    intersection: (other) ->
+      allDay = @allDay && other.allDay
+      if allDay
         newStart = if @start > other.start then @start else other.start
-        if @allDay
-          end = moment @end # Clone @end
-          end.add(1, "day")
-          end.subtract(1, "millisecond")
-          if other.allDay
-            newEnd = if end < other.end then @end else other.end
-          else
-            newEnd = if end < other.end then end else other.end
-        else
-          newEnd = if @end < other.end then @end else other.end
+        newEnd = if @end < other.end then @end else other.end
+      else
+        newStart = if @_trueStart() > other._trueStart() then @_trueStart() else other._trueStart()
+        newEnd = if @_trueEnd() < other._trueEnd() then @_trueEnd() else other._trueEnd()
 
-        allDay = @allDay && other.allDay
-        new Twix(newStart, newEnd, allDay)
-      if others.length == 1 then results[0] else results
-
-    _points: (items) ->
-      arr = []
-      for item, i in [@].concat(items)
-        arr.push({time: item.start, i: i, type: 0})
-        arr.push({time: item.end, i: i, type: 1})
-      arr.sort((a, b) -> a.time.valueOf() - b.time.valueOf())
+      new Twix(newStart, newEnd, allDay)
 
     xor: (others...) ->
       open = 0
       start = null
       results = []
 
-      for other in @_points(others)
+      arr = []
+      for item, i in [@].concat(others)
+        arr.push({time: item.start, i: i, type: 0})
+        arr.push({time: item.end, i: i, type: 1})
+      arr = arr.sort((a, b) -> a.time - b.time)
+
+      for other in arr
         open -= 1 if other.type == 1
         if open == other.type
           start = other.time
@@ -203,7 +195,6 @@ makeTwix = (moment) ->
             last = results[results.length - 1]
             if last && last.end.isSame(start)
               last.end = other.time
-              console.log("moved")
             else
               t = start.twix(other.time)
               results.push(t) if !t.isEmpty()
@@ -212,12 +203,12 @@ makeTwix = (moment) ->
 
       results
 
-    exclusion: (others...) -> @intersection(@xor(others))
+    exclusion: (others...) ->
+      @itersection(t) for t in @xor(others) when !t.empty()
 
     split: (args...) ->
 
-    isValid: ->
-      @_trueStart() <= @_trueEnd()
+    isValid: -> @_trueStart() <= @_trueEnd()
 
     equals: (other) ->
       (other instanceof Twix) &&

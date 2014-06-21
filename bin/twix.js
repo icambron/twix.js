@@ -291,46 +291,29 @@
         return new Twix(newStart, newEnd, allDay);
       };
 
-      Twix.prototype.intersection = function() {
-        var allDay, end, newEnd, newStart, other, others, results;
+      Twix.prototype.intersection = function(other) {
+        var allDay, newEnd, newStart;
 
-        others = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-        results = (function() {
-          var _i, _len, _results;
-
-          _results = [];
-          for (_i = 0, _len = others.length; _i < _len; _i++) {
-            other = others[_i];
-            newStart = this.start > other.start ? this.start : other.start;
-            if (this.allDay) {
-              end = moment(this.end);
-              end.add(1, "day");
-              end.subtract(1, "millisecond");
-              if (other.allDay) {
-                newEnd = end < other.end ? this.end : other.end;
-              } else {
-                newEnd = end < other.end ? end : other.end;
-              }
-            } else {
-              newEnd = this.end < other.end ? this.end : other.end;
-            }
-            allDay = this.allDay && other.allDay;
-            _results.push(new Twix(newStart, newEnd, allDay));
-          }
-          return _results;
-        }).call(this);
-        if (others.length === 1) {
-          return results[0];
+        allDay = this.allDay && other.allDay;
+        if (allDay) {
+          newStart = this.start > other.start ? this.start : other.start;
+          newEnd = this.end < other.end ? this.end : other.end;
         } else {
-          return results;
+          newStart = this._trueStart() > other._trueStart() ? this._trueStart() : other._trueStart();
+          newEnd = this._trueEnd() < other._trueEnd() ? this._trueEnd() : other._trueEnd();
         }
+        return new Twix(newStart, newEnd, allDay);
       };
 
-      Twix.prototype._points = function(items) {
-        var arr, i, item, _i, _len, _ref;
+      Twix.prototype.xor = function() {
+        var arr, i, item, last, open, other, others, results, start, t, _i, _j, _len, _len1, _ref;
 
+        others = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+        open = 0;
+        start = null;
+        results = [];
         arr = [];
-        _ref = [this].concat(items);
+        _ref = [this].concat(others);
         for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
           item = _ref[i];
           arr.push({
@@ -344,21 +327,11 @@
             type: 1
           });
         }
-        return arr.sort(function(a, b) {
-          return a.time.valueOf() - b.time.valueOf();
+        arr = arr.sort(function(a, b) {
+          return a.time - b.time;
         });
-      };
-
-      Twix.prototype.xor = function() {
-        var last, open, other, others, results, start, t, _i, _len, _ref;
-
-        others = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-        open = 0;
-        start = null;
-        results = [];
-        _ref = this._points(others);
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          other = _ref[_i];
+        for (_j = 0, _len1 = arr.length; _j < _len1; _j++) {
+          other = arr[_j];
           if (other.type === 1) {
             open -= 1;
           }
@@ -370,7 +343,6 @@
               last = results[results.length - 1];
               if (last && last.end.isSame(start)) {
                 last.end = other.time;
-                console.log("moved");
               } else {
                 t = start.twix(other.time);
                 if (!t.isEmpty()) {
@@ -385,6 +357,21 @@
           }
         }
         return results;
+      };
+
+      Twix.prototype.exclusion = function() {
+        var others, t, _i, _len, _ref, _results;
+
+        others = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+        _ref = this.xor(others);
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          t = _ref[_i];
+          if (!t.empty()) {
+            _results.push(this.itersection(t));
+          }
+        }
+        return _results;
       };
 
       Twix.prototype.split = function() {

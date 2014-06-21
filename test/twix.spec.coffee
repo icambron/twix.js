@@ -743,11 +743,6 @@ test = (moment, Twix) ->
       it "returns true for an engulfing range", ->
         assertNotEngulfing someDays, new Twix("1982-05-22", "1982-05-28", true)
 
-  describe "merge()", ->
-    it "calls union()", ->
-      assertTwixEqual new Twix("1982-05-24", "1982-05-26"),
-        new Twix("1982-05-24", "1982-05-25").merge(new Twix("1982-05-25", "1982-05-26"))
-
   describe "union()", ->
 
     someTime = thatDay "05:30", "08:30"
@@ -878,8 +873,6 @@ test = (moment, Twix) ->
 
       it "intersects with an engulfing range", ->
         assertTwixEqual thatDay(), thatDay().intersection(someDays)
-
-    describe "three or more ranges", ->
 
   describe "xor()", ->
 
