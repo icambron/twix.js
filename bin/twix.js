@@ -360,15 +360,18 @@
       };
 
       Twix.prototype.exclusion = function() {
-        var others, t, _i, _len, _ref, _results;
+        var others, t, _i, _len, _ref, _results,
+          _this = this;
 
         others = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-        _ref = this.xor(others);
+        _ref = this.xor.apply(this, others).map(function(i) {
+          return _this.intersection(i);
+        });
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           t = _ref[_i];
-          if (!t.empty()) {
-            _results.push(this.itersection(t));
+          if (!t.isEmpty() && t.isValid()) {
+            _results.push(t);
           }
         }
         return _results;

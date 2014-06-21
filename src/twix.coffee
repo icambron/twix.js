@@ -200,11 +200,10 @@ makeTwix = (moment) ->
               results.push(t) if !t.isEmpty()
           start = null
         open += 1 if other.type == 0
-
       results
 
     exclusion: (others...) ->
-      @itersection(t) for t in @xor(others) when !t.empty()
+      t for t in @xor(others...).map((i) => @intersection(i)) when !t.isEmpty() && t.isValid()
 
     split: (args...) ->
 

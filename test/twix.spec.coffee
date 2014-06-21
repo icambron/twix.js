@@ -884,46 +884,99 @@ test = (moment, Twix) ->
         later = thatDay "09:30", "11:30"
         orred = someTime.xor later
         assertEqual 2, orred.length
-        assertTwixEqual orred[0], someTime
-        assertTwixEqual  orred[1], later
+        assertTwixEqual someTime, orred[0]
+        assertTwixEqual later, orred[1]
 
       it "returns non-overlapping ranges as-is (earlier)", ->
         later = thatDay "09:30", "11:30"
         orred = later.xor someTime
         assertEqual 2, orred.length
-        assertTwixEqual orred[0], someTime
-        assertTwixEqual  orred[1], later
+        assertTwixEqual someTime, orred[0]
+        assertTwixEqual later, orred[1]
 
       it "returns the outside parts of a partially overlapping range (later)", ->
         orred = someTime.xor(thatDay "08:00", "11:30")
         assertEqual 2, orred.length
-        assertTwixEqual orred[0], thatDay("05:30", "08:00")
-        assertTwixEqual orred[1], thatDay("08:30", "11:30")
+        assertTwixEqual thatDay("05:30", "08:00"), orred[0]
+        assertTwixEqual thatDay("08:30", "11:30"), orred[1]
 
       it "returns the outside parts of a partially overlapping range (earlier)", ->
         orred = thatDay("08:00", "11:30").xor(someTime)
         assertEqual 2, orred.length
-        assertTwixEqual orred[0], thatDay("05:30", "08:00")
-        assertTwixEqual orred[1], thatDay("08:30", "11:30")
+        assertTwixEqual thatDay("05:30", "08:00"), orred[0]
+        assertTwixEqual thatDay("08:30", "11:30"), orred[1]
 
       it "returns the outside parts when engulfing a range", ->
         orred = someTime.xor(thatDay "06:30", "07:30")
         assertEqual 2, orred.length
-        assertTwixEqual orred[0], thatDay("05:30", "06:30")
-        assertTwixEqual orred[1], thatDay("07:30", "08:30")
+        assertTwixEqual thatDay("05:30", "06:30"), orred[0]
+        assertTwixEqual thatDay("07:30", "08:30"), orred[1]
 
       it "returns the outside parts of an engulfing range", ->
         orred = thatDay("06:30", "07:30").xor(someTime)
         assertEqual 2, orred.length
-        assertTwixEqual orred[0], thatDay("05:30", "06:30")
-        assertTwixEqual orred[1], thatDay("07:30", "08:30")
+        assertTwixEqual thatDay("05:30", "06:30"), orred[0]
+        assertTwixEqual thatDay("07:30", "08:30"), orred[1]
 
       it "returns one contiguous range for two adajacent ranges", ->
         orred = thatDay("08:30", "10:30").xor(someTime)
         assertEqual 1, orred.length
-        assertTwixEqual orred[0], thatDay("05:30", "10:30")
+        assertTwixEqual thatDay("05:30", "10:30"), orred[0]
+
+    describe "one all-day range", ->
+
+    describe "two all-day ranges", ->
+
+    describe "multiple ranges", ->
 
   describe "exclusion()", ->
+    someTime = thatDay "05:30", "08:30"
+    someDays = new Twix "1982-05-24", "1982-05-25", true
+
+    describe "non-all-day ranges", ->
+      it "returns self for non-overlapping ranges (later)", ->
+        later = thatDay "09:30", "11:30"
+        exed = someTime.exclusion later
+        console.log(exed)
+        assertEqual 1, exed.length
+        assertTwixEqual someTime, exed[0]
+
+      it "returns self for non-overlapping ranges (earlier)", ->
+        later = thatDay "09:30", "11:30"
+        exed = later.exclusion someTime
+        assertEqual 1, exed.length
+        assertTwixEqual later, exed[0]
+
+      it "returns the non-overlapping part of a partially overlapping range (later)", ->
+        exed = someTime.exclusion(thatDay "08:00", "11:30")
+        assertEqual 1, exed.length
+        assertTwixEqual thatDay("05:30", "08:00"), exed[0]
+
+      it "returns the outside parts of a partially overlapping range (earlier)", ->
+        exed = thatDay("08:00", "11:30").exclusion(someTime)
+        assertEqual 1, exed.length
+        assertTwixEqual thatDay("08:30", "11:30"), exed[0]
+
+      it "returns the outside parts when engulfing a range", ->
+        exed = someTime.exclusion(thatDay "06:30", "07:30")
+        assertEqual 2, exed.length
+        assertTwixEqual thatDay("05:30", "06:30"), exed[0]
+        assertTwixEqual thatDay("07:30", "08:30"), exed[1]
+
+      it "returns empty for an engulfing range", ->
+        exed = thatDay("06:30", "07:30").exclusion(someTime)
+        assertEqual 0, exed.length
+
+      it "returns self for an adjacent range", ->
+        exed = someTime.exclusion(thatDay("08:30", "10:30"))
+        assertEqual 1, exed.length
+        assertTwixEqual someTime, exed[0]
+
+    describe "one all-day range", ->
+
+    describe "two all-day ranges", ->
+
+    describe "multiple ranges", ->
 
   describe "split()", ->
     describe "using an interval", ->
