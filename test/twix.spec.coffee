@@ -855,7 +855,7 @@ test = (moment, Twix) ->
       it "intersects with an engulfing range", ->
         assertTwixEqual new Twix("1982-05-24 00:00", "1982-05-25 23:59:59.999"), someDays.intersection(new Twix("1982-05-23 20:00", "1982-05-26 08:30"))
 
-    describe "two all-day range", ->
+    describe "two all-day ranges", ->
 
       it "does not intersect with a later time", ->
         intersection = someDays.intersection(new Twix("1982-05-27", "1982-05-28", true))
@@ -878,6 +878,66 @@ test = (moment, Twix) ->
 
       it "intersects with an engulfing range", ->
         assertTwixEqual thatDay(), thatDay().intersection(someDays)
+
+    describe "three or more ranges", ->
+
+  describe "xor()", ->
+
+    someTime = thatDay "05:30", "08:30"
+    someDays = new Twix "1982-05-24", "1982-05-25", true
+
+    describe "non-all-day ranges", ->
+      it "returns non-overlapping ranges as-is (later)", ->
+        later = thatDay "09:30", "11:30"
+        orred = someTime.xor later
+        assertEqual 2, orred.length
+        assertTwixEqual orred[0], someTime
+        assertTwixEqual  orred[1], later
+
+      it "returns non-overlapping ranges as-is (earlier)", ->
+        later = thatDay "09:30", "11:30"
+        orred = later.xor someTime
+        assertEqual 2, orred.length
+        assertTwixEqual orred[0], someTime
+        assertTwixEqual  orred[1], later
+
+      it "returns the outside parts of a partially overlapping range (later)", ->
+        orred = someTime.xor(thatDay "08:00", "11:30")
+        assertEqual 2, orred.length
+        assertTwixEqual orred[0], thatDay("05:30", "08:00")
+        assertTwixEqual orred[1], thatDay("08:30", "11:30")
+
+      it "returns the outside parts of a partially overlapping range (earlier)", ->
+        orred = thatDay("08:00", "11:30").xor(someTime)
+        assertEqual 2, orred.length
+        assertTwixEqual orred[0], thatDay("05:30", "08:00")
+        assertTwixEqual orred[1], thatDay("08:30", "11:30")
+
+      it "returns the outside parts when engulfing a range", ->
+        orred = someTime.xor(thatDay "06:30", "07:30")
+        assertEqual 2, orred.length
+        assertTwixEqual orred[0], thatDay("05:30", "06:30")
+        assertTwixEqual orred[1], thatDay("07:30", "08:30")
+
+      it "returns the outside parts of an engulfing range", ->
+        orred = thatDay("06:30", "07:30").xor(someTime)
+        assertEqual 2, orred.length
+        assertTwixEqual orred[0], thatDay("05:30", "06:30")
+        assertTwixEqual orred[1], thatDay("07:30", "08:30")
+
+      it "returns one contiguous range for two adajacent ranges", ->
+        orred = thatDay("08:30", "10:30").xor(someTime)
+        assertEqual 1, orred.length
+        assertTwixEqual orred[0], thatDay("05:30", "10:30")
+
+  describe "exclusion()", ->
+
+  describe "split()", ->
+    describe "using an interval", ->
+
+    describe "using a time", ->
+
+    describe "usting a list of times", ->
 
   describe "isValid()", ->
     it "should validate an interval with an earlier start", ->
@@ -926,7 +986,6 @@ test = (moment, Twix) ->
       s = thisYear("05-25").twix(thisYear("5-26"), true).simpleFormat null,
         template: (first, second) -> "#{first} | #{second}"
       assertEqual true, s.indexOf("|") > -1
-
 
   describe "format()", ->
 
