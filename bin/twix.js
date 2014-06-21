@@ -306,23 +306,35 @@
       };
 
       Twix.prototype.xor = function() {
-        var arr, i, item, last, open, other, others, results, start, t, _i, _j, _len, _len1, _ref;
+        var allDay, arr, i, item, last, o, open, other, others, results, start, t, _i, _j, _len, _len1, _ref;
 
         others = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
         open = 0;
         start = null;
         results = [];
+        allDay = ((function() {
+          var _i, _len, _results;
+
+          _results = [];
+          for (_i = 0, _len = others.length; _i < _len; _i++) {
+            o = others[_i];
+            if (o.allDay) {
+              _results.push(o);
+            }
+          }
+          return _results;
+        })()).length === others.length;
         arr = [];
         _ref = [this].concat(others);
         for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
           item = _ref[i];
           arr.push({
-            time: item.start,
+            time: (allDay ? item.start : item._trueStart()),
             i: i,
             type: 0
           });
           arr.push({
-            time: item.end,
+            time: (allDay ? item.end : item._trueEnd()),
             i: i,
             type: 1
           });
@@ -344,7 +356,7 @@
               if (last && last.end.isSame(start)) {
                 last.end = other.time;
               } else {
-                t = start.twix(other.time);
+                t = new Twix(start, other.time);
                 if (!t.isEmpty()) {
                   results.push(t);
                 }

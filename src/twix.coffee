@@ -180,10 +180,12 @@ makeTwix = (moment) ->
       start = null
       results = []
 
+      allDay = (o for o in others when o.allDay).length == others.length
+
       arr = []
       for item, i in [@].concat(others)
-        arr.push({time: item.start, i: i, type: 0})
-        arr.push({time: item.end, i: i, type: 1})
+        arr.push({time: (if allDay then item.start else item._trueStart()), i: i, type: 0})
+        arr.push({time: (if allDay then item.end else item._trueEnd()), i: i, type: 1})
       arr = arr.sort((a, b) -> a.time - b.time)
 
       for other in arr
@@ -196,7 +198,7 @@ makeTwix = (moment) ->
             if last && last.end.isSame(start)
               last.end = other.time
             else
-              t = start.twix(other.time)
+              t = new Twix(start, other.time)
               results.push(t) if !t.isEmpty()
           start = null
         open += 1 if other.type == 0
