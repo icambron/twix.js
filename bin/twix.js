@@ -306,7 +306,7 @@
       };
 
       Twix.prototype.xor = function() {
-        var allDay, arr, i, item, last, o, open, other, others, results, start, t, _i, _j, _len, _len1, _ref;
+        var allDay, arr, endTime, i, item, last, o, open, other, others, results, start, t, _i, _j, _len, _len1, _ref;
 
         others = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
         open = 0;
@@ -329,12 +329,12 @@
         for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
           item = _ref[i];
           arr.push({
-            time: (allDay ? item.start : item._trueStart()),
+            time: item._trueStart(),
             i: i,
             type: 0
           });
           arr.push({
-            time: (allDay ? item.end : item._trueEnd()),
+            time: item._trueEnd(true),
             i: i,
             type: 1
           });
@@ -356,7 +356,8 @@
               if (last && last.end.isSame(start)) {
                 last.end = other.time;
               } else {
-                t = new Twix(start, other.time);
+                endTime = allDay ? other.time.subtract(1, 'd') : other.time;
+                t = new Twix(start, endTime, allDay);
                 if (!t.isEmpty()) {
                   results.push(t);
                 }
@@ -371,7 +372,7 @@
         return results;
       };
 
-      Twix.prototype.exclusion = function() {
+      Twix.prototype.difference = function() {
         var others, t, _i, _len, _ref, _results,
           _this = this;
 
@@ -612,7 +613,7 @@
         }
         if (this.allDay) {
           if (diffableEnd) {
-            return this.end.clone().add(1, "day");
+            return this.end.startOf('d').clone().add(1, "day");
           } else {
             return this.end.clone().endOf("day");
           }

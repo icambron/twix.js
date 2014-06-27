@@ -184,8 +184,8 @@ makeTwix = (moment) ->
 
       arr = []
       for item, i in [@].concat(others)
-        arr.push({time: (if allDay then item.start else item._trueStart()), i: i, type: 0})
-        arr.push({time: (if allDay then item.end else item._trueEnd()), i: i, type: 1})
+        arr.push({time: item._trueStart(), i: i, type: 0})
+        arr.push({time: item._trueEnd(true), i: i, type: 1})
       arr = arr.sort((a, b) -> a.time - b.time)
 
       for other in arr
@@ -198,13 +198,15 @@ makeTwix = (moment) ->
             if last && last.end.isSame(start)
               last.end = other.time
             else
-              t = new Twix(start, other.time)
+              #because we used the diffable end, we have to subtract back off a day. blech
+              endTime = if allDay then other.time.subtract(1, 'd') else other.time
+              t = new Twix(start, endTime, allDay)
               results.push(t) if !t.isEmpty()
           start = null
         open += 1 if other.type == 0
       results
 
-    exclusion: (others...) ->
+    difference: (others...) ->
       t for t in @xor(others...).map((i) => @intersection(i)) when !t.isEmpty() && t.isValid()
 
     split: (args...) ->
@@ -383,7 +385,7 @@ makeTwix = (moment) ->
     _trueEnd: (diffableEnd = false) ->
       if @allDay
         if diffableEnd
-          @end.clone().add(1, "day")
+          @end.startOf('d').clone().add(1, "day")
         else
           @end.clone().endOf("day")
       else

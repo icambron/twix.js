@@ -924,59 +924,96 @@ test = (moment, Twix) ->
         assertTwixEqual thatDay("05:30", "10:30"), orred[0]
 
     describe "one all-day range", ->
+      it "uses the full day in the xor", ->
+        xored = someDays.xor(new Twix("1982-05-25T16:00", "1982-05-26T02:00"))
+        assertEqual 2, xored.length
+        assertTwixEqual new Twix("1982-05-24T00:00", "1982-05-25T16:00"), xored[0]
+        assertTwixEqual new Twix("1982-05-26T00:00", "1982-05-26T02:00"), xored[1]
 
     describe "two all-day ranges", ->
+      it "returns an all-day range", ->
+        xored = someDays.xor(new Twix("1982-05-25", "1982-05-27", true))
+        assertEqual 2, xored.length
+        assertTwixEqual new Twix("1982-05-24", "1982-05-24", true), xored[0]
+        assertTwixEqual new Twix("1982-05-26", "1982-05-27", true), xored[1]
 
     describe "multiple ranges", ->
+      it "returns the xor of three ranges", ->
+        tween = thatDay "10:00", "13:00"
+        early = thatDay "08:00", "11:00"
+        later = thatDay "12:00", "14:00"
 
-  describe "exclusion()", ->
+        xored = tween.xor(early, later)
+
+        assertEqual 3, xored.length
+        assertTwixEqual thatDay("08:00", "10:00"), xored[0]
+        assertTwixEqual thatDay("11:00", "12:00"), xored[1]
+        assertTwixEqual thatDay("13:00", "14:00"), xored[2]
+
+  describe "difference()", ->
     someTime = thatDay "05:30", "08:30"
     someDays = new Twix "1982-05-24", "1982-05-25", true
 
     describe "non-all-day ranges", ->
       it "returns self for non-overlapping ranges (later)", ->
         later = thatDay "09:30", "11:30"
-        exed = someTime.exclusion later
-        console.log(exed)
+        exed = someTime.difference later
         assertEqual 1, exed.length
         assertTwixEqual someTime, exed[0]
 
       it "returns self for non-overlapping ranges (earlier)", ->
         later = thatDay "09:30", "11:30"
-        exed = later.exclusion someTime
+        exed = later.difference someTime
         assertEqual 1, exed.length
         assertTwixEqual later, exed[0]
 
       it "returns the non-overlapping part of a partially overlapping range (later)", ->
-        exed = someTime.exclusion(thatDay "08:00", "11:30")
+        exed = someTime.difference(thatDay "08:00", "11:30")
         assertEqual 1, exed.length
         assertTwixEqual thatDay("05:30", "08:00"), exed[0]
 
       it "returns the outside parts of a partially overlapping range (earlier)", ->
-        exed = thatDay("08:00", "11:30").exclusion(someTime)
+        exed = thatDay("08:00", "11:30").difference(someTime)
         assertEqual 1, exed.length
         assertTwixEqual thatDay("08:30", "11:30"), exed[0]
 
       it "returns the outside parts when engulfing a range", ->
-        exed = someTime.exclusion(thatDay "06:30", "07:30")
+        exed = someTime.difference(thatDay "06:30", "07:30")
         assertEqual 2, exed.length
         assertTwixEqual thatDay("05:30", "06:30"), exed[0]
         assertTwixEqual thatDay("07:30", "08:30"), exed[1]
 
       it "returns empty for an engulfing range", ->
-        exed = thatDay("06:30", "07:30").exclusion(someTime)
+        exed = thatDay("06:30", "07:30").difference(someTime)
         assertEqual 0, exed.length
 
       it "returns self for an adjacent range", ->
-        exed = someTime.exclusion(thatDay("08:30", "10:30"))
+        exed = someTime.difference(thatDay("08:30", "10:30"))
         assertEqual 1, exed.length
         assertTwixEqual someTime, exed[0]
 
     describe "one all-day range", ->
+      it "uses the full day", ->
+        exed = someDays.difference(new Twix("1982-05-25T16:00", "1982-05-26T02:00"))
+        assertEqual 1, exed.length
+        assertTwixEqual new Twix("1982-05-24T00:00", "1982-05-25T16:00"), exed[0]
 
     describe "two all-day ranges", ->
+      it "returns an all-day range", ->
+        exed = someDays.difference(new Twix("1982-05-25", "1982-05-27", true))
+        assertEqual 1, exed.length
+        assertTwixEqual new Twix("1982-05-24", "1982-05-24", true), exed[0]
 
     describe "multiple ranges", ->
+      it "returns the ifference of three ranges", ->
+        tween = thatDay "10:00", "13:00"
+        early = thatDay "08:00", "11:00"
+        later = thatDay "12:00", "14:00"
+
+        exed = tween.difference(early, later)
+
+        assertEqual 1, exed.length
+        assertTwixEqual thatDay("11:00", "12:00"), exed[0]
 
   describe "split()", ->
     describe "using an interval", ->
