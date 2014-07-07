@@ -1,6 +1,7 @@
+#Twix
+
 [![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![MIT License][license-image]][license-url] [![Build Status][travis-image]][travis-url]
 
-#Twix
 
 Twix is a simple but opinionated JS library for working with date ranges, and includes a customizable smart formatter. It's written in CoffeeScript and it depends on [Moment.js](http://momentjs.com/).
 
@@ -74,5 +75,5 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 [npm-version-image]: http://img.shields.io/npm/v/twix.svg?style=flat
 [npm-downloads-image]: http://img.shields.io/npm/dm/twix.svg?style=flat
 
-[travis-url]: http://travis-ci.org/icambron/twix
-[travis-image]: http://img.shields.io/travis/icambron/twix/develop.svg?style=flat
+[travis-url]: http://travis-ci.org/icambron/twix.js
+[travis-image]: http://img.shields.io/travis/icambron/twix.js/develop.svg?style=flat
