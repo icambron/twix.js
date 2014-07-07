@@ -4,9 +4,12 @@ deprecate = (name, instead, fn) ->
   alreadyDone = false
   (args...) ->
     unless alreadyDone
-      console.warn "##{name} is deprecated. Use ##{instead} instead." if console? && console.warn?
+      console?.warn? "##{name} is deprecated. Use ##{instead} instead."
     alreadyDone = true
     fn.apply @, args
+
+isArray = (input) ->
+  Object.prototype.toString.call(input) == '[object Array]'
 
 makeTwix = (moment) ->
   throw "Can't find moment" unless moment?
@@ -84,7 +87,7 @@ makeTwix = (moment) ->
     isSame: (period) -> @start.isSame @end, period
 
     length: (period) ->
-      @_trueEnd(true).diff @_trueStart(), period
+      @_trueEnd().diff @_trueStart(), period
 
     count: (period) ->
       start = @start.clone().startOf period
@@ -100,9 +103,9 @@ makeTwix = (moment) ->
     iterate: (intervalAmount = 1, period, minHours) ->
       [intervalAmount, period, minHours] = @_prepIterateInputs intervalAmount, period, minHours
 
-      start = @start.clone().startOf period
-      end = @end.clone().startOf period
-      hasNext = => start <= end && (!minHours || start.valueOf() != end.valueOf() || @end.hours() > minHours || @allDay)
+      start = @_trueStart().clone().startOf period
+      end = @_trueEnd().startOf period
+      hasNext = => (!@allDay && start <= end && (!minHours || !start.isSame(end) || @end.hours() > minHours)) || (@allDay && start < end)
 
       @_iterateHelper period, start, hasNext, intervalAmount
 
@@ -146,7 +149,7 @@ makeTwix = (moment) ->
       @_trueStart() <= mom && @_trueEnd() >= mom
 
     isEmpty: ->
-      @_trueStart().valueOf() == @_trueEnd().valueOf()
+      @_trueStart().isSame(@_trueEnd())
 
     # -- WORK WITH MULTIPLE RANGES --
     overlaps: (other) -> (@_trueEnd().isAfter(other._trueStart()) && @_trueStart().isBefore(other._trueEnd()))
@@ -185,7 +188,7 @@ makeTwix = (moment) ->
       arr = []
       for item, i in [@].concat(others)
         arr.push({time: item._trueStart(), i: i, type: 0})
-        arr.push({time: item._trueEnd(true), i: i, type: 1})
+        arr.push({time: item._trueEnd(), i: i, type: 1})
       arr = arr.sort((a, b) -> a.time - b.time)
 
       for other in arr
@@ -210,6 +213,34 @@ makeTwix = (moment) ->
       t for t in @xor(others...).map((i) => @intersection(i)) when !t.isEmpty() && t.isValid()
 
     split: (args...) ->
+      end = start = @_trueStart()
+
+      if moment.isDuration(args[0])
+        dur = args[0]
+      else if (!moment.isMoment(args[0]) && !isArray(args[0]) && typeof args[0] == "object") ||
+       (typeof args[0] == "number" && typeof args[1] == "string")
+        dur = moment.duration args[0], args[1]
+      else if isArray(args[0])
+        times = args[0]
+      else
+        times = args
+
+      if times
+        times = (moment(time) for time in times)
+        times = (mom for mom in times when mom.isValid() && mom >= start).sort()
+
+      return [@] if (dur && dur.asMilliseconds() == 0) || (times && times.length == 0)
+
+      vals = []; i = 0; final = @_trueEnd()
+      while start < final && (!times? || times[i])
+        end = if dur then start.clone().add(dur) else times[i].clone()
+        end = moment.min(final, end)
+        vals.push(moment.twix(start, end)) if !start.isSame(end)
+        start = end
+        i += 1
+      if !end.isSame(@_trueEnd()) && times
+        vals.push(moment.twix(end, @_trueEnd()))
+      vals
 
     isValid: -> @_trueStart() <= @_trueEnd()
 
@@ -382,12 +413,9 @@ makeTwix = (moment) ->
     # -- INTERNAL
     _trueStart: -> if @allDay then @start.clone().startOf("day") else @start.clone()
 
-    _trueEnd: (diffableEnd = false) ->
+    _trueEnd: ->
       if @allDay
-        if diffableEnd
-          @end.startOf('d').clone().add(1, "day")
-        else
-          @end.clone().endOf("day")
+        @end.startOf('d').clone().add(1, "day")
       else
         @end.clone()
 
@@ -402,9 +430,9 @@ makeTwix = (moment) ->
       hasNext: hasNext
 
     _prepIterateInputs: (inputs...)->
-      return inputs if typeof inputs[0] is 'number'
+      return inputs if typeof inputs[0] is "number"
 
-      if typeof inputs[0] == 'string'
+      if typeof inputs[0] == "string"
         period = inputs.shift()
         intervalAmount = inputs.pop() ? 1
 
@@ -412,14 +440,14 @@ makeTwix = (moment) ->
           minHours = inputs[0] ? false
 
       if moment.isDuration inputs[0]
-        period = 'milliseconds'
+        period = 'ms'
         intervalAmount = inputs[0].as period
 
       [intervalAmount, period, minHours]
 
-    _inner: (period = "milliseconds", intervalAmount = 1) ->
+    _inner: (period = "ms", intervalAmount = 1) ->
       start = @_trueStart()
-      end = @_trueEnd true
+      end = @_trueEnd()
 
       start.startOf(period).add(intervalAmount, period) if start > start.clone().startOf(period)
       end.startOf(period) if end < end.clone().endOf(period)
