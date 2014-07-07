@@ -45,19 +45,19 @@ test = (moment, Twix) ->
 
       it "uses the parse format", ->
         assertTwixEqual new Twix(moment("2012-05-25"), moment("2013-05-25"), false),
-          moment("05/25/2012").twix("05/25/2013", "MM/DD/YYYY")
+          moment("2012-05-25").twix("05/25/2013", "MM/DD/YYYY")
 
       it "uses a parseStrict object argument", ->
-        t = moment("05-25-1981").twix("A05/25/1982", "MM/DD/YYYY", parseStrict: true)
+        t = moment("1981-05-25").twix("A05/25/1982", "MM/DD/YYYY", parseStrict: true)
         assertEqual t.end.isValid(), false
 
-        t = moment("05-25-1981").twix("05/25/1982", "MM/DD/YYYY", parseStrict: true)
+        t = moment("1981-05-25").twix("05/25/1982", "MM/DD/YYYY", parseStrict: true)
         assertEqual t.end.isValid(), true
 
       it "uses an allDay option argument", ->
-        t = moment("05-25-1981").twix("05/25/1982", "MM/DD/YYYY", allDay: true)
+        t = moment("1981-05-25").twix("05/25/1982", "MM/DD/YYYY", allDay: true)
         assertEqual t.allDay, true
-        t = moment("05-25-1981").twix("1982-05-25", allDay: true)
+        t = moment("1981-05-25").twix("1982-05-25", allDay: true)
         assertEqual t.allDay, true
 
     describe "moment.forDuration()", ->
@@ -119,13 +119,13 @@ test = (moment, Twix) ->
     describe "day", ->
 
       it "returns true if they're the same day", ->
-        assertEqual true, moment("1982-05-25 05:30 AM").twix("1982-05-25 07:30 PM").isSame "day"
+        assertEqual true, moment("1982-05-25T05:30").twix("1982-05-25T19:30").isSame "day"
 
       it "returns false if they're different days day", ->
-        assertEqual false, moment("1982-05-25 05:30 AM").twix("1982-05-26 07:30 PM").isSame "day"
+        assertEqual false, moment("1982-05-25T05:30").twix("1982-05-26T19:30").isSame "day"
 
       it "returns true they're in different UTC days but the same local days", ->
-        assertEqual true, moment("1982-05-25 05:30 AM").twix("1982-05-25 11:30 PM").isSame "day"
+        assertEqual true, moment("1982-05-25T05:30").twix("1982-05-25T23:30").isSame "day"
 
   describe "length()", ->
 
@@ -486,9 +486,11 @@ test = (moment, Twix) ->
     it "returns true for empty ranges", ->
       assertEqual(true, thatDay("12:00", "12:00").isEmpty())
 
-    it "returns false for empty ranges", ->
+    it "returns false for non-empty ranges", ->
       assertEqual(false, thatDay("12:00", "13:00").isEmpty())
 
+    it "returns false for 'empty' all-day ranges", ->
+      assertEqual(false, moment("1982-05-25").twix("1982-05-25", allDay: true).isEmpty())
 
   describe "asDuration()", ->
     it "returns a duration object", ->
@@ -604,7 +606,7 @@ test = (moment, Twix) ->
         assertEqual false, range.contains(thisYear "05-24")
 
       it "returns false for moments after the range", ->
-        assertEqual false, range.contains(thisYear "05-26")
+        assertEqual false, range.contains(thisYear "05-26", "00:00:01")
 
   describe "overlaps()", ->
 
@@ -743,11 +745,6 @@ test = (moment, Twix) ->
       it "returns true for an engulfing range", ->
         assertNotEngulfing someDays, new Twix("1982-05-22", "1982-05-28", true)
 
-  describe "merge()", ->
-    it "calls union()", ->
-      assertTwixEqual new Twix("1982-05-24", "1982-05-26"),
-        new Twix("1982-05-24", "1982-05-25").merge(new Twix("1982-05-25", "1982-05-26"))
-
   describe "union()", ->
 
     someTime = thatDay "05:30", "08:30"
@@ -781,11 +778,11 @@ test = (moment, Twix) ->
         assertTwixEqual new Twix("1982-05-24 00:00", "1982-05-26 07:00"), someDays.union(new Twix("1982-05-24 20:00", "1982-05-26 07:00"))
 
       it "spans an earlier time", ->
-        assertTwixEqual new Twix("1982-05-23 08:00", moment("1982-05-25").endOf("day")), someDays.union(new Twix("1982-05-23 08:00", "1982-05-25 07:00"))
+        assertTwixEqual new Twix("1982-05-23 08:00", moment("1982-05-26")), someDays.union(new Twix("1982-05-23 08:00", "1982-05-25 07:00"))
 
       #i'm tempted to just say this is wrong...shouldn't it get to stay an all-day range?
       it "isn't affected by engulfing ranges", ->
-        assertTwixEqual new Twix("1982-05-24 00:00", moment("1982-05-25").endOf("day")), someDays.union(someTime)
+        assertTwixEqual new Twix("1982-05-24 00:00", moment("1982-05-26")), someDays.union(someTime)
 
       it "becomes an engulfing range", ->
         assertTwixEqual new Twix("1982-05-23 20:00", "1982-05-26 08:30"), someDays.union(new Twix("1982-05-23 20:00", "1982-05-26 08:30"))
@@ -844,7 +841,7 @@ test = (moment, Twix) ->
 
     describe "one all-day range", ->
       it "intersects with a later time", ->
-        assertTwixEqual new Twix("1982-05-24 20:00", "1982-05-25 23:59:59.999"), someDays.intersection(new Twix("1982-05-24 20:00", "1982-05-26 07:00"))
+        assertTwixEqual new Twix("1982-05-24 20:00", "1982-05-26"), someDays.intersection(new Twix("1982-05-24 20:00", "1982-05-26 07:00"))
 
       it "intersects with an earlier time", ->
         assertTwixEqual new Twix("1982-05-24 00:00", "1982-05-25 07:00"), someDays.intersection(new Twix("1982-05-23 08:00", "1982-05-25 07:00"))
@@ -853,9 +850,9 @@ test = (moment, Twix) ->
         assertTwixEqual new Twix("1982-05-25 05:30", "1982-05-25 08:30"), someDays.intersection(someTime)
 
       it "intersects with an engulfing range", ->
-        assertTwixEqual new Twix("1982-05-24 00:00", "1982-05-25 23:59:59.999"), someDays.intersection(new Twix("1982-05-23 20:00", "1982-05-26 08:30"))
+        assertTwixEqual new Twix("1982-05-24 00:00", "1982-05-26"), someDays.intersection(new Twix("1982-05-23 20:00", "1982-05-26 08:30"))
 
-    describe "two all-day range", ->
+    describe "two all-day ranges", ->
 
       it "does not intersect with a later time", ->
         intersection = someDays.intersection(new Twix("1982-05-27", "1982-05-28", true))
@@ -878,6 +875,225 @@ test = (moment, Twix) ->
 
       it "intersects with an engulfing range", ->
         assertTwixEqual thatDay(), thatDay().intersection(someDays)
+
+  describe "xor()", ->
+
+    someTime = thatDay "05:30", "08:30"
+    someDays = new Twix "1982-05-24", "1982-05-25", true
+
+    describe "non-all-day ranges", ->
+      it "returns non-overlapping ranges as-is (later)", ->
+        later = thatDay "09:30", "11:30"
+        orred = someTime.xor later
+        assertEqual 2, orred.length
+        assertTwixEqual someTime, orred[0]
+        assertTwixEqual later, orred[1]
+
+      it "returns non-overlapping ranges as-is (earlier)", ->
+        later = thatDay "09:30", "11:30"
+        orred = later.xor someTime
+        assertEqual 2, orred.length
+        assertTwixEqual someTime, orred[0]
+        assertTwixEqual later, orred[1]
+
+      it "returns the outside parts of a partially overlapping range (later)", ->
+        orred = someTime.xor(thatDay "08:00", "11:30")
+        assertEqual 2, orred.length
+        assertTwixEqual thatDay("05:30", "08:00"), orred[0]
+        assertTwixEqual thatDay("08:30", "11:30"), orred[1]
+
+      it "returns the outside parts of a partially overlapping range (earlier)", ->
+        orred = thatDay("08:00", "11:30").xor(someTime)
+        assertEqual 2, orred.length
+        assertTwixEqual thatDay("05:30", "08:00"), orred[0]
+        assertTwixEqual thatDay("08:30", "11:30"), orred[1]
+
+      it "returns the outside parts when engulfing a range", ->
+        orred = someTime.xor(thatDay "06:30", "07:30")
+        assertEqual 2, orred.length
+        assertTwixEqual thatDay("05:30", "06:30"), orred[0]
+        assertTwixEqual thatDay("07:30", "08:30"), orred[1]
+
+      it "returns the outside parts of an engulfing range", ->
+        orred = thatDay("06:30", "07:30").xor(someTime)
+        assertEqual 2, orred.length
+        assertTwixEqual thatDay("05:30", "06:30"), orred[0]
+        assertTwixEqual thatDay("07:30", "08:30"), orred[1]
+
+      it "returns one contiguous range for two adajacent ranges", ->
+        orred = thatDay("08:30", "10:30").xor(someTime)
+        assertEqual 1, orred.length
+        assertTwixEqual thatDay("05:30", "10:30"), orred[0]
+
+    describe "one all-day range", ->
+      it "uses the full day in the xor", ->
+        xored = someDays.xor(new Twix("1982-05-25T16:00", "1982-05-26T02:00"))
+        assertEqual 2, xored.length
+        assertTwixEqual new Twix("1982-05-24T00:00", "1982-05-25T16:00"), xored[0]
+        assertTwixEqual new Twix("1982-05-26T00:00", "1982-05-26T02:00"), xored[1]
+
+    describe "two all-day ranges", ->
+      it "returns an all-day range", ->
+        xored = someDays.xor(new Twix("1982-05-25", "1982-05-27", true))
+        assertEqual 2, xored.length
+        assertTwixEqual new Twix("1982-05-24", "1982-05-24", true), xored[0]
+        assertTwixEqual new Twix("1982-05-26", "1982-05-27", true), xored[1]
+
+    describe "multiple ranges", ->
+      it "returns the xor of three ranges", ->
+        tween = thatDay "10:00", "13:00"
+        early = thatDay "08:00", "11:00"
+        later = thatDay "12:00", "14:00"
+
+        xored = tween.xor(early, later)
+
+        assertEqual 3, xored.length
+        assertTwixEqual thatDay("08:00", "10:00"), xored[0]
+        assertTwixEqual thatDay("11:00", "12:00"), xored[1]
+        assertTwixEqual thatDay("13:00", "14:00"), xored[2]
+
+  describe "difference()", ->
+    someTime = thatDay "05:30", "08:30"
+    someDays = new Twix "1982-05-24", "1982-05-25", true
+
+    describe "non-all-day ranges", ->
+      it "returns self for non-overlapping ranges (later)", ->
+        later = thatDay "09:30", "11:30"
+        exed = someTime.difference later
+        assertEqual 1, exed.length
+        assertTwixEqual someTime, exed[0]
+
+      it "returns self for non-overlapping ranges (earlier)", ->
+        later = thatDay "09:30", "11:30"
+        exed = later.difference someTime
+        assertEqual 1, exed.length
+        assertTwixEqual later, exed[0]
+
+      it "returns the non-overlapping part of a partially overlapping range (later)", ->
+        exed = someTime.difference(thatDay "08:00", "11:30")
+        assertEqual 1, exed.length
+        assertTwixEqual thatDay("05:30", "08:00"), exed[0]
+
+      it "returns the outside parts of a partially overlapping range (earlier)", ->
+        exed = thatDay("08:00", "11:30").difference(someTime)
+        assertEqual 1, exed.length
+        assertTwixEqual thatDay("08:30", "11:30"), exed[0]
+
+      it "returns the outside parts when engulfing a range", ->
+        exed = someTime.difference(thatDay "06:30", "07:30")
+        assertEqual 2, exed.length
+        assertTwixEqual thatDay("05:30", "06:30"), exed[0]
+        assertTwixEqual thatDay("07:30", "08:30"), exed[1]
+
+      it "returns empty for an engulfing range", ->
+        exed = thatDay("06:30", "07:30").difference(someTime)
+        assertEqual 0, exed.length
+
+      it "returns self for an adjacent range", ->
+        exed = someTime.difference(thatDay("08:30", "10:30"))
+        assertEqual 1, exed.length
+        assertTwixEqual someTime, exed[0]
+
+    describe "one all-day range", ->
+      it "uses the full day", ->
+        exed = someDays.difference(new Twix("1982-05-25T16:00", "1982-05-26T02:00"))
+        assertEqual 1, exed.length
+        assertTwixEqual new Twix("1982-05-24T00:00", "1982-05-25T16:00"), exed[0]
+
+    describe "two all-day ranges", ->
+      it "returns an all-day range", ->
+        exed = someDays.difference(new Twix("1982-05-25", "1982-05-27", true))
+        assertEqual 1, exed.length
+        assertTwixEqual new Twix("1982-05-24", "1982-05-24", true), exed[0]
+
+    describe "multiple ranges", ->
+      it "returns the difference of three ranges", ->
+        tween = thatDay "10:00", "13:00"
+        early = thatDay "08:00", "11:00"
+        later = thatDay "12:00", "14:00"
+
+        exed = tween.difference(early, later)
+
+        assertEqual 1, exed.length
+        assertTwixEqual thatDay("11:00", "12:00"), exed[0]
+
+  describe "split()", ->
+    describe "using a duration", ->
+      assertHours = (splits) ->
+        assertEqual 3, splits.length
+        assertTwixEqual thatDay("05:01", "06:01"), splits[0]
+        assertTwixEqual thatDay("06:01", "07:01"), splits[1]
+        assertTwixEqual thatDay("07:01", "07:30"), splits[2]
+
+      it "accepts a duration directly", ->
+        splits = thatDay("05:01", "07:30").split(moment.duration(1, "hour"))
+        assertHours splits
+
+      it "accepts number, unit as args", ->
+        splits = thatDay("05:01", "07:30").split(1, "h")
+        assertHours splits
+
+      it "accepts an object", ->
+        splits = thatDay("05:01", "07:30").split(moment.duration({'h': 1}))
+        assertHours splits
+
+      it "returns the original if the duration is empty", ->
+        range = thatDay "05:01", "07:30"
+        splits = range.split(moment.duration({'h': 0}))
+        assertEqual 1, splits.length
+        assertTwixEqual range, splits[0]
+
+      it "splits up all-day ranges into hours across the whole day", ->
+        splits = moment("1982-05-25").twix("1982-05-26", allDay: true).split(moment.duration(1, "hour"))
+        assertEqual 48, splits.length
+        assertTwixEqual thatDay("00:00", "01:00"), splits[0]
+        assertTwixEqual moment.twix("1982-05-26T23:00", "1982-05-27T00:00"), splits[47]
+
+    describe "using times", ->
+
+      it "accepts a single time", ->
+        splits = thatDay("05:00", "06:00").split("1982-05-25T05:30")
+        assertEqual 2, splits.length
+        assertTwixEqual thatDay("05:00", "05:30"), splits[0]
+        assertTwixEqual thatDay("05:30", "06:00"), splits[1]
+
+      it "accepts multiple times", ->
+        splits = thatDay("05:00", "06:00").split("1982-05-25T05:30", "1982-05-25T05:45")
+        assertEqual 3, splits.length
+        assertTwixEqual thatDay("05:00", "05:30"), splits[0]
+        assertTwixEqual thatDay("05:30", "05:45"), splits[1]
+        assertTwixEqual thatDay("05:45", "06:00"), splits[2]
+
+      it "accepts a list of times", ->
+        splits = thatDay("05:00", "06:00").split(["1982-05-25T05:30", "1982-05-25T05:45"])
+        assertEqual 3, splits.length
+        assertTwixEqual thatDay("05:00", "05:30"), splits[0]
+        assertTwixEqual thatDay("05:30", "05:45"), splits[1]
+        assertTwixEqual thatDay("05:45", "06:00"), splits[2]
+
+      it "returns the original if there are no args", ->
+        range = thatDay "05:01", "07:30"
+        splits = range.split()
+        assertEqual 1, splits.length
+        assertTwixEqual range, splits[0]
+
+      it "returns the original if the arg is an empty list", ->
+        range = thatDay "05:01", "07:30"
+        splits = range.split([])
+        assertEqual 1, splits.length
+        assertTwixEqual range, splits[0]
+
+      it "excludes bad times", ->
+        splits = thatDay("05:00", "06:00").split("1982-05-23", "1982-05-25T05:30", moment.invalid())
+        assertEqual 2, splits.length
+        assertTwixEqual thatDay("05:00", "05:30"), splits[0]
+        assertTwixEqual thatDay("05:30", "06:00"), splits[1]
+
+      it "returns the original if they're all bad times", ->
+        range = thatDay "05:01", "07:30"
+        splits = range.split(moment.invalid())
+        assertEqual 1, splits.length
+        assertTwixEqual range, splits[0]
 
   describe "isValid()", ->
     it "should validate an interval with an earlier start", ->
@@ -915,18 +1131,17 @@ test = (moment, Twix) ->
       assertEqual "October - October", s
 
     it "accepts an allDay option", ->
-      s = thisYear("05-25").twix(thisYear("5-26"), true).simpleFormat null, allDay: "(wayo wayo)"
+      s = thisYear("05-25").twix(thisYear("05-26"), true).simpleFormat null, allDay: "(wayo wayo)"
       assertEqual true, s.indexOf("(wayo wayo)") > -1
 
     it "removes the all day text if allDay is null", ->
-      s = thisYear("05-25").twix(thisYear("5-26"), true).simpleFormat null, allDay: null
+      s = thisYear("05-25").twix(thisYear("05-26"), true).simpleFormat null, allDay: null
       assertEqual true, s.indexOf("(all day)") == -1
 
     it "accepts a custom template", ->
-      s = thisYear("05-25").twix(thisYear("5-26"), true).simpleFormat null,
+      s = thisYear("05-25").twix(thisYear("05-26"), true).simpleFormat null,
         template: (first, second) -> "#{first} | #{second}"
       assertEqual true, s.indexOf("|") > -1
-
 
   describe "format()", ->
 

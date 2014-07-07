@@ -23,11 +23,9 @@ lang = (moment, Twix) ->
 
   moment.lang before
 
-if module? && module.exports?
-  module.exports = lang
+module?.exports = lang
 
 if typeof(define) == "function" && define.amd
   define ["moment", "twix"], (moment, Twix) -> lang(moment, Twix)
 
-if @Twix && @moment
-  lang @moment, @Twix
+lang(@moment, @Twix) if @Twix && @moment
