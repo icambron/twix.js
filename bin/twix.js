@@ -51,6 +51,8 @@
         this.start = moment(start, parseFormat, options.parseStrict);
         this.end = moment(end, parseFormat, options.parseStrict);
         this.allDay = (_ref = options.allDay) != null ? _ref : false;
+        this._trueStart = this.allDay ? this.start.clone().startOf("day") : this.start;
+        this._trueEnd = this.allDay ? this.end.startOf('d').clone().add(1, "day") : this.end;
       }
 
       Twix._extend = function() {
@@ -170,7 +172,7 @@
       };
 
       Twix.prototype.length = function(period) {
-        return this._trueEnd().diff(this._trueStart(), period);
+        return this._trueEnd.diff(this._trueStart, period);
       };
 
       Twix.prototype.count = function(period) {
@@ -195,8 +197,8 @@
           intervalAmount = 1;
         }
         _ref = this._prepIterateInputs(intervalAmount, period, minHours), intervalAmount = _ref[0], period = _ref[1], minHours = _ref[2];
-        start = this._trueStart().clone().startOf(period);
-        end = this._trueEnd().startOf(period);
+        start = this._trueStart.clone().startOf(period);
+        end = this._trueEnd.clone().startOf(period);
         hasNext = (function(_this) {
           return function() {
             return (!_this.allDay && start <= end && (!minHours || !start.isSame(end) || _this.end.hours() > minHours)) || (_this.allDay && start < end);
@@ -258,19 +260,19 @@
 
       Twix.prototype.contains = function(mom) {
         mom = moment(mom);
-        return this._trueStart() <= mom && this._trueEnd() >= mom;
+        return this._trueStart <= mom && this._trueEnd >= mom;
       };
 
       Twix.prototype.isEmpty = function() {
-        return this._trueStart().isSame(this._trueEnd());
+        return this._trueStart.isSame(this._trueEnd);
       };
 
       Twix.prototype.overlaps = function(other) {
-        return this._trueEnd().isAfter(other._trueStart()) && this._trueStart().isBefore(other._trueEnd());
+        return this._trueEnd.isAfter(other._trueStart) && this._trueStart.isBefore(other._trueEnd);
       };
 
       Twix.prototype.engulfs = function(other) {
-        return this._trueStart() <= other._trueStart() && this._trueEnd() >= other._trueEnd();
+        return this._trueStart <= other._trueStart && this._trueEnd >= other._trueEnd;
       };
 
       Twix.prototype.union = function(other) {
@@ -280,8 +282,8 @@
           newStart = this.start < other.start ? this.start : other.start;
           newEnd = this.end > other.end ? this.end : other.end;
         } else {
-          newStart = this._trueStart() < other._trueStart() ? this._trueStart() : other._trueStart();
-          newEnd = this._trueEnd() > other._trueEnd() ? this._trueEnd() : other._trueEnd();
+          newStart = this._trueStart < other._trueStart ? this._trueStart : other._trueStart;
+          newEnd = this._trueEnd > other._trueEnd ? this._trueEnd : other._trueEnd;
         }
         return new Twix(newStart, newEnd, allDay);
       };
@@ -293,8 +295,8 @@
           newStart = this.start > other.start ? this.start : other.start;
           newEnd = this.end < other.end ? this.end : other.end;
         } else {
-          newStart = this._trueStart() > other._trueStart() ? this._trueStart() : other._trueStart();
-          newEnd = this._trueEnd() < other._trueEnd() ? this._trueEnd() : other._trueEnd();
+          newStart = this._trueStart > other._trueStart ? this._trueStart : other._trueStart;
+          newEnd = this._trueEnd < other._trueEnd ? this._trueEnd : other._trueEnd;
         }
         return new Twix(newStart, newEnd, allDay);
       };
@@ -321,12 +323,12 @@
         for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
           item = _ref[i];
           arr.push({
-            time: item._trueStart(),
+            time: item._trueStart,
             i: i,
             type: 0
           });
           arr.push({
-            time: item._trueEnd(),
+            time: item._trueEnd,
             i: i,
             type: 1
           });
@@ -385,7 +387,7 @@
       Twix.prototype.split = function() {
         var args, dur, end, final, i, mom, start, time, times, vals;
         args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-        end = start = this._trueStart();
+        end = start = this._trueStart.clone();
         if (moment.isDuration(args[0])) {
           dur = args[0];
         } else if ((!moment.isMoment(args[0]) && !isArray(args[0]) && typeof args[0] === "object") || (typeof args[0] === "number" && typeof args[1] === "string")) {
@@ -422,7 +424,7 @@
         }
         vals = [];
         i = 0;
-        final = this._trueEnd();
+        final = this._trueEnd;
         while (start < final && ((times == null) || times[i])) {
           end = dur ? start.clone().add(dur) : times[i].clone();
           end = moment.min(final, end);
@@ -432,14 +434,14 @@
           start = end;
           i += 1;
         }
-        if (!end.isSame(this._trueEnd()) && times) {
-          vals.push(moment.twix(end, this._trueEnd()));
+        if (!end.isSame(this._trueEnd) && times) {
+          vals.push(moment.twix(end, this._trueEnd));
         }
         return vals;
       };
 
       Twix.prototype.isValid = function() {
-        return this._trueStart() <= this._trueEnd();
+        return this._trueStart <= this._trueEnd;
       };
 
       Twix.prototype.equals = function(other) {
@@ -639,22 +641,6 @@
         return fold(common_bucket);
       };
 
-      Twix.prototype._trueStart = function() {
-        if (this.allDay) {
-          return this.start.clone().startOf("day");
-        } else {
-          return this.start.clone();
-        }
-      };
-
-      Twix.prototype._trueEnd = function() {
-        if (this.allDay) {
-          return this.end.startOf('d').clone().add(1, "day");
-        } else {
-          return this.end.clone();
-        }
-      };
-
       Twix.prototype._iterateHelper = function(period, iter, hasNext, intervalAmount) {
         if (intervalAmount == null) {
           intervalAmount = 1;
@@ -704,8 +690,8 @@
         if (intervalAmount == null) {
           intervalAmount = 1;
         }
-        start = this._trueStart();
-        end = this._trueEnd();
+        start = this._trueStart.clone();
+        end = this._trueEnd.clone();
         if (start > start.clone().startOf(period)) {
           start.startOf(period).add(intervalAmount, period);
         }
