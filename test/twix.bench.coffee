@@ -1,0 +1,21 @@
+Benchmark = require('benchmark')
+moment = require("moment")
+Twix = require("../../bin/twix")
+
+range = moment.twix("2013-07-11", "2013-07-13", true)
+
+momentInRange = moment("2013-07-12")
+momentOutsideRange = moment("2013-07-14")
+
+new Benchmark.Suite("Twix")
+  .add('#contains (non-moment)', -> range.contains("2013-07-12"))
+  .add('#contains (moment)', -> range.contains(momentInRange))
+  .add('#overlaps', -> range.contains(range))
+  .add('#engulfs', -> range.contains(range))
+  .add('#length', -> range.length())
+  .add('#count', -> range.count("days"))
+  .add('#countInner', -> range.countInner("days"))
+  .add('#isEmpty', -> range.isEmpty())
+  .add('#isValid', -> range.isValid())
+  .on('cycle', (event) -> console.log(String(event.target)))
+  .run(async: true)

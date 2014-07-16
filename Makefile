@@ -12,5 +12,8 @@ configure:
 directories:
 	@mkdir -p bin test/bin
 
+bench: build
+	@node test/bin/twix.bench.js
+
 test: build
 	@./node_modules/mocha/bin/mocha --reporter spec test/bin/twix.spec.js
