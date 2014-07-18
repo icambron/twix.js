@@ -602,11 +602,17 @@ test = (moment, Twix) ->
       it "returns true for moments at the end of the range", ->
         assertEqual true, range.contains(start.clone().endOf "day")
 
-      it "returns false for moments before the range", ->
+      it "returns false for moments well before the range", ->
         assertEqual false, range.contains(thisYear "05-24")
 
-      it "returns false for moments after the range", ->
-        assertEqual false, range.contains(thisYear "05-26", "00:00:01")
+      it "returns false for moments immediately before the range", ->
+        assertEqual false, range.contains(thisYear("05-24").endOf("day"))
+
+      it "returns false for moments immediately after the range", ->
+        assertEqual false, range.contains(thisYear "05-26")
+
+      it "returns false for moments well after the range", ->
+        assertEqual false, range.contains(thisYear "05-27")
 
   describe "overlaps()", ->
 
