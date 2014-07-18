@@ -1,4 +1,7 @@
-#Twix [![Build Status](https://secure.travis-ci.org/icambron/twix.js.png?branch=develop)](http://travis-ci.org/icambron/twix.js)#
+#Twix
+
+[![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![MIT License][license-image]][license-url] [![Build Status][travis-image]][travis-url]
+
 
 Twix is a simple but opinionated JS library for working with date ranges, and includes a customizable smart formatter. It's written in CoffeeScript and it depends on [Moment.js](http://momentjs.com/).
 
@@ -10,7 +13,7 @@ var t = moment("1982-01-25T09:30").twix("1982-01-25T13:30");
 t.format();  //=> Jan 25, 1982, 9:30 AM - 1:30 PM
 
 t.isSame("day"); //=> true
-t.humanizeDuration(); //=> "4 hours"
+t.humanizeLength(); //=> "4 hours"
 t.count("days"); //=> 1
 ```
 
@@ -64,3 +67,13 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+[license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
+[license-url]: LICENSE
+
+[npm-url]: https://npmjs.org/package/twix
+[npm-version-image]: http://img.shields.io/npm/v/twix.svg?style=flat
+[npm-downloads-image]: http://img.shields.io/npm/dm/twix.svg?style=flat
+
+[travis-url]: http://travis-ci.org/icambron/twix.js
+[travis-image]: http://img.shields.io/travis/icambron/twix.js/develop.svg?style=flat
