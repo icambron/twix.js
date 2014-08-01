@@ -259,7 +259,9 @@
       };
 
       Twix.prototype.contains = function(mom) {
-        mom = moment(mom);
+        if (!moment.isMoment(mom)) {
+          mom = moment(mom);
+        }
         return this._trueStart <= mom && this._trueEnd >= mom;
       };
 
@@ -782,7 +784,7 @@
         return o.constructor.prototype;
       }
     };
-    Twix._extend(getPrototypeOf(moment.fn._lang), {
+    Twix._extend(moment._locale || getPrototypeOf(moment.fn._lang), {
       _twix: Twix.defaults
     });
     Twix.formatTemplate = function(leftSide, rightSide) {

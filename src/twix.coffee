@@ -502,7 +502,7 @@ makeTwix = (moment) ->
       o.__proto__
     else o.constructor.prototype
 
-  Twix._extend(getPrototypeOf(moment.fn._lang), _twix: Twix.defaults)
+  Twix._extend(moment._locale || getPrototypeOf(moment.fn._lang), _twix: Twix.defaults)
 
   Twix.formatTemplate = (leftSide, rightSide) -> "#{leftSide} - #{rightSide}"
 
