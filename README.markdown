@@ -41,6 +41,8 @@ Patches are welcome!
 
 ##Changelog##
 
+ * **0.5.1**: Make Twix compatible with Moment 2.8.1
+
  * **0.5.0**: Fix intersection/overlap behavior (#36), expand signature, and deal with Moment deprecations.
 
  * **0.4.0**: Simplified internationalization support (**possibly breaking change for those few people using French support**), added more complex iteration durations. Reverted build complexity.
