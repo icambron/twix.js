@@ -11,6 +11,6 @@ before_script:
   - make build
 
 branches:
-  only:
-    -master
-    -develop
+  except:
+    - docs
+    - gh-pages
