@@ -1159,11 +1159,11 @@ textarea {
 
 /* line 48, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_scaffolding.scss */
 a {
-  color: #5eb0a4;
+  color: #428bca;
   text-decoration: none; }
   /* line 53, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_scaffolding.scss */
   a:hover, a:focus {
-    color: #408278;
+    color: #2a6496;
     text-decoration: underline; }
   /* line 58, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_scaffolding.scss */
   a:focus {
@@ -1390,11 +1390,11 @@ mark,
 
 /* line 5, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/mixins/_text-emphasis.scss */
 .text-primary {
-  color: #5eb0a4; }
+  color: #428bca; }
 
 /* line 8, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/mixins/_text-emphasis.scss */
 a.text-primary:hover {
-  color: #489388; }
+  color: #3071a9; }
 
 /* line 5, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/mixins/_text-emphasis.scss */
 .text-success {
@@ -1434,11 +1434,11 @@ a.text-danger:hover {
 
 /* line 5, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/mixins/_background-variant.scss */
 .bg-primary {
-  background-color: #5eb0a4; }
+  background-color: #428bca; }
 
 /* line 8, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/mixins/_background-variant.scss */
 a.bg-primary:hover {
-  background-color: #489388; }
+  background-color: #3071a9; }
 
 /* line 5, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/mixins/_background-variant.scss */
 .bg-success {
@@ -3383,23 +3383,23 @@ select[multiple].input-lg,
 /* line 60, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_buttons.scss */
 .btn-primary {
   color: white;
-  background-color: #5eb0a4;
-  border-color: #51a498; }
+  background-color: #428bca;
+  border-color: #357ebd; }
   /* line 15, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/mixins/_buttons.scss */
   .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .btn-primary.dropdown-toggle {
     color: white;
-    background-color: #489388;
-    border-color: #3d7b72; }
+    background-color: #3071a9;
+    border-color: #285e8e; }
   /* line 22, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/mixins/_buttons.scss */
   .btn-primary:active, .btn-primary.active, .open > .btn-primary.dropdown-toggle {
     background-image: none; }
   /* line 32, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/mixins/_buttons.scss */
   .btn-primary.disabled, .btn-primary.disabled:hover, .btn-primary.disabled:focus, .btn-primary.disabled:active, .btn-primary.disabled.active, .btn-primary[disabled], .btn-primary[disabled]:hover, .btn-primary[disabled]:focus, .btn-primary[disabled]:active, .btn-primary[disabled].active, fieldset[disabled] .btn-primary, fieldset[disabled] .btn-primary:hover, fieldset[disabled] .btn-primary:focus, fieldset[disabled] .btn-primary:active, fieldset[disabled] .btn-primary.active {
-    background-color: #5eb0a4;
-    border-color: #51a498; }
+    background-color: #428bca;
+    border-color: #357ebd; }
   /* line 38, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/mixins/_buttons.scss */
   .btn-primary .badge {
-    color: #5eb0a4;
+    color: #428bca;
     background-color: white; }
 
 /* line 64, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_buttons.scss */
@@ -3492,7 +3492,7 @@ select[multiple].input-lg,
 
 /* line 85, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_buttons.scss */
 .btn-link {
-  color: #5eb0a4;
+  color: #428bca;
   font-weight: normal;
   cursor: pointer;
   border-radius: 0; }
@@ -3506,7 +3506,7 @@ select[multiple].input-lg,
     border-color: transparent; }
   /* line 105, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_buttons.scss */
   .btn-link:hover, .btn-link:focus {
-    color: #408278;
+    color: #2a6496;
     text-decoration: underline;
     background-color: transparent; }
   /* line 113, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_buttons.scss */
@@ -3655,7 +3655,7 @@ tbody.collapse.in {
   color: white;
   text-decoration: none;
   outline: 0;
-  background-color: #5eb0a4; }
+  background-color: #428bca; }
 
 /* line 103, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_dropdowns.scss */
 .dropdown-menu > .disabled > a, .dropdown-menu > .disabled > a:hover, .dropdown-menu > .disabled > a:focus {
@@ -4093,7 +4093,7 @@ tbody.collapse.in {
   /* line 48, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_navs.scss */
   .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
     background-color: #eeeeee;
-    border-color: #5eb0a4; }
+    border-color: #428bca; }
   /* line 59, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_navs.scss */
   .nav .nav-divider {
     height: 1px;
@@ -4140,7 +4140,7 @@ tbody.collapse.in {
   /* line 133, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_navs.scss */
   .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
     color: white;
-    background-color: #5eb0a4; }
+    background-color: #428bca; }
 
 /* line 144, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_navs.scss */
 .nav-stacked > li {
@@ -4704,7 +4704,7 @@ tbody.collapse.in {
       padding: 6px 12px;
       line-height: 1.42857;
       text-decoration: none;
-      color: #5eb0a4;
+      color: #428bca;
       background-color: white;
       border: 1px solid #dddddd;
       margin-left: -1px; }
@@ -4723,7 +4723,7 @@ tbody.collapse.in {
   .pagination > li > a:hover, .pagination > li > a:focus,
   .pagination > li > span:hover,
   .pagination > li > span:focus {
-    color: #408278;
+    color: #2a6496;
     background-color: #eeeeee;
     border-color: #dddddd; }
   /* line 53, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_pagination.scss */
@@ -4733,8 +4733,8 @@ tbody.collapse.in {
   .pagination > .active > span:focus {
     z-index: 2;
     color: white;
-    background-color: #5eb0a4;
-    border-color: #5eb0a4;
+    background-color: #428bca;
+    border-color: #428bca;
     cursor: default; }
   /* line 68, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_pagination.scss */
   .pagination > .disabled > span,
@@ -4861,10 +4861,10 @@ a.label:hover, a.label:focus {
 
 /* line 48, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_labels.scss */
 .label-primary {
-  background-color: #5eb0a4; }
+  background-color: #428bca; }
   /* line 8, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/mixins/_labels.scss */
   .label-primary[href]:hover, .label-primary[href]:focus {
-    background-color: #489388; }
+    background-color: #3071a9; }
 
 /* line 52, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_labels.scss */
 .label-success {
@@ -4921,7 +4921,7 @@ a.label:hover, a.label:focus {
     padding: 1px 5px; }
   /* line 40, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_badges.scss */
   a.list-group-item.active > .badge, .nav-pills > .active > a > .badge {
-    color: #5eb0a4;
+    color: #428bca;
     background-color: white; }
   /* line 44, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_badges.scss */
   .nav-pills > li > a > .badge {
@@ -5001,7 +5001,7 @@ a.badge:hover, a.badge:focus {
 a.thumbnail:hover,
 a.thumbnail:focus,
 a.thumbnail.active {
-  border-color: #5eb0a4; }
+  border-color: #428bca; }
 
 /* line 9, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_alerts.scss */
 .alert {
@@ -5121,7 +5121,7 @@ a.thumbnail.active {
   line-height: 20px;
   color: white;
   text-align: center;
-  background-color: #5eb0a4;
+  background-color: #428bca;
   -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
   -webkit-transition: width 0.6s ease;
@@ -5281,8 +5281,8 @@ a.list-group-item {
 .list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
   z-index: 2;
   color: white;
-  background-color: #5eb0a4;
-  border-color: #5eb0a4; }
+  background-color: #428bca;
+  border-color: #428bca; }
   /* line 100, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_list-group.scss */
   .list-group-item.active .list-group-item-heading,
   .list-group-item.active .list-group-item-heading > small,
@@ -5294,7 +5294,7 @@ a.list-group-item {
     color: inherit; }
   /* line 103, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_list-group.scss */
   .list-group-item.active .list-group-item-text, .list-group-item.active:hover .list-group-item-text, .list-group-item.active:focus .list-group-item-text {
-    color: #e7f3f1; }
+    color: #e1edf7; }
 
 /* line 4, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/mixins/_list-group.scss */
 .list-group-item-success {
@@ -5628,22 +5628,22 @@ a.list-group-item-danger {
 
 /* line 229, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_panels.scss */
 .panel-primary {
-  border-color: #5eb0a4; }
+  border-color: #428bca; }
   /* line 6, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/mixins/_panels.scss */
   .panel-primary > .panel-heading {
     color: white;
-    background-color: #5eb0a4;
-    border-color: #5eb0a4; }
+    background-color: #428bca;
+    border-color: #428bca; }
     /* line 11, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/mixins/_panels.scss */
     .panel-primary > .panel-heading + .panel-collapse > .panel-body {
-      border-top-color: #5eb0a4; }
+      border-top-color: #428bca; }
     /* line 14, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/mixins/_panels.scss */
     .panel-primary > .panel-heading .badge {
-      color: #5eb0a4;
+      color: #428bca;
       background-color: white; }
   /* line 20, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/mixins/_panels.scss */
   .panel-primary > .panel-footer + .panel-collapse > .panel-body {
-    border-bottom-color: #5eb0a4; }
+    border-bottom-color: #428bca; }
 
 /* line 232, /Users/isaac/.gem/ruby/2.1.1/gems/bootstrap-sass-3.2.0.1/assets/stylesheets/bootstrap/_panels.scss */
 .panel-success {
@@ -8865,96 +8865,96 @@ button.close {
 .highlight .il {
   color: #009999; }
 
-/* line 14, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
+/* line 12, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
 .hero {
   text-align: center;
-  background-color: #5eb0a4;
+  background-color: #428bca;
   color: white;
   border-radius: 8px;
   padding: 20px; }
-  /* line 15, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
+  /* line 13, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
   .hero h1 {
     font-size: 60px; }
 
-/* line 22, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
+/* line 20, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
 .docs {
   position: relative; }
-  /* line 25, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
+  /* line 23, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
   .docs h2 {
-    background-color: #5eb0a4;
+    background-color: #428bca;
     color: white;
     border-radius: 8px;
     padding: 20px; }
 
-/* line 31, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
+/* line 29, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
 #toc.affix {
   top: 10px; }
 
-/* line 35, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
+/* line 33, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
 #navbar {
   background-color: black;
   margin-bottom: 10px; }
-  /* line 39, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
+  /* line 37, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
   #navbar #title {
     font-size: 30px;
     margin-top: 7px;
     margin-bottom: 7px; }
-    /* line 44, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
+    /* line 42, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
     #navbar #title a {
-      color: #5eb0a4; }
-      /* line 47, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
+      color: #428bca; }
+      /* line 45, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
       #navbar #title a:hover {
         text-decoration: none; }
-  /* line 53, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
+  /* line 51, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
   #navbar .nav-pills {
     margin-top: 7px;
     margin-bottom: 7px; }
 
-/* line 60, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
+/* line 58, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
 #toc > ul {
   overflow-y: auto;
   font-size: 14px;
   line-height: 18px;
   padding-left: 4px;
   list-style-type: none; }
-  /* line 68, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
+  /* line 66, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
   #toc > ul li {
     border-left: 2px solid transparent; }
-  /* line 72, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
+  /* line 70, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
   #toc > ul a {
     display: inline-block;
     width: 100%;
     text-decoration: none; }
-  /* line 81, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
+  /* line 79, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
   #toc > ul > li > a {
     color: black;
     font-size: 18px;
     line-height: 24px;
     padding-top: 10px;
     padding-bottom: 4px; }
-    /* line 88, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
+    /* line 86, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
     #toc > ul > li > a:hover {
       background-color: none; }
-  /* line 94, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
+  /* line 92, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
   #toc > ul > li.active a {
     font-weight: bold; }
-  /* line 99, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
+  /* line 97, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
   #toc > ul > li > ul {
     padding-left: 0; }
-  /* line 103, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
+  /* line 101, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
   #toc > ul > li > ul > li {
     display: none;
-    border-left-color: rgba(94, 176, 164, 0.3); }
-    /* line 109, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
+    border-left-color: rgba(66, 139, 202, 0.3); }
+    /* line 107, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
     #toc > ul > li > ul > li:hover, #toc > ul > li > ul > li.active {
-      background: rgba(94, 176, 164, 0.1);
-      border-left-color: #5eb0a4; }
-    /* line 114, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
+      background: rgba(66, 139, 202, 0.1);
+      border-left-color: #428bca; }
+    /* line 112, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
     #toc > ul > li > ul > li a {
-      color: #5eb0a4;
+      color: #428bca;
       padding-left: 40px;
       padding-top: 4px;
       padding-bottom: 4px; }
-  /* line 123, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
+  /* line 121, /Users/isaac/code/twix-pages/source/stylesheets/twix.scss */
   #toc > ul > li.active > ul > li {
     display: block; }
