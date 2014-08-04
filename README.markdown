@@ -16,7 +16,7 @@ t.count("days"); //=> 1
 
 And much more.
 
-##[Documentation](http://icambron.github.io/twix.js/)
+##[Documentation](http://icambron.github.io/twix.js/docs.html)
 
 ##Building##
 
