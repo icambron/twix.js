@@ -9,3 +9,8 @@ before_install:
 
 before_script:
   - make build
+
+branches:
+  only:
+    -master
+    -develop
