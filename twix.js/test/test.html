@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="../vendor/test/mocha.css" />
+
+  <body>
+    <div id="mocha"></div>
+
+    <script src="../vendor/test/mocha.js"></script>
+    <script>mocha.setup('bdd')</script>
+
+    <script src="../vendor/moment/moment.js"></script>
+    <script src="../vendor/moment/min/lang/de.js"></script>
+    <script src="../vendor/moment/min/lang/fr.js"></script>
+
+    <script src="../bin/twix.min.js"></script>
+    <script src="../bin/lang.js"></script>
+    <script src="bin/twix.spec.js"></script>
+
+    <script>
+      mocha.run();
+    </script>
+
+  </body>
+</html>

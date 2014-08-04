@@ -1,4 +1,0 @@
-markdown: redcarpet
-pygments: true
-source: src
-destination: build
