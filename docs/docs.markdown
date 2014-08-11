@@ -516,7 +516,7 @@ Here are all the options and their defaults
 }
 ```
 
-##Interationalization
+##Internationalization
 
 Moment supports a wide variety of languages, and if you set the language for moment (or individual moment instances), Twix will automatically use the localize formatting tokens. For example:
 
