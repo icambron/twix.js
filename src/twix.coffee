@@ -457,7 +457,7 @@ makeTwix = (moment) ->
       [start, end]
 
     _lazyLang: ->
-      langData = @start.locale()
+      langData = @start.localeData()
 
       @end.locale(langData._abbr) if langData? && @end.locale()._abbr != langData._abbr
 

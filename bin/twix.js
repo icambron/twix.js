@@ -28,7 +28,7 @@
   };
 
   makeTwix = function(moment) {
-    var Twix, getPrototypeOf, languagesLoaded;
+    var Twix, languagesLoaded;
     if (moment == null) {
       throw "Can't find moment";
     }
@@ -162,7 +162,7 @@
       };
 
       Twix.registerLang = function(name, options) {
-        return moment.lang(name, {
+        return moment.locale(name, {
           twix: Twix._extend({}, Twix.defaults, options)
         });
       };
@@ -709,9 +709,9 @@
 
       Twix.prototype._lazyLang = function() {
         var e, langData, languages, _ref;
-        langData = this.start.lang();
-        if ((langData != null) && this.end.lang()._abbr !== langData._abbr) {
-          this.end.lang(langData._abbr);
+        langData = this.start.localeData();
+        if ((langData != null) && this.end.locale()._abbr !== langData._abbr) {
+          this.end.locale(langData._abbr);
         }
         if ((this.langData != null) && this.langData._abbr === langData._abbr) {
           return;
@@ -775,16 +775,7 @@
       return Twix;
 
     })();
-    getPrototypeOf = function(o) {
-      if (typeof Object.getPrototypeOf === "function") {
-        return Object.getPrototypeOf(o);
-      } else if ("".__proto__ === String.prototype) {
-        return o.__proto__;
-      } else {
-        return o.constructor.prototype;
-      }
-    };
-    Twix._extend(moment._locale || getPrototypeOf(moment.fn._lang), {
+    Twix._extend(moment._locale, {
       _twix: Twix.defaults
     });
     Twix.formatTemplate = function(leftSide, rightSide) {
