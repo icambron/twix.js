@@ -84,7 +84,7 @@ makeTwix = (moment) ->
           if options.spaceBeforeMeridiem then " " else ""
 
     @registerLang: (name, options) ->
-      moment.lang name, twix: Twix._extend {}, Twix.defaults, options
+      moment.locale name, twix: Twix._extend {}, Twix.defaults, options
 
     # -- INFORMATIONAL --
     isSame: (period) -> @start.isSame @end, period
@@ -457,9 +457,9 @@ makeTwix = (moment) ->
       [start, end]
 
     _lazyLang: ->
-      langData = @start.lang()
+      langData = @start.locale()
 
-      @end.lang(langData._abbr) if langData? && @end.lang()._abbr != langData._abbr
+      @end.locale(langData._abbr) if langData? && @end.locale()._abbr != langData._abbr
 
       return if @langData? && @langData._abbr == langData._abbr
 
@@ -495,14 +495,7 @@ makeTwix = (moment) ->
     merge: deprecate "merge", "union(other)", (other) -> @union other
 
   # -- PLUGIN --
-  getPrototypeOf = (o) ->
-    if typeof Object.getPrototypeOf == "function"
-      Object.getPrototypeOf o
-    else if "".__proto__ == String.prototype
-      o.__proto__
-    else o.constructor.prototype
-
-  Twix._extend(moment._locale || getPrototypeOf(moment.fn._lang), _twix: Twix.defaults)
+  Twix._extend(moment._locale, _twix: Twix.defaults)
 
   Twix.formatTemplate = (leftSide, rightSide) -> "#{leftSide} - #{rightSide}"
 
