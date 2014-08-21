@@ -14,7 +14,38 @@ isArray = (input) ->
 makeTwix = (moment) ->
   throw "Can't find moment" unless moment?
 
-  languagesLoaded = false
+  locales = {}
+
+  loadLocale = (mom) ->
+    loc = mom.locale()
+    return locales[loc] if locales[loc]?
+
+    settings = mom.localeData()._longDateFormat
+    dateFormat = settings.LLLL.replace('LT', settings.LT)
+
+    locData = parseFormat(dateFormat)
+    locales[loc] = locData
+    locData
+
+  parseFormat = (format, options = {}) ->
+
+    #what i would give to be able to use [].reduce
+    results = {}
+
+    for elem, i in format.match(/(\W+)?[a-zA-Z]+/g)
+      matches = elem.match(/(\W*)(\w+)/)
+      if matches?
+        [_, pre, format] = matches
+        unitMaybe = moment.normalizeUnits(moment.normalizeUnits(format[0]))
+        unit = if unitMaybe == 'a' then 'meridiem' else unitMaybe
+        override = options[unit + "Format"]
+
+        results[unit] =
+          slot: i + 1
+          format: override || format
+          pre: pre
+
+    results
 
   class Twix
     constructor: (start, end, parseFormat, options = {}) ->
@@ -38,53 +69,8 @@ makeTwix = (moment) ->
           first[attr] = other[attr] unless typeof other[attr] == "undefined"
       first
 
-    @defaults:
-      twentyFourHour: false
-      allDaySimple:
-        fn: (options) -> () -> options.allDay
-        slot: 0
-        pre: " "
-      dayOfWeek:
-        fn: (options) -> (date) -> date.format options.weekdayFormat
-        slot: 1
-        pre: " "
-      allDayMonth:
-        fn: (options) -> (date) -> date.format "#{options.monthFormat} #{options.dayFormat}"
-        slot: 2
-        pre: " "
-      month:
-        fn: (options) -> (date) -> date.format options.monthFormat
-        slot: 2
-        pre: " "
-      date:
-        fn: (options) -> (date) -> date.format options.dayFormat
-        slot: 3
-        pre: " "
-      year:
-        fn: (options) -> (date) -> date.format options.yearFormat
-        slot: 4
-        pre: ", "
-      time:
-        fn: (options) -> (date) ->
-          str = if date.minutes() == 0 && options.implicitMinutes && !options.twentyFourHour
-                  date.format options.hourFormat
-                else
-                  date.format "#{options.hourFormat}:#{options.minuteFormat}"
-
-          if !options.groupMeridiems && !options.twentyFourHour
-            str += " " if options.spaceBeforeMeridiem
-            str += date.format options.meridiemFormat
-          str
-        slot: 5
-        pre: ", "
-      meridiem:
-        fn: (options) -> (t) => t.format options.meridiemFormat
-        slot: 6
-        pre: (options)->
-          if options.spaceBeforeMeridiem then " " else ""
-
     @registerLang: (name, options) ->
-      moment.lang name, twix: Twix._extend {}, Twix.defaults, options
+      moment.locale name, twix: Twix._extend {}, Twix.defaults, options
 
     # -- INFORMATIONAL --
     isSame: (period) -> @start.isSame @end, period
@@ -120,10 +106,10 @@ makeTwix = (moment) ->
 
       @_iterateHelper period, start, hasNext, intervalAmount
 
-    humanizeLength: ->
+    humanizeLength: (options = {}) ->
       if @allDay
         if @isSame "day"
-          "all day"
+          options.allDay || "all day"
         else
           @start.from(@end.clone().add(1, "day"), true)
       else
@@ -268,7 +254,6 @@ makeTwix = (moment) ->
       s
 
     format: (inopts) ->
-      @_lazyLang()
 
       return "" if @isEmpty()
 
@@ -277,16 +262,8 @@ makeTwix = (moment) ->
         spaceBeforeMeridiem: true
         showDate: true
         showDayOfWeek: false
-        twentyFourHour: @langData.twentyFourHour
         implicitMinutes: true
         implicitYear: true
-        yearFormat: "YYYY"
-        monthFormat: "MMM"
-        weekdayFormat: "ddd"
-        dayFormat: "D"
-        meridiemFormat: "A"
-        hourFormat: "h"
-        minuteFormat: "mm"
         allDay: "all day"
         explicitAllDay: false
         lastNightEndsAt: 0
@@ -294,124 +271,117 @@ makeTwix = (moment) ->
 
       Twix._extend options, (inopts || {})
 
-      fs = []
+      tokens = if options.parseFormat? then parseFormat(options.parseFormat) else loadLocale(@start, options)
 
-      options.hourFormat = options.hourFormat.replace("h", "H") if options.twentyFourHour
+      #options.hourFormat = options.hourFormat.replace("h", "H") if options.twentyFourHour
+
+      fs = []
 
       goesIntoTheMorning =
         options.lastNightEndsAt > 0 &&
         !@allDay &&
-        @end.clone().startOf("day").valueOf() == @start.clone().add(1, "day").startOf("day").valueOf() &&
+        @end.clone().startOf("d").valueOf() == @start.clone().add(1, "d").startOf("d").valueOf() &&
         @start.hours() > 12 &&
         @end.hours() < options.lastNightEndsAt
 
-      needDate = options.showDate || (!@isSame("day") && !goesIntoTheMorning)
+      needDate = options.showDate || (!@isSame("d") && !goesIntoTheMorning)
 
-      if @allDay && @isSame("day") && (!options.showDate || options.explicitAllDay)
+      simple = (name, overrides = {}) ->
+        item = tokens[name]
+        name: name
+        fn: overrides.fn || (date) -> date.format(item.format)
+        slot: overrides.slot || item.slot
+        pre: item.pre
+
+      if @allDay && @isSame("d") && (!options.showDate || options.explicitAllDay)
         fs.push
           name: "all day simple"
-          fn: @_formatFn('allDaySimple', options)
-          pre: @_formatPre('allDaySimple', options)
-          slot: @_formatSlot('allDaySimple')
+          fn: -> options.allDay
+          slot: 0
 
-      if needDate && (!options.implicitYear || @start.year() != moment().year() || !@isSame("year"))
-        fs.push
-          name: "year",
-          fn: @_formatFn('year', options)
-          pre: @_formatPre('year', options)
-          slot: @_formatSlot('year')
+      if needDate && (!options.implicitYear || @start.year() != moment().year() || !@isSame("y"))
+        fs.push(simple "year")
 
+      #make the month and date show up together even if the month is common
+      #todo - is this a good way to do this? are there languages where this isn't valid?
       if !@allDay && needDate
         fs.push
-          name: "all day month"
-          fn: @_formatFn('allDayMonth', options)
+          name: "bundled month/date"
+          fn: (date) ->
+            sorted = [tokens["month"], tokens["date"]].sort((a, b) -> a.format.slot - b.format.slot)
+            "#{date.format(sorted[0].format)} #{date.format(sorted[1].format)}"
+          pre: tokens["month"].pre
           ignoreEnd: -> goesIntoTheMorning
-          pre: @_formatPre('allDayMonth', options)
-          slot: @_formatSlot('allDayMonth')
+          slot: tokens["month"].slot
 
       if @allDay && needDate
-        fs.push
-          name: "month"
-          fn: @_formatFn('month', options)
-          pre: @_formatPre('month', options)
-          slot: @_formatSlot('month')
-
-      if @allDay && needDate
-        fs.push
-          name: "date"
-          fn: @_formatFn('date', options)
-          pre: @_formatPre('date', options)
-          slot: @_formatSlot('date')
+        fs.push(simple "month")
+        fs.push(simple "date")
 
       if needDate && options.showDayOfWeek
-        fs.push
-          name: "day of week",
-          fn: @_formatFn('dayOfWeek', options)
-          pre: @_formatPre('dayOfWeek', options)
-          slot: @_formatSlot('dayOfWeek')
+        fs.push(simple "day")
 
       if options.groupMeridiems && !options.twentyFourHour && !@allDay
-        fs.push
-          name: "meridiem",
-          fn: @_formatFn('meridiem', options)
-          pre: @_formatPre('meridiem', options)
-          slot: @_formatSlot('meridiem')
+        fs.push(simple "meridiem")
 
       if !@allDay
-        fs.push
-          name: "time",
-          fn: @_formatFn('time', options)
-          pre: @_formatPre('time', options)
-          slot: @_formatSlot('time')
+        fs.push(simple "hour")
+        fs.push(simple "minute", fn:
+          (date) ->
+            if date.minutes() == 0 && options.implicitMinutes && !options.twentyFourHour
+                null
+            else
+              date.format tokens["minute"].format
+        )
 
-      start_bucket = []
-      end_bucket = []
-      common_bucket = []
+      startBucket = []
+      endBucket = []
+      commonBucket = []
       together = true
 
-      process = (format) =>
-        start_str = format.fn @start
+      for format in fs
+        do =>
+          startStr = format.fn @start
+          endStr = if format.ignoreEnd?() then startStr else format.fn @end
+          startGroup = {format: format, value: -> startStr}
 
-        end_str = if format.ignoreEnd && format.ignoreEnd()
-                    start_str
-                  else format.fn @end
+          if endStr == startStr && together
+            commonBucket.push startGroup
+          else
+            if together
+              together = false
+              commonBucket.push {
+                format: {slot: format.slot, pre: ""}
+                value: -> options.template(fold(startBucket), fold(endBucket, true).trim())
+              }
 
-        start_group = {format: format, value: -> start_str}
+            startBucket.push startGroup
+            endBucket.push {format: format, value: -> endStr}
 
-        if end_str == start_str && together
-          common_bucket.push start_group
-        else
-          if together
-            together = false
-            common_bucket.push {
-              format: {slot: format.slot, pre: ""}
-              value: -> options.template(fold(start_bucket), fold(end_bucket, true).trim())
-            }
-
-          start_bucket.push start_group
-          end_bucket.push {format: format, value: -> end_str}
-
-      process format for format in fs
-
-      global_first = true
-      fold = (array, skip_pre) =>
-        local_first = true
+      globalFirst = true
+      fold = (array, skipPre) =>
+        localFirst = true
         str = ""
+
         for section in array.sort((a, b) -> a.format.slot - b.format.slot)
 
-          unless global_first
-            if local_first && skip_pre
-              str += " "
-            else
-              str += section.format.pre
+          val = section.value()
 
-          str += section.value()
+          if val != null
 
-          global_first = false
-          local_first = false
+            unless globalFirst
+              if localFirst && skipPre
+                str += " "
+              else
+                str += section.format.pre
+
+            str += val
+
+            globalFirst = false
+            localFirst = false
         str
 
-      fold common_bucket
+      fold commonBucket
 
     # -- INTERNAL
     _iterateHelper: (period, iter, hasNext, intervalAmount = 1) ->
@@ -456,35 +426,6 @@ makeTwix = (moment) ->
 
       [start, end]
 
-    _lazyLang: ->
-      langData = @start.lang()
-
-      @end.lang(langData._abbr) if langData? && @end.lang()._abbr != langData._abbr
-
-      return if @langData? && @langData._abbr == langData._abbr
-
-      if hasModule && !(languagesLoaded || langData._abbr == "en")
-        try
-          languages = require "./lang"
-          languages moment, Twix
-        catch e
-
-        languagesLoaded = true
-
-      @langData = langData?._twix ? Twix.defaults
-
-    _formatFn: (name, options) ->
-      @langData[name].fn(options)
-
-    _formatSlot: (name) ->
-      @langData[name].slot
-
-    _formatPre: (name, options) ->
-      if typeof @langData[name].pre == "function"
-        @langData[name].pre(options)
-      else
-        @langData[name].pre
-
     # -- DEPRECATED METHODS --
     sameDay: deprecate "sameDay", "isSame('day')", -> @isSame "day"
     sameYear: deprecate "sameYear", "isSame('year')", -> @isSame "year"
@@ -495,14 +436,8 @@ makeTwix = (moment) ->
     merge: deprecate "merge", "union(other)", (other) -> @union other
 
   # -- PLUGIN --
-  getPrototypeOf = (o) ->
-    if typeof Object.getPrototypeOf == "function"
-      Object.getPrototypeOf o
-    else if "".__proto__ == String.prototype
-      o.__proto__
-    else o.constructor.prototype
 
-  Twix._extend(moment._locale || getPrototypeOf(moment.fn._lang), _twix: Twix.defaults)
+  Twix._extend(moment._locale, _twix: Twix.defaults)
 
   Twix.formatTemplate = (leftSide, rightSide) -> "#{leftSide} - #{rightSide}"
 

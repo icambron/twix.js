@@ -28,11 +28,47 @@
   };
 
   makeTwix = function(moment) {
-    var Twix, getPrototypeOf, languagesLoaded;
+    var Twix, loadLocale, locales, parseFormat;
     if (moment == null) {
       throw "Can't find moment";
     }
-    languagesLoaded = false;
+    locales = {};
+    loadLocale = function(mom) {
+      var dateFormat, loc, locData, settings;
+      loc = mom.locale();
+      if (locales[loc] != null) {
+        return locales[loc];
+      }
+      settings = mom.localeData()._longDateFormat;
+      dateFormat = settings.LLLL.replace('LT', settings.LT);
+      locData = parseFormat(dateFormat);
+      locales[loc] = locData;
+      return locData;
+    };
+    parseFormat = function(format, options) {
+      var elem, i, matches, override, pre, results, unit, unitMaybe, _, _i, _len, _ref;
+      if (options == null) {
+        options = {};
+      }
+      results = {};
+      _ref = format.match(/(\W+)?[a-zA-Z]+/g);
+      for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+        elem = _ref[i];
+        matches = elem.match(/(\W*)(\w+)/);
+        if (matches != null) {
+          _ = matches[0], pre = matches[1], format = matches[2];
+          unitMaybe = moment.normalizeUnits(moment.normalizeUnits(format[0]));
+          unit = unitMaybe === 'a' ? 'meridiem' : unitMaybe;
+          override = options[unit + "Format"];
+          results[unit] = {
+            slot: i + 1,
+            format: override || format,
+            pre: pre
+          };
+        }
+      }
+      return results;
+    };
     Twix = (function() {
       function Twix(start, end, parseFormat, options) {
         var _ref;
@@ -69,100 +105,8 @@
         return first;
       };
 
-      Twix.defaults = {
-        twentyFourHour: false,
-        allDaySimple: {
-          fn: function(options) {
-            return function() {
-              return options.allDay;
-            };
-          },
-          slot: 0,
-          pre: " "
-        },
-        dayOfWeek: {
-          fn: function(options) {
-            return function(date) {
-              return date.format(options.weekdayFormat);
-            };
-          },
-          slot: 1,
-          pre: " "
-        },
-        allDayMonth: {
-          fn: function(options) {
-            return function(date) {
-              return date.format("" + options.monthFormat + " " + options.dayFormat);
-            };
-          },
-          slot: 2,
-          pre: " "
-        },
-        month: {
-          fn: function(options) {
-            return function(date) {
-              return date.format(options.monthFormat);
-            };
-          },
-          slot: 2,
-          pre: " "
-        },
-        date: {
-          fn: function(options) {
-            return function(date) {
-              return date.format(options.dayFormat);
-            };
-          },
-          slot: 3,
-          pre: " "
-        },
-        year: {
-          fn: function(options) {
-            return function(date) {
-              return date.format(options.yearFormat);
-            };
-          },
-          slot: 4,
-          pre: ", "
-        },
-        time: {
-          fn: function(options) {
-            return function(date) {
-              var str;
-              str = date.minutes() === 0 && options.implicitMinutes && !options.twentyFourHour ? date.format(options.hourFormat) : date.format("" + options.hourFormat + ":" + options.minuteFormat);
-              if (!options.groupMeridiems && !options.twentyFourHour) {
-                if (options.spaceBeforeMeridiem) {
-                  str += " ";
-                }
-                str += date.format(options.meridiemFormat);
-              }
-              return str;
-            };
-          },
-          slot: 5,
-          pre: ", "
-        },
-        meridiem: {
-          fn: function(options) {
-            return (function(_this) {
-              return function(t) {
-                return t.format(options.meridiemFormat);
-              };
-            })(this);
-          },
-          slot: 6,
-          pre: function(options) {
-            if (options.spaceBeforeMeridiem) {
-              return " ";
-            } else {
-              return "";
-            }
-          }
-        }
-      };
-
       Twix.registerLang = function(name, options) {
-        return moment.lang(name, {
+        return moment.locale(name, {
           twix: Twix._extend({}, Twix.defaults, options)
         });
       };
@@ -220,10 +164,13 @@
         return this._iterateHelper(period, start, hasNext, intervalAmount);
       };
 
-      Twix.prototype.humanizeLength = function() {
+      Twix.prototype.humanizeLength = function(options) {
+        if (options == null) {
+          options = {};
+        }
         if (this.allDay) {
           if (this.isSame("day")) {
-            return "all day";
+            return options.allDay || "all day";
           } else {
             return this.start.from(this.end.clone().add(1, "day"), true);
           }
@@ -472,8 +419,7 @@
       };
 
       Twix.prototype.format = function(inopts) {
-        var common_bucket, end_bucket, fold, format, fs, global_first, goesIntoTheMorning, needDate, options, process, start_bucket, together, _i, _len;
-        this._lazyLang();
+        var commonBucket, endBucket, fold, format, fs, globalFirst, goesIntoTheMorning, needDate, options, simple, startBucket, together, tokens, _fn, _i, _len;
         if (this.isEmpty()) {
           return "";
         }
@@ -482,130 +428,119 @@
           spaceBeforeMeridiem: true,
           showDate: true,
           showDayOfWeek: false,
-          twentyFourHour: this.langData.twentyFourHour,
           implicitMinutes: true,
           implicitYear: true,
-          yearFormat: "YYYY",
-          monthFormat: "MMM",
-          weekdayFormat: "ddd",
-          dayFormat: "D",
-          meridiemFormat: "A",
-          hourFormat: "h",
-          minuteFormat: "mm",
           allDay: "all day",
           explicitAllDay: false,
           lastNightEndsAt: 0,
           template: Twix.formatTemplate
         };
         Twix._extend(options, inopts || {});
+        tokens = options.parseFormat != null ? parseFormat(options.parseFormat) : loadLocale(this.start, options);
         fs = [];
-        if (options.twentyFourHour) {
-          options.hourFormat = options.hourFormat.replace("h", "H");
-        }
-        goesIntoTheMorning = options.lastNightEndsAt > 0 && !this.allDay && this.end.clone().startOf("day").valueOf() === this.start.clone().add(1, "day").startOf("day").valueOf() && this.start.hours() > 12 && this.end.hours() < options.lastNightEndsAt;
-        needDate = options.showDate || (!this.isSame("day") && !goesIntoTheMorning);
-        if (this.allDay && this.isSame("day") && (!options.showDate || options.explicitAllDay)) {
+        goesIntoTheMorning = options.lastNightEndsAt > 0 && !this.allDay && this.end.clone().startOf("d").valueOf() === this.start.clone().add(1, "d").startOf("d").valueOf() && this.start.hours() > 12 && this.end.hours() < options.lastNightEndsAt;
+        needDate = options.showDate || (!this.isSame("d") && !goesIntoTheMorning);
+        simple = function(name, overrides) {
+          var item;
+          if (overrides == null) {
+            overrides = {};
+          }
+          item = tokens[name];
+          return {
+            name: name,
+            fn: overrides.fn || function(date) {
+              return date.format(item.format);
+            },
+            slot: overrides.slot || item.slot,
+            pre: item.pre
+          };
+        };
+        if (this.allDay && this.isSame("d") && (!options.showDate || options.explicitAllDay)) {
           fs.push({
             name: "all day simple",
-            fn: this._formatFn('allDaySimple', options),
-            pre: this._formatPre('allDaySimple', options),
-            slot: this._formatSlot('allDaySimple')
+            fn: function() {
+              return options.allDay;
+            },
+            slot: 0
           });
         }
-        if (needDate && (!options.implicitYear || this.start.year() !== moment().year() || !this.isSame("year"))) {
-          fs.push({
-            name: "year",
-            fn: this._formatFn('year', options),
-            pre: this._formatPre('year', options),
-            slot: this._formatSlot('year')
-          });
+        if (needDate && (!options.implicitYear || this.start.year() !== moment().year() || !this.isSame("y"))) {
+          fs.push(simple("year"));
         }
         if (!this.allDay && needDate) {
           fs.push({
-            name: "all day month",
-            fn: this._formatFn('allDayMonth', options),
+            name: "bundled month/date",
+            fn: function(date) {
+              var sorted;
+              sorted = [tokens["month"], tokens["date"]].sort(function(a, b) {
+                return a.format.slot - b.format.slot;
+              });
+              return "" + (date.format(sorted[0].format)) + " " + (date.format(sorted[1].format));
+            },
+            pre: tokens["month"].pre,
             ignoreEnd: function() {
               return goesIntoTheMorning;
             },
-            pre: this._formatPre('allDayMonth', options),
-            slot: this._formatSlot('allDayMonth')
+            slot: tokens["month"].slot
           });
         }
         if (this.allDay && needDate) {
-          fs.push({
-            name: "month",
-            fn: this._formatFn('month', options),
-            pre: this._formatPre('month', options),
-            slot: this._formatSlot('month')
-          });
-        }
-        if (this.allDay && needDate) {
-          fs.push({
-            name: "date",
-            fn: this._formatFn('date', options),
-            pre: this._formatPre('date', options),
-            slot: this._formatSlot('date')
-          });
+          fs.push(simple("month"));
+          fs.push(simple("date"));
         }
         if (needDate && options.showDayOfWeek) {
-          fs.push({
-            name: "day of week",
-            fn: this._formatFn('dayOfWeek', options),
-            pre: this._formatPre('dayOfWeek', options),
-            slot: this._formatSlot('dayOfWeek')
-          });
+          fs.push(simple("day"));
         }
         if (options.groupMeridiems && !options.twentyFourHour && !this.allDay) {
-          fs.push({
-            name: "meridiem",
-            fn: this._formatFn('meridiem', options),
-            pre: this._formatPre('meridiem', options),
-            slot: this._formatSlot('meridiem')
-          });
+          fs.push(simple("meridiem"));
         }
         if (!this.allDay) {
-          fs.push({
-            name: "time",
-            fn: this._formatFn('time', options),
-            pre: this._formatPre('time', options),
-            slot: this._formatSlot('time')
-          });
+          fs.push(simple("hour"));
+          fs.push(simple("minute", {
+            fn: function(date) {
+              if (date.minutes() === 0 && options.implicitMinutes && !options.twentyFourHour) {
+                return null;
+              } else {
+                return date.format(tokens["minute"].format);
+              }
+            }
+          }));
         }
-        start_bucket = [];
-        end_bucket = [];
-        common_bucket = [];
+        startBucket = [];
+        endBucket = [];
+        commonBucket = [];
         together = true;
-        process = (function(_this) {
-          return function(format) {
-            var end_str, start_group, start_str;
-            start_str = format.fn(_this.start);
-            end_str = format.ignoreEnd && format.ignoreEnd() ? start_str : format.fn(_this.end);
-            start_group = {
+        _fn = (function(_this) {
+          return function() {
+            var endStr, startGroup, startStr;
+            startStr = format.fn(_this.start);
+            endStr = (typeof format.ignoreEnd === "function" ? format.ignoreEnd() : void 0) ? startStr : format.fn(_this.end);
+            startGroup = {
               format: format,
               value: function() {
-                return start_str;
+                return startStr;
               }
             };
-            if (end_str === start_str && together) {
-              return common_bucket.push(start_group);
+            if (endStr === startStr && together) {
+              return commonBucket.push(startGroup);
             } else {
               if (together) {
                 together = false;
-                common_bucket.push({
+                commonBucket.push({
                   format: {
                     slot: format.slot,
                     pre: ""
                   },
                   value: function() {
-                    return options.template(fold(start_bucket), fold(end_bucket, true).trim());
+                    return options.template(fold(startBucket), fold(endBucket, true).trim());
                   }
                 });
               }
-              start_bucket.push(start_group);
-              return end_bucket.push({
+              startBucket.push(startGroup);
+              return endBucket.push({
                 format: format,
                 value: function() {
-                  return end_str;
+                  return endStr;
                 }
               });
             }
@@ -613,34 +548,37 @@
         })(this);
         for (_i = 0, _len = fs.length; _i < _len; _i++) {
           format = fs[_i];
-          process(format);
+          _fn();
         }
-        global_first = true;
+        globalFirst = true;
         fold = (function(_this) {
-          return function(array, skip_pre) {
-            var local_first, section, str, _j, _len1, _ref;
-            local_first = true;
+          return function(array, skipPre) {
+            var localFirst, section, str, val, _j, _len1, _ref;
+            localFirst = true;
             str = "";
             _ref = array.sort(function(a, b) {
               return a.format.slot - b.format.slot;
             });
             for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
               section = _ref[_j];
-              if (!global_first) {
-                if (local_first && skip_pre) {
-                  str += " ";
-                } else {
-                  str += section.format.pre;
+              val = section.value();
+              if (val !== null) {
+                if (!globalFirst) {
+                  if (localFirst && skipPre) {
+                    str += " ";
+                  } else {
+                    str += section.format.pre;
+                  }
                 }
+                str += val;
+                globalFirst = false;
+                localFirst = false;
               }
-              str += section.value();
-              global_first = false;
-              local_first = false;
             }
             return str;
           };
         })(this);
-        return fold(common_bucket);
+        return fold(commonBucket);
       };
 
       Twix.prototype._iterateHelper = function(period, iter, hasNext, intervalAmount) {
@@ -707,43 +645,6 @@
         return [start, end];
       };
 
-      Twix.prototype._lazyLang = function() {
-        var e, langData, languages, _ref;
-        langData = this.start.lang();
-        if ((langData != null) && this.end.lang()._abbr !== langData._abbr) {
-          this.end.lang(langData._abbr);
-        }
-        if ((this.langData != null) && this.langData._abbr === langData._abbr) {
-          return;
-        }
-        if (hasModule && !(languagesLoaded || langData._abbr === "en")) {
-          try {
-            languages = require("./lang");
-            languages(moment, Twix);
-          } catch (_error) {
-            e = _error;
-          }
-          languagesLoaded = true;
-        }
-        return this.langData = (_ref = langData != null ? langData._twix : void 0) != null ? _ref : Twix.defaults;
-      };
-
-      Twix.prototype._formatFn = function(name, options) {
-        return this.langData[name].fn(options);
-      };
-
-      Twix.prototype._formatSlot = function(name) {
-        return this.langData[name].slot;
-      };
-
-      Twix.prototype._formatPre = function(name, options) {
-        if (typeof this.langData[name].pre === "function") {
-          return this.langData[name].pre(options);
-        } else {
-          return this.langData[name].pre;
-        }
-      };
-
       Twix.prototype.sameDay = deprecate("sameDay", "isSame('day')", function() {
         return this.isSame("day");
       });
@@ -775,16 +676,7 @@
       return Twix;
 
     })();
-    getPrototypeOf = function(o) {
-      if (typeof Object.getPrototypeOf === "function") {
-        return Object.getPrototypeOf(o);
-      } else if ("".__proto__ === String.prototype) {
-        return o.__proto__;
-      } else {
-        return o.constructor.prototype;
-      }
-    };
-    Twix._extend(moment._locale || getPrototypeOf(moment.fn._lang), {
+    Twix._extend(moment._locale, {
       _twix: Twix.defaults
     });
     Twix.formatTemplate = function(leftSide, rightSide) {

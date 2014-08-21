@@ -475,6 +475,9 @@ test = (moment, Twix) ->
       it "formats multiday correctly", ->
         assertEqual("3 days", new Twix("1982-05-25", "1982-05-27", true).humanizeLength())
 
+      it "allows you to override the all-day text", ->
+        assertEqual("dude", new Twix("1982-05-25", "1982-05-25", true).humanizeLength(allDay: 'dude'))
+
     describe "non-all-day ranges", ->
       it "formats single-day correctly", ->
         assertEqual("4 hours", thatDay("12:00", "16:00").humanizeLength())
@@ -1158,34 +1161,34 @@ test = (moment, Twix) ->
       test "different year, different day shows everything",
         start: "1982-05-25T05:30"
         end: "1983-05-26T15:30"
-        result: "May 25, 1982, 5:30 AM - May 26, 1983, 3:30 PM"
+        result: "May 25, 1982 5:30 AM - May 26, 1983 3:30 PM"
 
       test "this year, different day skips year",
         start: thisYear("05-25", "05:30")
         end: thisYear("05-26", "15:30")
-        result: "May 25, 5:30 AM - May 26, 3:30 PM"
+        result: "May 25 5:30 AM - May 26 3:30 PM"
 
       test "this year, different day shows year if requested",
         start: thisYear("05-25", "05:30")
         end: thisYear("05-26", "15:30")
         options: {implicitYear: false}
-        result: "May 25, 5:30 AM - May 26, 3:30 PM, #{new Date().getFullYear() }"
+        result: "May 25 5:30 AM - May 26 3:30 PM, #{new Date().getFullYear() }"
 
       test "same day, different times shows date once",
         start: "1982-05-25 05:30"
         end: "1982-05-25 15:30"
-        result: "May 25, 1982, 5:30 AM - 3:30 PM"
+        result: "May 25, 1982 5:30 AM - 3:30 PM"
 
       test "same day, different times, same meridian shows date and meridiem once",
         start: "1982-05-25T05:30"
         end: "1982-05-25T06:30"
-        result: "May 25, 1982, 5:30 - 6:30 AM"
+        result: "May 25, 1982 5:30 - 6:30 AM"
 
       test "custom month format for regular range",
         start: "2010-08-25T05:30"
         end: "2010-08-25T06:30"
         options: {monthFormat: "MMMM"}
-        result: "August 25, 2010, 5:30 - 6:30 AM"
+        result: "August 25, 2010 5:30 - 6:30 AM"
 
       test "custom month format for all day range",
         start: "2010-08-25"
@@ -1198,19 +1201,19 @@ test = (moment, Twix) ->
       test "round hour doesn't show :00",
         start: "1982-05-25T05:00"
         end: "1982-05-25T07:00"
-        result: "May 25, 1982, 5 - 7 AM"
+        result: "May 25, 1982 5 - 7 AM"
 
       test "mixed times still shows :30",
         start: "1982-05-25T05:00"
         end: "1982-05-25T05:30"
-        result: "May 25, 1982, 5 - 5:30 AM"
+        result: "May 25, 1982 5 - 5:30 AM"
 
     describe "implicit minutes", ->
       test "still shows the :00",
         start: thisYear "05-25", "05:00"
         end: thisYear "05-25", "07:00"
         options: {implicitMinutes: false}
-        result: "May 25, 5:00 - 7:00 AM"
+        result: "May 25 5:00 - 7:00 AM"
 
     describe "all day ranges", ->
 
@@ -1218,7 +1221,7 @@ test = (moment, Twix) ->
         start: "2010-08-25"
         end: "2010-08-25"
         allDay: true
-        result: "Aug 25, 2010"
+        result: "August 25, 2010"
 
       test "same month says month on one side",
         start: thisYear("05-25")
@@ -1237,14 +1240,14 @@ test = (moment, Twix) ->
         start: thisYear("05-25")
         end: thisYear("06-01")
         allDay: true
-        result: "May 25 - Jun 1"
+        result: "May 25 - June 1"
 
       test "different month shows both, with year if requested",
         start: thisYear("05-25")
         end: thisYear("06-01")
         allDay: true
         options: {implicitYear: false}
-        result: "May 25 - Jun 1, #{ (new Date).getFullYear() }"
+        result: "May 25 - June 1, #{ (new Date).getFullYear() }"
 
       test "explicit year shows the year once",
         start: "1982-05-25"
@@ -1262,14 +1265,14 @@ test = (moment, Twix) ->
         start: "1982-05-25"
         end: "1983-06-01"
         allDay: true
-        result: "May 25, 1982 - Jun 1, 1983"
+        result: "May 25, 1982 - June 1, 1983"
 
       test "explicit allDay",
         start: "1982-05-25"
         end: "1982-05-25"
         allDay: true
         options: {explicitAllDay: true}
-        result: "all day May 25, 1982"
+        result: "all day, May 25, 1982"
 
     describe "no single dates", ->
       test "shouldn't show dates for intraday",
@@ -1282,7 +1285,7 @@ test = (moment, Twix) ->
         start: thisYear "05-25", "05:30"
         end: thisYear "05-27", "06:30"
         options: {showDate : false}
-        result: "May 25, 5:30 AM - May 27, 6:30 AM"
+        result: "May 25 5:30 AM - May 27 6:30 AM"
 
       test "should just say 'all day' for all day rangess",
         start: thisYear("05-25")
@@ -1296,33 +1299,33 @@ test = (moment, Twix) ->
         start: thisYear "05-25", "05:30"
         end: thisYear "05-25", "07:30"
         options: {groupMeridiems: false}
-        result: "May 25, 5:30 AM - 7:30 AM"
+        result: "May 25 5:30 AM - 7:30 AM"
 
       test "even with abbreviated hours",
         start: thisYear "05-25", "19:00"
         end: thisYear "05-25", "21:00"
         options: {groupMeridiems: false}
-        result: "May 25, 7 PM - 9 PM"
+        result: "May 25 7 PM - 9 PM"
 
     describe "no meridiem spaces", ->
       test "should skip the meridiem space",
         start: thisYear "05-25", "05:30"
         end: thisYear "05-25", "07:30"
         options: {spaceBeforeMeridiem: false, groupMeridiems: false}
-        result: "May 25, 5:30AM - 7:30AM"
+        result: "May 25 5:30AM - 7:30AM"
 
     describe "24 hours", ->
       test "shouldn't show meridians",
         start: thisYear "05-25", "05:30"
         end: thisYear "05-25", "19:30"
         options: {twentyFourHour: true},
-        result: "May 25, 5:30 - 19:30"
+        result: "May 25 5:30 - 19:30"
 
       test "always shows the :00",
         start: thisYear "05-25", "12:00"
         end: thisYear "05-25", "15:00"
         options: {twentyFourHour: true},
-        result: "May 25, 12:00 - 15:00"
+        result: "May 25 12:00 - 15:00"
 
     describe "show day of week", ->
 
@@ -1330,7 +1333,7 @@ test = (moment, Twix) ->
         start: "2013-05-25T05:30"
         end: "2013-05-28T19:30"
         options: {showDayOfWeek: true}
-        result: "Sat May 25, 5:30 AM - Tue May 28, 7:30 PM, 2013"
+        result: "Sat May 25 5:30 AM - Tue May 28 7:30 PM, 2013"
 
       test "should show day of week, specify day of week format",
         start: "2013-08-25T05:30"
@@ -1342,14 +1345,14 @@ test = (moment, Twix) ->
         start: "2013-05-25T05:30"
         end: "2013-05-25T19:30"
         options: {showDayOfWeek: true}
-        result: "Sat May 25, 2013, 5:30 AM - 7:30 PM"
+        result: "Sat May 25 2013, 5:30 AM - 7:30 PM"
 
       test "doesn't collapse with one week of separation",
         start: "2013-05-25"
         end: "2013-06-01"
         allDay: true
         options: {showDayOfWeek: true}
-        result: "Sat May 25 - Sat Jun 1, 2013"
+        result: "Sat May 25 - Sat June 1, 2013"
 
     describe "goes into the morning", ->
 
@@ -1363,7 +1366,7 @@ test = (moment, Twix) ->
         start: "1982-05-25 17:00"
         end: "1982-05-26 10:00"
         options: {lastNightEndsAt: 5},
-        result: "May 25, 5 PM - May 26, 10 AM, 1982"
+        result: "May 25 5 PM - May 26, 10 AM, 1982"
 
       test "morning start is adjustable",
         start: "1982-05-25 17:00"
@@ -1375,7 +1378,7 @@ test = (moment, Twix) ->
         start: "1982-05-25 05:00"
         end: "1982-05-26 04:00"
         options: {lastNightEndsAt: 5},
-        result: "May 25, 5 AM - May 26, 4 AM, 1982"
+        result: "May 25 5 AM - May 26 4 AM, 1982"
 
       describe "and we're trying to hide the date", ->
 
@@ -1389,27 +1392,27 @@ test = (moment, Twix) ->
           start: "1982-05-25 17:00"
           end: "1982-05-26 10:00"
           options: {lastNightEndsAt: 5},
-          result: "May 25, 5 PM - May 26, 10 AM, 1982"
+          result: "May 25 5 PM - May 26, 10 AM, 1982"
 
       describe "other options", ->
         it "accepts a custom format", ->
           start: "1982-05-25 17:00"
           end: "1982-05-26 10:00"
           options: {template: (first, second) -> "#{first} | #{second}"}
-          result: "May 25, 5 PM | May 26, 10 AM, 1982"
+          result: "May 25 5 PM | May 26, 10 AM, 1982"
 
   describe "internationalization", ->
     it "uses alternative language when specified by moment", ->
       start = moment("1982-05-25").lang "fr"
       range = start.twix(start.clone().add 1, 'days')
 
-      assertEqual '25 mai, 0:00 - 26 mai, 0:00, 1982', range.format()
+      assertEqual '25 mai 0:00 - 26 mai, 0:00, 1982', range.format()
 
     it "uses English formatting rules when there's no format for the specified language", ->
       start = moment("1982-10-14").lang "de"
       range = start.twix(start.clone().add 1, 'days')
 
-      assertEqual 'Okt. 14, 12 AM - Okt. 15, 12 AM, 1982', range.format()
+      assertEqual 'Okt. 14 12 AM - Okt. 15 12 AM, 1982', range.format()
 
 if define?
   define(["moment", "twix"], (moment, Twix) -> test moment, Twix)
