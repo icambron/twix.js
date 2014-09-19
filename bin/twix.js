@@ -352,7 +352,7 @@
               if (last && last.end.isSame(start)) {
                 last.end = other.time;
               } else {
-                endTime = allDay ? other.time.subtract(1, 'd') : other.time;
+                endTime = allDay ? other.time.clone().subtract(1, 'd') : other.time;
                 t = new Twix(start, endTime, allDay);
                 if (!t.isEmpty()) {
                   results.push(t);

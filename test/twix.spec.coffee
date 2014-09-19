@@ -1006,6 +1006,22 @@ test = (moment, Twix) ->
         assertEqual 1, exed.length
         assertTwixEqual new Twix("1982-05-24", "1982-05-24", true), exed[0]
 
+      it "doesn't mutate its inputs", ->
+        first = new Twix "1982-05-24", "1982-05-25", true
+        second = new Twix "1982-05-25", "1982-05-27", true
+
+        firstStart = first._trueStart.clone()
+        firstEnd = first._trueEnd.clone()
+        secondStart = second._trueStart.clone()
+        secondEnd = second._trueEnd.clone()
+
+        first.difference(second)
+
+        assertMomentEqual firstStart, first._trueStart
+        assertMomentEqual firstEnd, first._trueEnd
+        assertMomentEqual secondStart, second._trueStart
+        assertMomentEqual secondEnd, second._trueEnd
+
     describe "multiple ranges", ->
       it "returns the difference of three ranges", ->
         tween = thatDay "10:00", "13:00"

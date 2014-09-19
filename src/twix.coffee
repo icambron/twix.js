@@ -205,7 +205,7 @@ makeTwix = (moment) ->
               last.end = other.time
             else
               #because we used the diffable end, we have to subtract back off a day. blech
-              endTime = if allDay then other.time.subtract(1, 'd') else other.time
+              endTime = if allDay then other.time.clone().subtract(1, 'd') else other.time
               t = new Twix(start, endTime, allDay)
               results.push(t) if !t.isEmpty()
           start = null
