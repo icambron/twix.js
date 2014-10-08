@@ -108,7 +108,7 @@ makeTwix = (moment) ->
 
       start = @_trueStart.clone().startOf period
       end = @_trueEnd.clone().startOf period
-      hasNext = => (!@allDay && start <= end && (!minHours || !start.isSame(end) || @end.hours() > minHours)) || (@allDay && start < end)
+      hasNext = => (start <= end && (!minHours || !start.isSame(end) || @end.hours() > minHours || @allDay))
 
       @_iterateHelper period, start, hasNext, intervalAmount
 
