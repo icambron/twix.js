@@ -308,8 +308,8 @@ test = (moment, Twix) ->
         assertEqual null, iter.next()
 
       it "provides 366 days if the range is a year", ->
-        start = thisYear "05-25", "16:00"
-        end = thisYear("05-25", "03:00").add 1, "year"
+        start = moment "2014-05-25", "16:00"
+        end = moment("2014-05-25", "03:00").add 1, "year"
         iter = start.twix(end).iterate "days"
         results = while iter.hasNext()
           iter.next()
