@@ -14,7 +14,7 @@ isArray = (input) ->
 makeTwix = (moment) ->
   throw "Can't find moment" unless moment?
 
-  languagesLoaded = false
+  localesLoaded = false
 
   class Twix
     constructor: (start, end, parseFormat, options = {}) ->
@@ -83,7 +83,7 @@ makeTwix = (moment) ->
         pre: (options)->
           if options.spaceBeforeMeridiem then " " else ""
 
-    @registerLang: (name, options) ->
+    @registerLocale: (name, options) ->
       moment.locale name, twix: Twix._extend {}, Twix.defaults, options
 
     # -- INFORMATIONAL --
@@ -268,7 +268,7 @@ makeTwix = (moment) ->
       s
 
     format: (inopts) ->
-      @_lazyLang()
+      @_lazyLocale()
 
       return "" if @isEmpty()
 
@@ -277,7 +277,7 @@ makeTwix = (moment) ->
         spaceBeforeMeridiem: true
         showDate: true
         showDayOfWeek: false
-        twentyFourHour: @langData.twentyFourHour
+        twentyFourHour: @localeData.twentyFourHour
         implicitMinutes: true
         implicitYear: true
         yearFormat: "YYYY"
@@ -456,34 +456,34 @@ makeTwix = (moment) ->
 
       [start, end]
 
-    _lazyLang: ->
-      langData = @start.localeData()
+    _lazyLocale: ->
+      localeData = @start.localeData()
 
-      @end.locale(langData._abbr) if langData? && @end.locale()._abbr != langData._abbr
+      @end.locale(localeData._abbr) if localeData? && @end.locale()._abbr != localeData._abbr
 
-      return if @langData? && @langData._abbr == langData._abbr
+      return if @localeData? && @localeData._abbr == localeData._abbr
 
-      if hasModule && !(languagesLoaded || langData._abbr == "en")
+      if hasModule && !(localesLoaded || localeData._abbr == "en")
         try
-          languages = require "./lang"
-          languages moment, Twix
+          locales = require "./locale"
+          locales moment, Twix
         catch e
 
-        languagesLoaded = true
+        localesLoaded = true
 
-      @langData = langData?._twix ? Twix.defaults
+      @localeData = localeData?._twix ? Twix.defaults
 
     _formatFn: (name, options) ->
-      @langData[name].fn(options)
+      @localeData[name].fn(options)
 
     _formatSlot: (name) ->
-      @langData[name].slot
+      @localeData[name].slot
 
     _formatPre: (name, options) ->
-      if typeof @langData[name].pre == "function"
-        @langData[name].pre(options)
+      if typeof @localeData[name].pre == "function"
+        @localeData[name].pre(options)
       else
-        @langData[name].pre
+        @localeData[name].pre
 
     # -- DEPRECATED METHODS --
     sameDay: deprecate "sameDay", "isSame('day')", -> @isSame "day"

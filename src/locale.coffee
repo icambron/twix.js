@@ -1,7 +1,7 @@
-lang = (moment, Twix) ->
-  before = moment.lang()
+locale = (moment, Twix) ->
+  before = moment.locale()
 
-  Twix.registerLang "fr",
+  Twix.registerLocale "fr",
     twentyFourHour: true
     allDayMonth:
       fn: (options) -> (date) -> date.format "#{options.dayFormat} #{options.monthFormat}"
@@ -11,7 +11,7 @@ lang = (moment, Twix) ->
     date:
       slot: 2
 
-  Twix.registerLang "fr-ca",
+  Twix.registerLocale "fr-ca",
     twentyFourHour: true
     allDayMonth:
       fn: (options) -> (date) -> date.format "#{options.dayFormat} #{options.monthFormat}"
@@ -21,11 +21,11 @@ lang = (moment, Twix) ->
     date:
       slot: 2
 
-  moment.lang before
+  moment.locale before
 
-module?.exports = lang
+module?.exports = locale
 
 if typeof(define) == "function" && define.amd
-  define ["moment", "twix"], (moment, Twix) -> lang(moment, Twix)
+  define ["moment", "twix"], (moment, Twix) -> locale(moment, Twix)
 
-lang(@moment, @Twix) if @Twix && @moment
+locale(@moment, @Twix) if @Twix && @moment

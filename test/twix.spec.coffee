@@ -1416,13 +1416,13 @@ test = (moment, Twix) ->
 
   describe "internationalization", ->
     it "uses alternative language when specified by moment", ->
-      start = moment("1982-05-25").lang "fr"
+      start = moment("1982-05-25").locale "fr"
       range = start.twix(start.clone().add 1, 'days')
 
       assertEqual '25 mai, 0:00 - 26 mai, 0:00, 1982', range.format()
 
     it "uses English formatting rules when there's no format for the specified language", ->
-      start = moment("1982-10-14").lang "de"
+      start = moment("1982-10-14").locale "de"
       range = start.twix(start.clone().add 1, 'days')
 
       assertEqual 'Okt. 14, 12 AM - Okt. 15, 12 AM, 1982', range.format()
