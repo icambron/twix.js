@@ -21,6 +21,8 @@ And much more.
 
 ##[Documentation](http://icambron.github.io/twix.js/docs.html)
 
+**Breaking change in 0.6.0** Twix ranges will ignore changes to their endpoints; once you create the range, it's frozen in place. Construct new ranges to grow/shrink.
+
 ##Building##
 
 If you want to build Twix for yourself, you'll need to install CoffeeScript. Then clone the repo out and run this:
@@ -43,6 +45,8 @@ Patches are welcome!
  * Don't include your changes to the generated `.js` files in the patch; they're much harder to merge. I'll generate them when I cut the release.
 
 ##Changelog##
+
+ * **0.6.0**: Moment deprecations, s/lang/locale, xor, intersection, split, difference, immutability
 
  * **0.5.1**: Make Twix compatible with Moment 2.8.1
 
