@@ -822,4 +822,8 @@
     this.Twix = makeTwix(this.moment);
   }
 
+  if (typeof moment !== "undefined" && moment !== null) {
+    this.Twix = makeTwix(moment);
+  }
+
 }).call(this);

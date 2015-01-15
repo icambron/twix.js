@@ -56,4 +56,9 @@
     locale(this.moment, this.Twix);
   }
 
+  if (this.Twix && moment) {
+    locale(moment, this.Twix);
+    delete this.Twix;
+  }
+
 }).call(this);
