@@ -9,8 +9,10 @@ var where = ["client", "server"];
 
 Package.onUse(function(api) {
 
-	api.use("momentjs:moment", where);
-	api.imply("momentjs:moment", where);
+	// Please see latest available version for momentjs:moment on
+	// https://atmospherejs.com/momentjs/moment
+	api.use("momentjs:moment@2.9.0", where);
+	api.imply("momentjs:moment@2.9.0", where);
 
 	api.add_files([
     "bin/twix.js",
