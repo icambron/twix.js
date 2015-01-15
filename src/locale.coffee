@@ -29,3 +29,8 @@ if typeof(define) == "function" && define.amd
   define ["moment", "twix"], (moment, Twix) -> locale(moment, Twix)
 
 locale(@moment, @Twix) if @Twix && @moment
+
+# Also checks globals (Meteor)
+if @Twix && moment
+  locale(moment, @Twix)
+  delete @Twix
