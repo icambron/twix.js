@@ -33,6 +33,5 @@ if @Twix
     locale(@moment, @Twix)
   else if moment?
     # Also checks globals (Meteor)
-    console.log("Setting locale!!!!!!!!!!!!!!!!!!!!!");
     locale(moment, @Twix)
     delete @Twix
