@@ -514,4 +514,8 @@ module.exports = makeTwix(require "moment") if hasModule
 if  typeof(define) == "function"
   define "twix", ["moment"], (moment) -> makeTwix(moment)
 
-@Twix = makeTwix(@moment) if @moment?
+if @moment
+  @Twix = makeTwix(@moment)
+else if moment?
+  # Also checks globals (Meteor)
+  @Twix = makeTwix(moment)

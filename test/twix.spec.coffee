@@ -1,5 +1,5 @@
 test = (moment, Twix) ->
-  moment.lang 'en'
+  moment.locale 'en'
 
   assertEqual = (a, b) -> throw new Error("Found #{b}, expected #{a}") unless a == b
   assertTwixEqual = (a, b) -> throw new Error("Found #{b.toString()}, expected #{a.toString()}") unless a.equals b

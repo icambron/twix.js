@@ -28,4 +28,9 @@ module?.exports = locale
 if typeof(define) == "function" && define.amd
   define ["moment", "twix"], (moment, Twix) -> locale(moment, Twix)
 
-locale(@moment, @Twix) if @Twix && @moment
+if @Twix
+  if @moment
+    locale(@moment, @Twix)
+  else if moment?
+    # Also checks globals (Meteor)
+    locale(moment, @Twix)
