@@ -34,4 +34,3 @@ if @Twix
   else if moment?
     # Also checks globals (Meteor)
     locale(moment, @Twix)
-    delete @Twix
