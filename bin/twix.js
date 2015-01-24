@@ -198,7 +198,10 @@
         }
         _ref = this._prepIterateInputs(intervalAmount, period, minHours), intervalAmount = _ref[0], period = _ref[1], minHours = _ref[2];
         start = this._trueStart.clone().startOf(period);
-        end = this._trueEnd.clone().startOf(period);
+        end = this.end.clone().startOf(period);
+        if (this.allDay) {
+          end = end.add(1, "day");
+        }
         hasNext = (function(_this) {
           return function() {
             return (!_this.allDay && start <= end && (!minHours || !start.isSame(end) || _this.end.hours() > minHours)) || (_this.allDay && start < end);

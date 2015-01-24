@@ -46,6 +46,10 @@ Patches are welcome!
 
 ##Changelog##
 
+ * **0.6.2**: Fix `iterate` for days
+
+ * **0.6.1**: Meteor support
+
  * **0.6.0**: Moment deprecations, s/lang/locale, xor, intersection, split, difference, immutability
 
  * **0.5.1**: Make Twix compatible with Moment 2.8.1

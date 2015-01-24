@@ -14,9 +14,9 @@ build: directories
 	@./node_modules/uglify-js/bin/uglifyjs -o bin/twix.min.js bin/twix.js
 	@./node_modules/uglify-js/bin/uglifyjs -o bin/locale.min.js bin/locale.js
 
-	$(seder) "s/  \"version\": [0-9.:\",]*/  \"version\": \"${VER}\",/g" bower.json
-	$(seder) "s/  \"version\": [0-9.:\",]*/  \"version\": \"${VER}\",/g" component.json
-	$(seder) "s/  version: [0-9.:\",]*/  version: \"${VER}\",/g" package.js
+	@$(seder) "s/  \"version\": [0-9.:\",]*/  \"version\": \"${VER}\",/g" bower.json
+	@$(seder) "s/  \"version\": [0-9.:\",]*/  \"version\": \"${VER}\",/g" component.json
+	@$(seder) "s/  version: [0-9.:\",]*/  version: \"${VER}\",/g" package.js
 
 configure:
 	@npm install
