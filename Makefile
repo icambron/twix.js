@@ -7,9 +7,9 @@ build: directories
 	@./node_modules/uglify-js/bin/uglifyjs -o bin/twix.min.js bin/twix.js
 	@./node_modules/uglify-js/bin/uglifyjs -o bin/locale.min.js bin/locale.js
 
-	@sed -i "s/  \"version\": [0-9.:\",]*/  \"version\": \"${VER}\",/g" bower.json
-	@sed -i "s/  \"version\": [0-9.:\",]*/  \"version\": \"${VER}\",/g" component.json
-	@sed -i "s/  version: [0-9.:\",]*/  version: \"${VER}\",/g" package.js
+	@sed -i ".bak" "s/  \"version\": [0-9.:\",]*/  \"version\": \"${VER}\",/g" bower.json
+	@sed -i ".bak" "s/  \"version\": [0-9.:\",]*/  \"version\": \"${VER}\",/g" component.json
+	@sed -i ".bak" "s/  version: [0-9.:\",]*/  version: \"${VER}\",/g" package.js
 
 configure:
 	@npm install
