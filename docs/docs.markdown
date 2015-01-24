@@ -290,6 +290,51 @@ var range2 = moment("1982-05-27").twix("1982-06-13");
 range1.intersection(range2); //=> 5/27/82 - 5/30/1982
 ```
 
+###xor
+Returns an array of ranges that aren't in one range or the other, but not both.
+
+```js
+var range1 = moment("1982-05-24").twix("1982-05-28", true);
+var range2 = moment("1982-05-22").twix("1982-05-26", true);
+var xorred = range1.xor(range2);
+
+xorred[0].format() //=> 'May 22 - 23, 1982'
+xorred[1].format() //=> 'May 27 - 28, 1982'
+```
+
+The array returned may contain 0, 1, or 2 ranges.
+
+###difference
+Returns an array of ranges that are in this range but not the target range.
+
+```js
+var range1 = moment("1982-05-23").twix("1982-05-28", true);
+var range2 = moment("1982-05-25").twix("1982-05-26", true);
+var diff = range1.difference(range2);
+
+diff[0].format(); //=> 'May 23 - 24, 1982'
+diff[1].format(); //=> 'May 27 - 28, 1982'
+```
+
+The array returned may contain 0, 1, or 2 ranges.
+
+###split
+Splits a range into multiple ranges. Can take either a duration, the arguments for creating a duration, or any number of times.
+
+```js
+var range = moment("1982-05-25T05:01").twix("1982-05-25T07:30");
+
+var splits = range.split(1, "hour");
+splits[0].format({showDate: false}); //=> '5:01 - 6:01 AM'
+splits[1].format({showDate: false}); //=> '6:01 - 7:01 AM'
+splits[2].format({showDate: false}); //=> '7:01 - 7:30 AM'
+
+//other signatures
+range.split(moment.duration({"h": 1})).length; //=> 3
+range.split(moment("1982-05-25T06:00")).length; //=> 2
+range.split(moment("1982-05-25T06:00"), moment("1982-05-25T07:00")).length; //=> 3
+```
+
 ##Moment durations
 
 Moment now has [durations](http://momentjs.com/docs/#/durations/), which represent a block of time, but not a *specific* block of time, just a period of, say, hours or days. Twix provides some utilities for working with durations.
