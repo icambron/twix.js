@@ -3,7 +3,7 @@
 
   test = function(moment, Twix) {
     var assertEqual, assertMomentEqual, assertTwixEqual, nextYear, thatDay, thisYear, tomorrow, yesterday;
-    moment.lang('en');
+    moment.locale('en');
     assertEqual = function(a, b) {
       if (a !== b) {
         throw new Error("Found " + b + ", expected " + a);
@@ -66,26 +66,26 @@
           return assertEqual(t.allDay, true);
         });
         it("uses the parse format", function() {
-          return assertTwixEqual(new Twix(moment("2012-05-25"), moment("2013-05-25"), false), moment("05/25/2012").twix("05/25/2013", "MM/DD/YYYY"));
+          return assertTwixEqual(new Twix(moment("2012-05-25"), moment("2013-05-25"), false), moment("2012-05-25").twix("05/25/2013", "MM/DD/YYYY"));
         });
         it("uses a parseStrict object argument", function() {
           var t;
-          t = moment("05-25-1981").twix("A05/25/1982", "MM/DD/YYYY", {
+          t = moment("1981-05-25").twix("A05/25/1982", "MM/DD/YYYY", {
             parseStrict: true
           });
           assertEqual(t.end.isValid(), false);
-          t = moment("05-25-1981").twix("05/25/1982", "MM/DD/YYYY", {
+          t = moment("1981-05-25").twix("05/25/1982", "MM/DD/YYYY", {
             parseStrict: true
           });
           return assertEqual(t.end.isValid(), true);
         });
         return it("uses an allDay option argument", function() {
           var t;
-          t = moment("05-25-1981").twix("05/25/1982", "MM/DD/YYYY", {
+          t = moment("1981-05-25").twix("05/25/1982", "MM/DD/YYYY", {
             allDay: true
           });
           assertEqual(t.allDay, true);
-          t = moment("05-25-1981").twix("1982-05-25", {
+          t = moment("1981-05-25").twix("1982-05-25", {
             allDay: true
           });
           return assertEqual(t.allDay, true);
@@ -161,13 +161,13 @@
       });
       return describe("day", function() {
         it("returns true if they're the same day", function() {
-          return assertEqual(true, moment("1982-05-25 05:30 AM").twix("1982-05-25 07:30 PM").isSame("day"));
+          return assertEqual(true, moment("1982-05-25T05:30").twix("1982-05-25T19:30").isSame("day"));
         });
         it("returns false if they're different days day", function() {
-          return assertEqual(false, moment("1982-05-25 05:30 AM").twix("1982-05-26 07:30 PM").isSame("day"));
+          return assertEqual(false, moment("1982-05-25T05:30").twix("1982-05-26T19:30").isSame("day"));
         });
         return it("returns true they're in different UTC days but the same local days", function() {
-          return assertEqual(true, moment("1982-05-25 05:30 AM").twix("1982-05-25 11:30 PM").isSame("day"));
+          return assertEqual(true, moment("1982-05-25T05:30").twix("1982-05-25T23:30").isSame("day"));
         });
       });
     });
@@ -334,7 +334,7 @@
             }
             return _results;
           })();
-          assertSameMinute(start.clone().add('minutes', 20), results[1]);
+          assertSameMinute(start.clone().add(20, "minutes"), results[1]);
           return assertEqual(4, results.length);
         });
         return it("provides 5 periods of 2 hours, 30 minutes and 20 seconds if the range is 10 hours and 2 minutes", function() {
@@ -355,7 +355,7 @@
             }
             return _results;
           })();
-          assertSameMinute(start.clone().add('minutes', 30).add('hours', 2).add('seconds', 20), results[1]);
+          assertSameMinute(start.clone().add(30, "minutes").add(2, "hours").add(20, "seconds"), results[1]);
           return assertEqual(5, results.length);
         });
       });
@@ -377,7 +377,7 @@
             }
             return _results;
           })();
-          assertSameMinute(start.clone().add('minutes', 20), results[1]);
+          assertSameMinute(start.clone().add(20, "minutes"), results[1]);
           return assertEqual(4, results.length);
         });
       });
@@ -405,8 +405,8 @@
         });
         it("provides 366 days if the range is a year", function() {
           var end, iter, results, start;
-          start = thisYear("05-25", "16:00");
-          end = thisYear("05-25", "03:00").add(1, "year");
+          start = moment("2014-05-25", "16:00");
+          end = moment("2014-05-25", "03:00").add(1, "year");
           iter = start.twix(end).iterate("days");
           results = (function() {
             var _results;
@@ -443,6 +443,25 @@
           assertSameDay(start, iter.next());
           assertEqual(false, iter.hasNext());
           return assertEqual(null, iter.next());
+        });
+      });
+      describe("months", function() {
+        var assertSameDay;
+        assertSameDay = function(first, second) {
+          return assertEqual(true, first.isSame(second, "day"));
+        };
+        return it("provides 3 months for an all-day range with three months in it", function() {
+          var dateRange, end, iter, start;
+          start = moment("2014-10-01");
+          end = moment("2014-12-01");
+          dateRange = start.twix(end, true);
+          iter = dateRange.iterate("M");
+          assertEqual(true, iter.hasNext());
+          assertSameDay(start, iter.next());
+          assertEqual(true, iter.hasNext());
+          assertSameDay(moment("2014-11-01"), iter.next());
+          assertEqual(true, iter.hasNext());
+          return assertSameDay(end, iter.next());
         });
       });
       return describe("years", function() {
@@ -498,7 +517,7 @@
             }
             return _results;
           })();
-          assertSameMinute(start.clone().add('minutes', 20), results[1]);
+          assertSameMinute(start.clone().add(20, "minutes"), results[1]);
           return assertEqual(3, results.length);
         });
         return it("provides 4 periods of 2 hours, 30 minutes and 20 seconds if the range is 10 hours and 1 minute 20 seconds", function() {
@@ -519,7 +538,7 @@
             }
             return _results;
           })();
-          assertSameMinute(start.clone().add('minutes', 30).add('hours', 2).add('seconds', 20), results[1]);
+          assertSameMinute(start.clone().add(30, "minutes").add(2, "hours").add(20, "seconds"), results[1]);
           return assertEqual(4, results.length);
         });
       });
@@ -541,7 +560,7 @@
             }
             return _results;
           })();
-          assertSameMinute(start.clone().add('minutes', 20), results[1]);
+          assertSameMinute(start.clone().add(20, "minutes"), results[1]);
           return assertEqual(3, results.length);
         });
         return it("provides 24 periods of 60 minutes if the range is 24 hours", function() {
@@ -569,7 +588,7 @@
           var end, iter, results, start;
           start = thisYear("05-25", "03:00");
           end = thisYear("05-25", "10:00");
-          iter = start.twix(end).iterateInner("hours", 2);
+          iter = start.twix(end).iterateInner(2, "hours");
           results = (function() {
             var _results;
             _results = [];
@@ -578,7 +597,7 @@
             }
             return _results;
           })();
-          assertSameHour(start.clone().add('hours', 2), results[1]);
+          assertSameHour(start.clone().add(2, "hours"), results[1]);
           return assertEqual(3, results.length);
         });
       });
@@ -654,8 +673,13 @@
       it("returns true for empty ranges", function() {
         return assertEqual(true, thatDay("12:00", "12:00").isEmpty());
       });
-      return it("returns false for empty ranges", function() {
+      it("returns false for non-empty ranges", function() {
         return assertEqual(false, thatDay("12:00", "13:00").isEmpty());
+      });
+      return it("returns false for 'empty' all-day ranges", function() {
+        return assertEqual(false, moment("1982-05-25").twix("1982-05-25", {
+          allDay: true
+        }).isEmpty());
       });
     });
     describe("asDuration()", function() {
@@ -792,7 +816,7 @@
           return assertEqual(false, range.contains(thisYear("05-24")));
         });
         return it("returns false for moments after the range", function() {
-          return assertEqual(false, range.contains(thisYear("05-26")));
+          return assertEqual(false, range.contains(thisYear("05-26", "00:00:01")));
         });
       });
     });
@@ -944,11 +968,6 @@
         });
       });
     });
-    describe("merge()", function() {
-      return it("calls union()", function() {
-        return assertTwixEqual(new Twix("1982-05-24", "1982-05-26"), new Twix("1982-05-24", "1982-05-25").merge(new Twix("1982-05-25", "1982-05-26")));
-      });
-    });
     describe("union()", function() {
       var someDays, someTime;
       someTime = thatDay("05:30", "08:30");
@@ -981,10 +1000,10 @@
           return assertTwixEqual(new Twix("1982-05-24 00:00", "1982-05-26 07:00"), someDays.union(new Twix("1982-05-24 20:00", "1982-05-26 07:00")));
         });
         it("spans an earlier time", function() {
-          return assertTwixEqual(new Twix("1982-05-23 08:00", moment("1982-05-25").endOf("day")), someDays.union(new Twix("1982-05-23 08:00", "1982-05-25 07:00")));
+          return assertTwixEqual(new Twix("1982-05-23 08:00", moment("1982-05-26")), someDays.union(new Twix("1982-05-23 08:00", "1982-05-25 07:00")));
         });
         it("isn't affected by engulfing ranges", function() {
-          return assertTwixEqual(new Twix("1982-05-24 00:00", moment("1982-05-25").endOf("day")), someDays.union(someTime));
+          return assertTwixEqual(new Twix("1982-05-24 00:00", moment("1982-05-26")), someDays.union(someTime));
         });
         return it("becomes an engulfing range", function() {
           return assertTwixEqual(new Twix("1982-05-23 20:00", "1982-05-26 08:30"), someDays.union(new Twix("1982-05-23 20:00", "1982-05-26 08:30")));
@@ -1046,7 +1065,7 @@
       });
       describe("one all-day range", function() {
         it("intersects with a later time", function() {
-          return assertTwixEqual(new Twix("1982-05-24 20:00", "1982-05-25 23:59:59.999"), someDays.intersection(new Twix("1982-05-24 20:00", "1982-05-26 07:00")));
+          return assertTwixEqual(new Twix("1982-05-24 20:00", "1982-05-26"), someDays.intersection(new Twix("1982-05-24 20:00", "1982-05-26 07:00")));
         });
         it("intersects with an earlier time", function() {
           return assertTwixEqual(new Twix("1982-05-24 00:00", "1982-05-25 07:00"), someDays.intersection(new Twix("1982-05-23 08:00", "1982-05-25 07:00")));
@@ -1055,10 +1074,10 @@
           return assertTwixEqual(new Twix("1982-05-25 05:30", "1982-05-25 08:30"), someDays.intersection(someTime));
         });
         return it("intersects with an engulfing range", function() {
-          return assertTwixEqual(new Twix("1982-05-24 00:00", "1982-05-25 23:59:59.999"), someDays.intersection(new Twix("1982-05-23 20:00", "1982-05-26 08:30")));
+          return assertTwixEqual(new Twix("1982-05-24 00:00", "1982-05-26"), someDays.intersection(new Twix("1982-05-23 20:00", "1982-05-26 08:30")));
         });
       });
-      return describe("two all-day range", function() {
+      return describe("two all-day ranges", function() {
         it("does not intersect with a later time", function() {
           var intersection;
           intersection = someDays.intersection(new Twix("1982-05-27", "1982-05-28", true));
@@ -1082,6 +1101,285 @@
         });
         return it("intersects with an engulfing range", function() {
           return assertTwixEqual(thatDay(), thatDay().intersection(someDays));
+        });
+      });
+    });
+    describe("xor()", function() {
+      var someDays, someTime;
+      someTime = thatDay("05:30", "08:30");
+      someDays = new Twix("1982-05-24", "1982-05-25", true);
+      describe("non-all-day ranges", function() {
+        it("returns non-overlapping ranges as-is (later)", function() {
+          var later, orred;
+          later = thatDay("09:30", "11:30");
+          orred = someTime.xor(later);
+          assertEqual(2, orred.length);
+          assertTwixEqual(someTime, orred[0]);
+          return assertTwixEqual(later, orred[1]);
+        });
+        it("returns non-overlapping ranges as-is (earlier)", function() {
+          var later, orred;
+          later = thatDay("09:30", "11:30");
+          orred = later.xor(someTime);
+          assertEqual(2, orred.length);
+          assertTwixEqual(someTime, orred[0]);
+          return assertTwixEqual(later, orred[1]);
+        });
+        it("returns the outside parts of a partially overlapping range (later)", function() {
+          var orred;
+          orred = someTime.xor(thatDay("08:00", "11:30"));
+          assertEqual(2, orred.length);
+          assertTwixEqual(thatDay("05:30", "08:00"), orred[0]);
+          return assertTwixEqual(thatDay("08:30", "11:30"), orred[1]);
+        });
+        it("returns the outside parts of a partially overlapping range (earlier)", function() {
+          var orred;
+          orred = thatDay("08:00", "11:30").xor(someTime);
+          assertEqual(2, orred.length);
+          assertTwixEqual(thatDay("05:30", "08:00"), orred[0]);
+          return assertTwixEqual(thatDay("08:30", "11:30"), orred[1]);
+        });
+        it("returns the outside parts when engulfing a range", function() {
+          var orred;
+          orred = someTime.xor(thatDay("06:30", "07:30"));
+          assertEqual(2, orred.length);
+          assertTwixEqual(thatDay("05:30", "06:30"), orred[0]);
+          return assertTwixEqual(thatDay("07:30", "08:30"), orred[1]);
+        });
+        it("returns the outside parts of an engulfing range", function() {
+          var orred;
+          orred = thatDay("06:30", "07:30").xor(someTime);
+          assertEqual(2, orred.length);
+          assertTwixEqual(thatDay("05:30", "06:30"), orred[0]);
+          return assertTwixEqual(thatDay("07:30", "08:30"), orred[1]);
+        });
+        return it("returns one contiguous range for two adajacent ranges", function() {
+          var orred;
+          orred = thatDay("08:30", "10:30").xor(someTime);
+          assertEqual(1, orred.length);
+          return assertTwixEqual(thatDay("05:30", "10:30"), orred[0]);
+        });
+      });
+      describe("one all-day range", function() {
+        return it("uses the full day in the xor", function() {
+          var xored;
+          xored = someDays.xor(new Twix("1982-05-25T16:00", "1982-05-26T02:00"));
+          assertEqual(2, xored.length);
+          assertTwixEqual(new Twix("1982-05-24T00:00", "1982-05-25T16:00"), xored[0]);
+          return assertTwixEqual(new Twix("1982-05-26T00:00", "1982-05-26T02:00"), xored[1]);
+        });
+      });
+      describe("two all-day ranges", function() {
+        return it("returns an all-day range", function() {
+          var xored;
+          xored = someDays.xor(new Twix("1982-05-25", "1982-05-27", true));
+          assertEqual(2, xored.length);
+          assertTwixEqual(new Twix("1982-05-24", "1982-05-24", true), xored[0]);
+          return assertTwixEqual(new Twix("1982-05-26", "1982-05-27", true), xored[1]);
+        });
+      });
+      return describe("multiple ranges", function() {
+        return it("returns the xor of three ranges", function() {
+          var early, later, tween, xored;
+          tween = thatDay("10:00", "13:00");
+          early = thatDay("08:00", "11:00");
+          later = thatDay("12:00", "14:00");
+          xored = tween.xor(early, later);
+          assertEqual(3, xored.length);
+          assertTwixEqual(thatDay("08:00", "10:00"), xored[0]);
+          assertTwixEqual(thatDay("11:00", "12:00"), xored[1]);
+          return assertTwixEqual(thatDay("13:00", "14:00"), xored[2]);
+        });
+      });
+    });
+    describe("difference()", function() {
+      var someDays, someTime;
+      someTime = thatDay("05:30", "08:30");
+      someDays = new Twix("1982-05-24", "1982-05-25", true);
+      describe("non-all-day ranges", function() {
+        it("returns self for non-overlapping ranges (later)", function() {
+          var exed, later;
+          later = thatDay("09:30", "11:30");
+          exed = someTime.difference(later);
+          assertEqual(1, exed.length);
+          return assertTwixEqual(someTime, exed[0]);
+        });
+        it("returns self for non-overlapping ranges (earlier)", function() {
+          var exed, later;
+          later = thatDay("09:30", "11:30");
+          exed = later.difference(someTime);
+          assertEqual(1, exed.length);
+          return assertTwixEqual(later, exed[0]);
+        });
+        it("returns the non-overlapping part of a partially overlapping range (later)", function() {
+          var exed;
+          exed = someTime.difference(thatDay("08:00", "11:30"));
+          assertEqual(1, exed.length);
+          return assertTwixEqual(thatDay("05:30", "08:00"), exed[0]);
+        });
+        it("returns the outside parts of a partially overlapping range (earlier)", function() {
+          var exed;
+          exed = thatDay("08:00", "11:30").difference(someTime);
+          assertEqual(1, exed.length);
+          return assertTwixEqual(thatDay("08:30", "11:30"), exed[0]);
+        });
+        it("returns the outside parts when engulfing a range", function() {
+          var exed;
+          exed = someTime.difference(thatDay("06:30", "07:30"));
+          assertEqual(2, exed.length);
+          assertTwixEqual(thatDay("05:30", "06:30"), exed[0]);
+          return assertTwixEqual(thatDay("07:30", "08:30"), exed[1]);
+        });
+        it("returns empty for an engulfing range", function() {
+          var exed;
+          exed = thatDay("06:30", "07:30").difference(someTime);
+          return assertEqual(0, exed.length);
+        });
+        return it("returns self for an adjacent range", function() {
+          var exed;
+          exed = someTime.difference(thatDay("08:30", "10:30"));
+          assertEqual(1, exed.length);
+          return assertTwixEqual(someTime, exed[0]);
+        });
+      });
+      describe("one all-day range", function() {
+        return it("uses the full day", function() {
+          var exed;
+          exed = someDays.difference(new Twix("1982-05-25T16:00", "1982-05-26T02:00"));
+          assertEqual(1, exed.length);
+          return assertTwixEqual(new Twix("1982-05-24T00:00", "1982-05-25T16:00"), exed[0]);
+        });
+      });
+      describe("two all-day ranges", function() {
+        it("returns an all-day range", function() {
+          var exed;
+          exed = someDays.difference(new Twix("1982-05-25", "1982-05-27", true));
+          assertEqual(1, exed.length);
+          return assertTwixEqual(new Twix("1982-05-24", "1982-05-24", true), exed[0]);
+        });
+        return it("doesn't mutate its inputs", function() {
+          var first, firstEnd, firstStart, second, secondEnd, secondStart;
+          first = new Twix("1982-05-24", "1982-05-25", true);
+          second = new Twix("1982-05-25", "1982-05-27", true);
+          firstStart = first._trueStart.clone();
+          firstEnd = first._trueEnd.clone();
+          secondStart = second._trueStart.clone();
+          secondEnd = second._trueEnd.clone();
+          first.difference(second);
+          assertMomentEqual(firstStart, first._trueStart);
+          assertMomentEqual(firstEnd, first._trueEnd);
+          assertMomentEqual(secondStart, second._trueStart);
+          return assertMomentEqual(secondEnd, second._trueEnd);
+        });
+      });
+      return describe("multiple ranges", function() {
+        return it("returns the difference of three ranges", function() {
+          var early, exed, later, tween;
+          tween = thatDay("10:00", "13:00");
+          early = thatDay("08:00", "11:00");
+          later = thatDay("12:00", "14:00");
+          exed = tween.difference(early, later);
+          assertEqual(1, exed.length);
+          return assertTwixEqual(thatDay("11:00", "12:00"), exed[0]);
+        });
+      });
+    });
+    describe("split()", function() {
+      describe("using a duration", function() {
+        var assertHours;
+        assertHours = function(splits) {
+          assertEqual(3, splits.length);
+          assertTwixEqual(thatDay("05:01", "06:01"), splits[0]);
+          assertTwixEqual(thatDay("06:01", "07:01"), splits[1]);
+          return assertTwixEqual(thatDay("07:01", "07:30"), splits[2]);
+        };
+        it("accepts a duration directly", function() {
+          var splits;
+          splits = thatDay("05:01", "07:30").split(moment.duration(1, "hour"));
+          return assertHours(splits);
+        });
+        it("accepts number, unit as args", function() {
+          var splits;
+          splits = thatDay("05:01", "07:30").split(1, "h");
+          return assertHours(splits);
+        });
+        it("accepts an object", function() {
+          var splits;
+          splits = thatDay("05:01", "07:30").split(moment.duration({
+            'h': 1
+          }));
+          return assertHours(splits);
+        });
+        it("returns the original if the duration is empty", function() {
+          var range, splits;
+          range = thatDay("05:01", "07:30");
+          splits = range.split(moment.duration({
+            'h': 0
+          }));
+          assertEqual(1, splits.length);
+          return assertTwixEqual(range, splits[0]);
+        });
+        return it("splits up all-day ranges into hours across the whole day", function() {
+          var splits;
+          splits = moment("1982-05-25").twix("1982-05-26", {
+            allDay: true
+          }).split(moment.duration(1, "hour"));
+          assertEqual(48, splits.length);
+          assertTwixEqual(thatDay("00:00", "01:00"), splits[0]);
+          return assertTwixEqual(moment.twix("1982-05-26T23:00", "1982-05-27T00:00"), splits[47]);
+        });
+      });
+      return describe("using times", function() {
+        it("accepts a single time", function() {
+          var splits;
+          splits = thatDay("05:00", "06:00").split("1982-05-25T05:30");
+          assertEqual(2, splits.length);
+          assertTwixEqual(thatDay("05:00", "05:30"), splits[0]);
+          return assertTwixEqual(thatDay("05:30", "06:00"), splits[1]);
+        });
+        it("accepts multiple times", function() {
+          var splits;
+          splits = thatDay("05:00", "06:00").split("1982-05-25T05:30", "1982-05-25T05:45");
+          assertEqual(3, splits.length);
+          assertTwixEqual(thatDay("05:00", "05:30"), splits[0]);
+          assertTwixEqual(thatDay("05:30", "05:45"), splits[1]);
+          return assertTwixEqual(thatDay("05:45", "06:00"), splits[2]);
+        });
+        it("accepts a list of times", function() {
+          var splits;
+          splits = thatDay("05:00", "06:00").split(["1982-05-25T05:30", "1982-05-25T05:45"]);
+          assertEqual(3, splits.length);
+          assertTwixEqual(thatDay("05:00", "05:30"), splits[0]);
+          assertTwixEqual(thatDay("05:30", "05:45"), splits[1]);
+          return assertTwixEqual(thatDay("05:45", "06:00"), splits[2]);
+        });
+        it("returns the original if there are no args", function() {
+          var range, splits;
+          range = thatDay("05:01", "07:30");
+          splits = range.split();
+          assertEqual(1, splits.length);
+          return assertTwixEqual(range, splits[0]);
+        });
+        it("returns the original if the arg is an empty list", function() {
+          var range, splits;
+          range = thatDay("05:01", "07:30");
+          splits = range.split([]);
+          assertEqual(1, splits.length);
+          return assertTwixEqual(range, splits[0]);
+        });
+        it("excludes bad times", function() {
+          var splits;
+          splits = thatDay("05:00", "06:00").split("1982-05-23", "1982-05-25T05:30", moment.invalid());
+          assertEqual(2, splits.length);
+          assertTwixEqual(thatDay("05:00", "05:30"), splits[0]);
+          return assertTwixEqual(thatDay("05:30", "06:00"), splits[1]);
+        });
+        return it("returns the original if they're all bad times", function() {
+          var range, splits;
+          range = thatDay("05:01", "07:30");
+          splits = range.split(moment.invalid());
+          assertEqual(1, splits.length);
+          return assertTwixEqual(range, splits[0]);
         });
       });
     });
@@ -1126,21 +1424,21 @@
       });
       it("accepts an allDay option", function() {
         var s;
-        s = thisYear("05-25").twix(thisYear("5-26"), true).simpleFormat(null, {
+        s = thisYear("05-25").twix(thisYear("05-26"), true).simpleFormat(null, {
           allDay: "(wayo wayo)"
         });
         return assertEqual(true, s.indexOf("(wayo wayo)") > -1);
       });
       it("removes the all day text if allDay is null", function() {
         var s;
-        s = thisYear("05-25").twix(thisYear("5-26"), true).simpleFormat(null, {
+        s = thisYear("05-25").twix(thisYear("05-26"), true).simpleFormat(null, {
           allDay: null
         });
         return assertEqual(true, s.indexOf("(all day)") === -1);
       });
       return it("accepts a custom template", function() {
         var s;
-        s = thisYear("05-25").twix(thisYear("5-26"), true).simpleFormat(null, {
+        s = thisYear("05-25").twix(thisYear("05-26"), true).simpleFormat(null, {
           template: function(first, second) {
             return "" + first + " | " + second;
           }
@@ -1476,13 +1774,13 @@
     return describe("internationalization", function() {
       it("uses alternative language when specified by moment", function() {
         var range, start;
-        start = moment("1982-05-25").lang("fr");
+        start = moment("1982-05-25").locale("fr");
         range = start.twix(start.clone().add(1, 'days'));
         return assertEqual('25 mai, 0:00 - 26 mai, 0:00, 1982', range.format());
       });
       return it("uses English formatting rules when there's no format for the specified language", function() {
         var range, start;
-        start = moment("1982-10-14").lang("de");
+        start = moment("1982-10-14").locale("de");
         range = start.twix(start.clone().add(1, 'days'));
         return assertEqual('Okt. 14, 12 AM - Okt. 15, 12 AM, 1982', range.format());
       });

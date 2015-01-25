@@ -1,6 +1,6 @@
 {
   "name": "twix",
-  "version": "0.5.1",
+  "version": "0.6.2",
   "description": "Twix.js allows you to work with date ranges",
   "homepage": "http://icambron.github.io/twix.js/",
   "author": "Isaac Cambron",
@@ -9,6 +9,7 @@
     "moment": ">= 2.0.0"
   },
   "devDependencies": {
+    "benchmark": "latest",
     "mocha" : "latest",
     "uglify-js" : "latest",
     "coffee-script" : "latest"

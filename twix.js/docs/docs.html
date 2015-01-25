@@ -294,6 +294,51 @@ var range2 = moment("1982-05-27").twix("1982-06-13");</p>
 <p>range1.intersection(range2); //=&gt; 5/27/82 - 5/30/1982
 ```</p>
 
+<h3 id="xor">xor</h3>
+<p>Returns an array of ranges that aren't in one range or the other, but not both.</p>
+
+<p>```js
+var range1 = moment("1982-05-24").twix("1982-05-28", true);
+var range2 = moment("1982-05-22").twix("1982-05-26", true);
+var xorred = range1.xor(range2);</p>
+
+<p>xorred[0].format() //=&gt; 'May 22 - 23, 1982'
+xorred[1].format() //=&gt; 'May 27 - 28, 1982'
+```</p>
+
+<p>The array returned may contain 0, 1, or 2 ranges.</p>
+
+<h3 id="difference">difference</h3>
+<p>Returns an array of ranges that are in this range but not the target range.</p>
+
+<p>```js
+var range1 = moment("1982-05-23").twix("1982-05-28", true);
+var range2 = moment("1982-05-25").twix("1982-05-26", true);
+var diff = range1.difference(range2);</p>
+
+<p>diff[0].format(); //=&gt; 'May 23 - 24, 1982'
+diff[1].format(); //=&gt; 'May 27 - 28, 1982'
+```</p>
+
+<p>The array returned may contain 0, 1, or 2 ranges.</p>
+
+<h3 id="split">split</h3>
+<p>Splits a range into multiple ranges. Can take either a duration, the arguments for creating a duration, or any number of times.</p>
+
+<p>```js
+var range = moment("1982-05-25T05:01").twix("1982-05-25T07:30");</p>
+
+<p>var splits = range.split(1, "hour");
+splits[0].format({showDate: false}); //=&gt; '5:01 - 6:01 AM'
+splits[1].format({showDate: false}); //=&gt; '6:01 - 7:01 AM'
+splits[2].format({showDate: false}); //=&gt; '7:01 - 7:30 AM'</p>
+
+<p>//other signatures
+range.split(moment.duration({"h": 1})).length; //=&gt; 3
+range.split(moment("1982-05-25T06:00")).length; //=&gt; 2
+range.split(moment("1982-05-25T06:00"), moment("1982-05-25T07:00")).length; //=&gt; 3
+```</p>
+
 <h2 id="moment-durations">Moment durations</h2>
 
 <p>Moment now has <a href="http://momentjs.com/docs/#/durations/">durations</a>, which represent a block of time, but not a <em>specific</em> block of time, just a period of, say, hours or days. Twix provides some utilities for working with durations.</p>
