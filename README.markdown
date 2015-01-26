@@ -46,7 +46,7 @@ Patches are welcome!
 
 ## Changelog
 
- * **0.6.2**: Fix `iterate` for days
+ * **0.6.2**: Fix `iterate` for months
 
  * **0.6.1**: Meteor support
 
