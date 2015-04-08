@@ -21,6 +21,10 @@ And much more.
 
 ## [Documentation](http://icambron.github.io/twix.js/docs.html)
 
+**Attention Moment 2.10.0 users**: You need to upgrade to the latest Twix!
+
+Even there, a breaking change in Moment prevents Twix's duration extension functions from working (the rest of Twix works fine). Moment will fix the issue upstream soon
+
 **Breaking change in 0.6.0** Twix ranges will ignore changes to their endpoints; once you create the range, it's frozen in place. Construct new ranges to grow/shrink.
 
 ## Building
@@ -45,6 +49,8 @@ Patches are welcome!
  * Don't include your changes to the generated `.js` files in the patch; they're much harder to merge. I'll generate them when I cut the release.
 
 ## Changelog
+
+ * **0.6.3**: Moment 2.10 compatibility
 
  * **0.6.2**: Fix `iterate` for months
 
