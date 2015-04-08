@@ -307,8 +307,8 @@ test = (moment, Twix) ->
         assertEqual null, iter.next()
 
       it "provides 366 days if the range is a year", ->
-        start = moment "2014-05-25", "16:00"
-        end = moment("2014-05-25", "03:00").add 1, "year"
+        start = moment("2014-05-25T16:00")
+        end = moment("2014-05-25T03:00").add 1, "year"
         iter = start.twix(end).iterate "days"
         results = while iter.hasNext()
           iter.next()
@@ -1445,6 +1445,16 @@ test = (moment, Twix) ->
       range = start.twix(start.clone().add 1, 'days')
 
       assertEqual 'Okt. 14, 12 AM - Okt. 15, 12 AM, 1982', range.format()
+
+    it "uses alternative languages when they're set globally", ->
+      try
+        moment.locale("fr")
+        start = moment("1982-05-25")
+        range = start.twix(start.clone().add 1, 'days')
+
+        assertEqual '25 mai, 0:00 - 26 mai, 0:00, 1982', range.format()
+      finally
+        moment.locale("en")
 
 if define?
   define(["moment", "twix"], (moment, Twix) -> test moment, Twix)

@@ -778,7 +778,7 @@
       return Twix;
 
     })();
-    Twix._extend(moment._locale, {
+    Twix._extend(moment.locale(), {
       _twix: Twix.defaults
     });
     Twix.formatTemplate = function(leftSide, rightSide) {
@@ -801,12 +801,14 @@
     moment.fn.forDuration = function(duration, allDay) {
       return new Twix(this, this.clone().add(duration), allDay);
     };
-    moment.duration.fn.afterMoment = function(startingTime, allDay) {
-      return new Twix(startingTime, moment(startingTime).clone().add(this), allDay);
-    };
-    moment.duration.fn.beforeMoment = function(startingTime, allDay) {
-      return new Twix(moment(startingTime).clone().subtract(this), startingTime, allDay);
-    };
+    if (moment.duration.fn) {
+      moment.duration.fn.afterMoment = function(startingTime, allDay) {
+        return new Twix(startingTime, moment(startingTime).clone().add(this), allDay);
+      };
+      moment.duration.fn.beforeMoment = function(startingTime, allDay) {
+        return new Twix(moment(startingTime).clone().subtract(this), startingTime, allDay);
+      };
+    }
     moment.twixClass = Twix;
     return Twix;
   };

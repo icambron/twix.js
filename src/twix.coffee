@@ -496,15 +496,16 @@ makeTwix = (moment) ->
     merge: deprecate "merge", "union(other)", (other) -> @union other
 
   # -- PLUGIN --
-  Twix._extend(moment._locale, _twix: Twix.defaults)
+  Twix._extend(moment.locale(), _twix: Twix.defaults)
 
   Twix.formatTemplate = (leftSide, rightSide) -> "#{leftSide} - #{rightSide}"
 
   moment.twix = -> new Twix(arguments...)
   moment.fn.twix = -> new Twix(this, arguments...)
   moment.fn.forDuration = (duration, allDay) -> new Twix(this, this.clone().add(duration), allDay)
-  moment.duration.fn.afterMoment = (startingTime, allDay) -> new Twix(startingTime, moment(startingTime).clone().add(this), allDay)
-  moment.duration.fn.beforeMoment = (startingTime, allDay) -> new Twix(moment(startingTime).clone().subtract(this), startingTime, allDay)
+  if moment.duration.fn
+    moment.duration.fn.afterMoment = (startingTime, allDay) -> new Twix(startingTime, moment(startingTime).clone().add(this), allDay)
+    moment.duration.fn.beforeMoment = (startingTime, allDay) -> new Twix(moment(startingTime).clone().subtract(this), startingTime, allDay)
   moment.twixClass = Twix
 
   Twix
