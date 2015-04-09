@@ -21,9 +21,7 @@ And much more.
 
 ## [Documentation](http://icambron.github.io/twix.js/docs.html)
 
-**Attention Moment 2.10.0 users**: You need to upgrade to the latest Twix!
-
-Even there, a breaking change in Moment prevents Twix's duration extension functions from working (the rest of Twix works fine). Moment will fix the issue upstream soon
+**Attention Moment 2.10.x users**: You need to upgrade to the latest Twix! You also should make sure not to be on Moment 2.10.0 (i.e. upgrade to the latest point release) because it has some compatibility issues with Twix.
 
 **Breaking change in 0.6.0** Twix ranges will ignore changes to their endpoints; once you create the range, it's frozen in place. Construct new ranges to grow/shrink.
 
