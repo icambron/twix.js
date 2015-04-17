@@ -30,7 +30,7 @@ makeTwix = (moment) ->
       @allDay = options.allDay ? false
 
       @_trueStart = if @allDay then @start.clone().startOf("day") else @start
-      @_trueEnd = if @allDay then @end.startOf('d').clone().add(1, "day") else @end
+      @_trueEnd = if @allDay then @end.clone().startOf("day").add(1, "day") else @end
 
     @_extend: (first, others...) ->
       for other in others
