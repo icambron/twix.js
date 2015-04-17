@@ -30,7 +30,13 @@ makeTwix = (moment) ->
       @allDay = options.allDay ? false
 
       @_trueStart = if @allDay then @start.clone().startOf("day") else @start
-      @_trueEnd = if @allDay then @end.clone().startOf("day").add(1, "day") else @end
+      if options.containEndpoints not in ["start", true, undefined]
+        @_trueStart = @_trueStart.clone().add(1)
+
+      if options.containEndpoints in ["end", true, undefined]
+        @_trueEnd = if @allDay then @end.clone().startOf("day").add(1, "day") else @end
+      else
+        @_trueEnd = if @allDay then @end.clone().endOf("day") else @end.clone().subtract(1)
 
     @_extend: (first, others...) ->
       for other in others
