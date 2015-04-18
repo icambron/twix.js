@@ -31,7 +31,7 @@ makeTwix = (moment) ->
       @containsEndpoints = options.containsEndpoints ? true
 
       @_trueStart = if @allDay then @start.clone().startOf("day") else @start
-      if @containsEndpoints not in ["start", true]
+      unless @containsEndpoints in ["start", true]
         @_trueStart = @_trueStart.clone().add(1)
 
       if @containsEndpoints in ["end", true]
