@@ -60,6 +60,18 @@ test = (moment, Twix) ->
         t = moment("1981-05-25").twix("1982-05-25", allDay: true)
         assertEqual t.allDay, true
 
+      it "creates closed ranges by default", ->
+        t = moment("1981-05-25").twix("05/25/1982", "MM/DD/YYYY")
+        assertEqual t.containsEndpoints, true
+        t = moment("1981-05-25").twix("1982-05-25")
+        assertEqual t.containsEndpoints, true
+
+      it "uses a containsEndpoints option argument", ->
+        t = moment("1981-05-25").twix("05/25/1982", "MM/DD/YYYY", containsEndpoints: false)
+        assertEqual t.containsEndpoints, false
+        t = moment("1981-05-25").twix("1982-05-25", containsEndpoints: false)
+        assertEqual t.containsEndpoints, false
+
     describe "moment.forDuration()", ->
       it "constructs a twix", ->
         from = thisYear("05-25")
