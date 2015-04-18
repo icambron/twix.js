@@ -86,8 +86,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 [license-url]: LICENSE
 
 [npm-url]: https://npmjs.org/package/twix
-[npm-version-image]: http://img.shields.io/npm/v/twix.svg?style=flat
-[npm-downloads-image]: http://img.shields.io/npm/dm/twix.svg?style=flat
+[npm-version-image]: http://img.shields.io/npm/v/twix.svg?style=flat-square
+[npm-downloads-image]: http://img.shields.io/npm/dm/twix.svg?style=flat-square
 
 [travis-url]: http://travis-ci.org/icambron/twix.js
-[travis-image]: http://img.shields.io/travis/icambron/twix.js/develop.svg?style=flat
+[travis-image]: http://img.shields.io/travis/icambron/twix.js/develop.svg?style=flat-square
