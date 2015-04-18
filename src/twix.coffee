@@ -258,6 +258,7 @@ makeTwix = (moment) ->
     equals: (other) ->
       (other instanceof Twix) &&
         @allDay == other.allDay &&
+        @containsEndpoints == other.containsEndpoints &&
         @start.valueOf() == other.start.valueOf() &&
         @end.valueOf() == other.end.valueOf()
 
