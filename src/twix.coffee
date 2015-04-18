@@ -28,12 +28,13 @@ makeTwix = (moment) ->
       @start = moment start, parseFormat, options.parseStrict
       @end = moment end, parseFormat, options.parseStrict
       @allDay = options.allDay ? false
+      @containsEndpoints = options.containsEndpoints ? true
 
       @_trueStart = if @allDay then @start.clone().startOf("day") else @start
-      if options.containEndpoints not in ["start", true, undefined]
+      if @containsEndpoints not in ["start", true]
         @_trueStart = @_trueStart.clone().add(1)
 
-      if options.containEndpoints in ["end", true, undefined]
+      if @containsEndpoints in ["end", true]
         @_trueEnd = if @allDay then @end.clone().startOf("day").add(1, "day") else @end
       else
         @_trueEnd = if @allDay then @end.clone().endOf("day") else @end.clone().subtract(1)
