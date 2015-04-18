@@ -263,7 +263,7 @@ makeTwix = (moment) ->
         @end.valueOf() == other.end.valueOf()
 
     # -- FORMATING --
-    toString: -> "{start: #{@start.format()}, end: #{@end.format()}, allDay: #{@allDay ? "true" : "false"}}"
+    toString: -> "{start: #{@start.format()}, end: #{@end.format()}, allDay: #{@allDay ? "true" : "false"}, containsEndpoints: #{@containsEndpoints ? "true" : "false"}}"
 
     simpleFormat: (momentOpts, inopts) ->
       options =
