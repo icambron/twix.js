@@ -18,7 +18,6 @@ getBounds = (startTwix, endTwix, allDay) ->
     contains = includeStart
   else
     contains = if includeStart then "start" else "end"
-  console.log "includeStart", includeStart, "includeEnd", includeEnd, "contains", contains
 
   start = startTwix.start
   if startTwix.allDay and not allDay
@@ -199,7 +198,6 @@ makeTwix = (moment) ->
         later = if @_trueEnd >= other._trueEnd then this else other
 
       [start, end, contains] = getBounds earlier, later, allDay
-      console.log earlier.containsEndpoints, start.format(), later.containsEndpoints, end.format(), contains
       new Twix(start, end, allDay: allDay, containsEndpoints: contains)
 
     intersection: (other) ->
