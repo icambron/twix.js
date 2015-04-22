@@ -780,7 +780,7 @@ test = (moment, Twix) ->
     someTime = thatDay "05:30", "08:30", containsEndpoints: contains
     someDays = new Twix "1982-05-24", "1982-05-26", allDay: true, containsEndpoints: contains
 
-    describe "union() with containsEndpoints=" + contains, ->
+    describe "with containsEndpoints=#{contains}", ->
 
       describe "non-all-day ranges", ->
 
@@ -879,10 +879,11 @@ test = (moment, Twix) ->
         it "becomes an engulfing range", ->
           assertTwixEqual someDays, thatDay().union(someDays)
 
-  unionTests true,    earlier: true,    later: true
-  unionTests "start", earlier: "start", later: true
-  unionTests "end",   earlier: true,    later: "end"
-  unionTests false,   earlier: "start", later: "end"
+  describe "union()", ->
+    unionTests true,    earlier: true,    later: true
+    unionTests "start", earlier: "start", later: true
+    unionTests "end",   earlier: true,    later: "end"
+    unionTests false,   earlier: "start", later: "end"
 
   describe "intersection()", ->
 
