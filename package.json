@@ -5,7 +5,7 @@
   "homepage": "http://icambron.github.io/twix.js/",
   "author": "Isaac Cambron",
   "keywords": ["twix", "date", "date range"],
-  "dependencies": {
+  "peerDependencies": {
     "moment": ">= 2.9.0"
   },
   "devDependencies": {
