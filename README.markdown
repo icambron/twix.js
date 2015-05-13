@@ -48,6 +48,8 @@ Patches are welcome!
 
 ## Changelog
 
+ * **0.6.4**: Use peerDependency for Moment
+
  * **0.6.3**: Moment 2.10 compatibility
 
  * **0.6.2**: Fix `iterate` for months

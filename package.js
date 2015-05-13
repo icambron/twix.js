@@ -1,7 +1,7 @@
 Package.describe({
   name: "momentjs:twix",
   summary: "Twix.js (official) by Isaac Cambron: a Moment.js plugin for working with date ranges.",
-  version: "0.6.3",
+  version: "0.6.4",
   git: "https://github.com/icambron/twix.js.git",
   documentation: "README.markdown",
 });
