@@ -9,6 +9,7 @@
     "moment": ">= 2.9.0"
   },
   "devDependencies": {
+    "moment": ">= 2.9.0",
     "benchmark": "latest",
     "mocha" : "latest",
     "uglify-js" : "latest",
