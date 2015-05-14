@@ -23,7 +23,7 @@ locale = (moment, Twix) ->
 
   moment.locale before
 
-module?.exports = locale
+return module.exports = locale if module?
 
 if typeof(define) == "function" && define.amd
   define ["moment", "twix"], (moment, Twix) -> locale(moment, Twix)
