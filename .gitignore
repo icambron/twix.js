@@ -2,3 +2,9 @@ node_modules
 test/bin
 *.bak
 npm-debug.log
+
+#JetBrains IDE files
+.idea
+
+#Mac filesystem file
+.DS_Store
