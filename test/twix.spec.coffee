@@ -1306,6 +1306,12 @@ test = (moment, Twix) ->
         options: {explicitAllDay: true}
         result: "all day May 25, 1982"
 
+      test "should show the dates but not times for multi day if explicit AllDay",
+        start: "2010-05-25 05:30"
+        end: "2010-05-27 06:30"
+        options: {explicitAllDay: true}
+        result: "May 25 - May 27, 2010"
+
     describe "no single dates", ->
       test "shouldn't show dates for intraday",
         start: "2010-05-25 05:30"

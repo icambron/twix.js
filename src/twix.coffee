@@ -351,14 +351,14 @@ makeTwix = (moment) ->
           pre: @_formatPre('dayOfWeek', options)
           slot: @_formatSlot('dayOfWeek')
 
-      if options.groupMeridiems && !options.twentyFourHour && !@allDay
+      if options.groupMeridiems && !options.twentyFourHour && !@allDay && !options.explicitAllDay
         fs.push
           name: "meridiem",
           fn: @_formatFn('meridiem', options)
           pre: @_formatPre('meridiem', options)
           slot: @_formatSlot('meridiem')
 
-      if !@allDay
+      if !@allDay && !options.explicitAllDay
         fs.push
           name: "time",
           fn: @_formatFn('time', options)
