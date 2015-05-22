@@ -278,6 +278,7 @@ makeTwix = (moment) ->
         spaceBeforeMeridiem: true
         showDate: true
         showDayOfWeek: false
+        showTime: true
         twentyFourHour: @localeData.twentyFourHour
         implicitMinutes: true
         implicitYear: true
@@ -351,14 +352,14 @@ makeTwix = (moment) ->
           pre: @_formatPre('dayOfWeek', options)
           slot: @_formatSlot('dayOfWeek')
 
-      if options.groupMeridiems && !options.twentyFourHour && !@allDay && !options.explicitAllDay
+      if options.groupMeridiems && !options.twentyFourHour && !@allDay && options.showTime
         fs.push
           name: "meridiem",
           fn: @_formatFn('meridiem', options)
           pre: @_formatPre('meridiem', options)
           slot: @_formatSlot('meridiem')
 
-      if !@allDay && !options.explicitAllDay
+      if !@allDay && options.showTime
         fs.push
           name: "time",
           fn: @_formatFn('time', options)

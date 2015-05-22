@@ -1306,12 +1306,6 @@ test = (moment, Twix) ->
         options: {explicitAllDay: true}
         result: "all day May 25, 1982"
 
-      test "should show the dates but not times for multi day if explicit AllDay",
-        start: "2010-05-25 05:30"
-        end: "2010-05-27 06:30"
-        options: {explicitAllDay: true}
-        result: "May 25 - May 27, 2010"
-
     describe "no single dates", ->
       test "shouldn't show dates for intraday",
         start: "2010-05-25 05:30"
@@ -1325,12 +1319,25 @@ test = (moment, Twix) ->
         options: {showDate : false}
         result: "May 25, 5:30 AM - May 27, 6:30 AM"
 
-      test "should just say 'all day' for all day rangess",
+      test "should just say 'all day' for all day ranges",
         start: thisYear("05-25")
         end: thisYear("05-25")
         options: {showDate : false}
         allDay: true
         result: "all day"
+
+    describe "showTime includes time", ->
+      test "should show the dates and the times for multi day if showTime explicitly true",
+        start: "2010-05-25 05:30"
+        end: "2010-05-27 06:30"
+        result: "May 25, 5:30 AM - May 27, 6:30 AM, 2010"
+
+      test "should show the dates but not times for multi day if showTime false",
+        start: "2010-05-25 05:30"
+        end: "2010-05-27 06:30"
+        options: {showTime: false}
+        result: "May 25 - May 27, 2010"
+
 
     describe "ungroup meridiems", ->
       test "should put meridiems on both sides",
