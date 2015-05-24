@@ -545,7 +545,7 @@ Here are all the options and their defaults
   spaceBeforeMeridiem: true,
   showDate: true,
   showDayOfWeek: false,
-  showTime: false,
+  showTime: true,
   twentyFourHour: false,
   implicitMinutes: true,
   implicitYear: true,
