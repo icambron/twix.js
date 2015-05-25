@@ -11,6 +11,24 @@ deprecate = (name, instead, fn) ->
 isArray = (input) ->
   Object.prototype.toString.call(input) == '[object Array]'
 
+getBounds = (startTwix, endTwix, allDay) ->
+  includeStart = startTwix.containsEndpoints in [true, "start"]
+  includeEnd = endTwix.containsEndpoints in [true, "end"]
+  if includeStart == includeEnd
+    contains = includeStart
+  else
+    contains = if includeStart then "start" else "end"
+
+  start = startTwix.start
+  if startTwix.allDay and not allDay
+    start = startTwix.start.clone().startOf("day")
+
+  end = endTwix.end
+  if endTwix.allDay and not allDay
+    end = endTwix.end.clone().startOf("day").add(1, "day")
+
+  [start, end, contains]
+
 makeTwix = (moment) ->
   throw "Can't find moment" unless moment?
 
@@ -28,9 +46,16 @@ makeTwix = (moment) ->
       @start = moment start, parseFormat, options.parseStrict
       @end = moment end, parseFormat, options.parseStrict
       @allDay = options.allDay ? false
+      @containsEndpoints = options.containsEndpoints ? true
 
       @_trueStart = if @allDay then @start.clone().startOf("day") else @start
-      @_trueEnd = if @allDay then @end.startOf('d').clone().add(1, "day") else @end
+      unless @containsEndpoints in ["start", true]
+        @_trueStart = @_trueStart.clone().add(1)
+
+      if @containsEndpoints in ["end", true]
+        @_trueEnd = if @allDay then @end.clone().startOf("day").add(1, "day") else @end
+      else
+        @_trueEnd = if @allDay then @end.clone().endOf("day") else @end.clone().subtract(1)
 
     @_extend: (first, others...) ->
       for other in others
@@ -162,14 +187,18 @@ makeTwix = (moment) ->
 
     union: (other) ->
       allDay = @allDay && other.allDay
-      if allDay
-        newStart = if @start < other.start then @start else other.start
-        newEnd = if @end > other.end then @end else other.end
+      if allDay and +@_trueStart == +other._trueStart
+        earlier = if @start <= other.start then this else other
       else
-        newStart = if @_trueStart < other._trueStart then @_trueStart else other._trueStart
-        newEnd = if @_trueEnd > other._trueEnd then @_trueEnd else other._trueEnd
+        earlier = if @_trueStart <= other._trueStart then this else other
 
-      new Twix(newStart, newEnd, allDay)
+      if allDay and +@_trueEnd == +other._trueEnd
+        later = if @end >= other.end then this else other
+      else
+        later = if @_trueEnd >= other._trueEnd then this else other
+
+      [start, end, contains] = getBounds earlier, later, allDay
+      new Twix(start, end, allDay: allDay, containsEndpoints: contains)
 
     intersection: (other) ->
       allDay = @allDay && other.allDay
@@ -251,11 +280,12 @@ makeTwix = (moment) ->
     equals: (other) ->
       (other instanceof Twix) &&
         @allDay == other.allDay &&
+        @containsEndpoints == other.containsEndpoints &&
         @start.valueOf() == other.start.valueOf() &&
         @end.valueOf() == other.end.valueOf()
 
     # -- FORMATING --
-    toString: -> "{start: #{@start.format()}, end: #{@end.format()}, allDay: #{@allDay ? "true" : "false"}}"
+    toString: -> "{start: #{@start.format()}, end: #{@end.format()}, allDay: #{@allDay ? "true" : "false"}, containsEndpoints: #{@containsEndpoints ? "true" : "false"}}"
 
     simpleFormat: (momentOpts, inopts) ->
       options =

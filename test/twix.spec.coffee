@@ -15,9 +15,9 @@ test = (moment, Twix) ->
   yesterday = -> moment().subtract(1, "day").startOf "day"
   tomorrow = -> moment().add(1, "day").startOf "day"
 
-  thatDay = (start, end) ->
+  thatDay = (start, end, options) ->
     if start
-      moment("1982-05-25T#{start}").twix "1982-05-25T#{end}"
+      moment("1982-05-25T#{start}").twix "1982-05-25T#{end}", options
     else
       moment("1982-05-25").twix "1982-05-25", true
 
@@ -59,6 +59,18 @@ test = (moment, Twix) ->
         assertEqual t.allDay, true
         t = moment("1981-05-25").twix("1982-05-25", allDay: true)
         assertEqual t.allDay, true
+
+      it "creates closed ranges by default", ->
+        t = moment("1981-05-25").twix("05/25/1982", "MM/DD/YYYY")
+        assertEqual t.containsEndpoints, true
+        t = moment("1981-05-25").twix("1982-05-25")
+        assertEqual t.containsEndpoints, true
+
+      it "uses a containsEndpoints option argument", ->
+        t = moment("1981-05-25").twix("05/25/1982", "MM/DD/YYYY", containsEndpoints: false)
+        assertEqual t.containsEndpoints, false
+        t = moment("1981-05-25").twix("1982-05-25", containsEndpoints: false)
+        assertEqual t.containsEndpoints, false
 
     describe "moment.forDuration()", ->
       it "constructs a twix", ->
@@ -764,67 +776,114 @@ test = (moment, Twix) ->
       it "returns true for an engulfing range", ->
         assertNotEngulfing someDays, new Twix("1982-05-22", "1982-05-28", true)
 
+  unionTests = (contains, resultContains) ->
+    someTime = thatDay "05:30", "08:30", containsEndpoints: contains
+    someDays = new Twix "1982-05-24", "1982-05-26", allDay: true, containsEndpoints: contains
+
+    describe "with containsEndpoints=#{contains}", ->
+
+      describe "non-all-day ranges", ->
+
+        it "spans a later time", ->
+          assertTwixEqual(
+            thatDay("05:30", "11:30", containsEndpoints: resultContains.later),
+            someTime.union(thatDay "09:30", "11:30")
+          )
+
+        it "spans an earlier time", ->
+          assertTwixEqual(
+            thatDay("03:30", "08:30", containsEndpoints: resultContains.earlier),
+            someTime.union(thatDay "03:30", "04:30")
+          )
+
+        it "spans a partially later range", ->
+          assertTwixEqual(
+            thatDay("05:30", "11:30", containsEndpoints: resultContains.later),
+            someTime.union(thatDay "08:00", "11:30")
+          )
+
+        it "spans a partially earlier range", ->
+          assertTwixEqual(
+            thatDay("04:30", "08:30", containsEndpoints: resultContains.earlier),
+            someTime.union(thatDay "04:30", "06:30")
+          )
+
+        it "isn't affected by engulfed ranges", ->
+          assertTwixEqual someTime, someTime.union(thatDay "06:30", "07:30")
+
+        it "becomes an engulfing range", ->
+          assertTwixEqual thatDay("04:30", "09:30"), someTime.union(thatDay "04:30", "09:30")
+
+        it "spans adjacent ranges", ->
+          assertTwixEqual(
+            thatDay("05:30", "09:30", containsEndpoints: resultContains.later),
+            someTime.union(thatDay "08:30", "09:30")
+          )
+
+      describe "one all-day range", ->
+
+        it "spans a later time", ->
+          assertTwixEqual(
+            new Twix("1982-05-24 00:00", "1982-05-27 07:00", containsEndpoints: resultContains.later),
+            someDays.union(new Twix("1982-05-24 20:00", "1982-05-27 07:00"))
+          )
+
+        it "spans an earlier time", ->
+          assertTwixEqual(
+            new Twix("1982-05-23 08:00", moment("1982-05-27"), containsEndpoints: resultContains.earlier),
+            someDays.union(new Twix("1982-05-23 08:00", "1982-05-25 07:00"))
+          )
+
+        #i'm tempted to just say this is wrong...shouldn't it get to stay an all-day range?
+        it "isn't affected by engulfing ranges", ->
+          assertTwixEqual(
+            new Twix("1982-05-24 00:00", moment("1982-05-27"), containsEndpoints: contains),
+            someDays.union(someTime)
+          )
+
+        it "becomes an engulfing range", ->
+          assertTwixEqual(
+            new Twix("1982-05-23 20:00", "1982-05-27 08:30"),
+            someDays.union(new Twix("1982-05-23 20:00", "1982-05-27 08:30"))
+          )
+
+      describe "two all-day ranges", ->
+
+        it "spans a later time", ->
+          assertTwixEqual(
+            new Twix("1982-05-24", "1982-05-29", allDay: true, containsEndpoints: resultContains.later),
+            someDays.union(new Twix("1982-05-28", "1982-05-29", true))
+          )
+
+        it "spans an earlier time", ->
+          assertTwixEqual(
+            new Twix("1982-05-21", "1982-05-26", allDay: true, containsEndpoints: resultContains.earlier),
+            someDays.union(new Twix("1982-05-21", "1982-05-22", true))
+          )
+
+        it "spans a partially later time", ->
+          assertTwixEqual(
+            new Twix("1982-05-24", "1982-05-27", allDay: true, containsEndpoints: resultContains.later),
+            someDays.union(new Twix("1982-05-26", "1982-05-27", true))
+          )
+
+        it "spans a partially earlier time", ->
+          assertTwixEqual(
+            new Twix("1982-05-23", "1982-05-26", allDay: true, containsEndpoints: resultContains.earlier),
+            someDays.union(new Twix("1982-05-23", "1982-05-24", true))
+          )
+
+        it "isn't affected by engulfing ranges", ->
+          assertTwixEqual someDays, someDays.union(thatDay())
+
+        it "becomes an engulfing range", ->
+          assertTwixEqual someDays, thatDay().union(someDays)
+
   describe "union()", ->
-
-    someTime = thatDay "05:30", "08:30"
-    someDays = new Twix "1982-05-24", "1982-05-25", true
-
-    describe "non-all-day ranges", ->
-
-      it "spans a later time", ->
-        assertTwixEqual thatDay("05:30", "11:30"), someTime.union(thatDay "09:30", "11:30")
-
-      it "spans an earlier time", ->
-        assertTwixEqual thatDay("03:30", "08:30"), someTime.union(thatDay "03:30", "04:30")
-
-      it "spans a partially later range", ->
-        assertTwixEqual thatDay("05:30", "11:30"), someTime.union(thatDay "08:00", "11:30")
-
-      it "spans a partially earlier range", ->
-        assertTwixEqual thatDay("04:30", "08:30"), someTime.union(thatDay "04:30", "06:30")
-
-      it "isn't affected by engulfed ranges", ->
-        assertTwixEqual someTime, someTime.union(thatDay "06:30", "07:30")
-
-      it "becomes an engulfing range", ->
-        assertTwixEqual thatDay("04:30", "09:30"), someTime.union(thatDay "04:30", "09:30")
-
-      it "spans adjacent ranges", ->
-        assertTwixEqual thatDay("05:30", "09:30"), someTime.union(thatDay "08:30", "09:30")
-
-    describe "one all-day range", ->
-      it "spans a later time", ->
-        assertTwixEqual new Twix("1982-05-24 00:00", "1982-05-26 07:00"), someDays.union(new Twix("1982-05-24 20:00", "1982-05-26 07:00"))
-
-      it "spans an earlier time", ->
-        assertTwixEqual new Twix("1982-05-23 08:00", moment("1982-05-26")), someDays.union(new Twix("1982-05-23 08:00", "1982-05-25 07:00"))
-
-      #i'm tempted to just say this is wrong...shouldn't it get to stay an all-day range?
-      it "isn't affected by engulfing ranges", ->
-        assertTwixEqual new Twix("1982-05-24 00:00", moment("1982-05-26")), someDays.union(someTime)
-
-      it "becomes an engulfing range", ->
-        assertTwixEqual new Twix("1982-05-23 20:00", "1982-05-26 08:30"), someDays.union(new Twix("1982-05-23 20:00", "1982-05-26 08:30"))
-
-    describe "two all-day ranges", ->
-
-      it "spans a later time", ->
-        assertTwixEqual new Twix("1982-05-24", "1982-05-28", true), someDays.union(new Twix("1982-05-27", "1982-05-28", true))
-
-      it "spans an earlier time", ->
-        assertTwixEqual new Twix("1982-05-21", "1982-05-25", true), someDays.union(new Twix("1982-05-21", "1982-05-22", true))
-
-      it "spans a partially later time", ->
-        assertTwixEqual new Twix("1982-05-24", "1982-05-26", true), someDays.union(new Twix("1982-05-25", "1982-05-26", true))
-
-      it "spans a partially earlier time", ->
-        assertTwixEqual new Twix("1982-05-23", "1982-05-25", true), someDays.union(new Twix("1982-05-23", "1982-05-25", true))
-
-      it "isn't affected by engulfing ranges", ->
-        assertTwixEqual someDays, someDays.union(thatDay())
-
-      it "becomes an engulfing range", ->
-        assertTwixEqual someDays, thatDay().union(someDays)
+    unionTests true,    earlier: true,    later: true
+    unionTests "start", earlier: "start", later: true
+    unionTests "end",   earlier: true,    later: "end"
+    unionTests false,   earlier: "start", later: "end"
 
   describe "intersection()", ->
 
