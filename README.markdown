@@ -48,6 +48,8 @@ Patches are welcome!
 
 ## Changelog
 
+ * **0.6.5**: Fix for `contains()` on all-day ranges
+
  * **0.6.4**: Use peerDependency for Moment
 
  * **0.6.3**: Moment 2.10 compatibility
