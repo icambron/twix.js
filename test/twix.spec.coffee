@@ -509,7 +509,7 @@ test = (moment, Twix) ->
       assertEqual(false, thatDay("12:00", "13:00").isEmpty())
 
     it "returns false for 'empty' all-day ranges", ->
-      assertEqual(false, moment("1982-05-25").twix("1982-05-25", allDay: true).isEmpty())
+      assertEqual(false, moment("1982-05-25").twix("1982-05-25", true).isEmpty())
 
   describe "asDuration()", ->
     it "returns a duration object", ->
@@ -623,6 +623,9 @@ test = (moment, Twix) ->
 
       it "returns false for moments before the range", ->
         assertEqual false, range.contains(thisYear "05-24")
+
+      it "returns false for moments after the end of the range", ->
+        assertEqual false, range.contains(thisYear "05-26", "00:00:00")
 
       it "returns false for moments after the range", ->
         assertEqual false, range.contains(thisYear "05-26", "00:00:01")
@@ -1030,16 +1033,16 @@ test = (moment, Twix) ->
         second = new Twix "1982-05-25", "1982-05-27", true
 
         firstStart = first._trueStart.clone()
-        firstEnd = first._trueEnd.clone()
+        firstEnd = first._displayEnd.clone()
         secondStart = second._trueStart.clone()
-        secondEnd = second._trueEnd.clone()
+        secondEnd = second._displayEnd.clone()
 
         first.difference(second)
 
         assertMomentEqual firstStart, first._trueStart
-        assertMomentEqual firstEnd, first._trueEnd
+        assertMomentEqual firstEnd, first._displayEnd
         assertMomentEqual secondStart, second._trueStart
-        assertMomentEqual secondEnd, second._trueEnd
+        assertMomentEqual secondEnd, second._displayEnd
 
     describe "multiple ranges", ->
       it "returns the difference of three ranges", ->
