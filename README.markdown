@@ -23,7 +23,7 @@ And much more.
 
 **Attention Moment 2.10.x users**: You need to upgrade to the latest Twix! You also should make sure not to be on Moment 2.10.0 (i.e. upgrade to the latest point release) because it has some compatibility issues with Twix.
 
-**Breaking change in 0.7.0**: Twix French internationalization (for French) is no longer supported. It doesn't seem to have had a lot of use, and it's pain to maintain.
+**Breaking change in 0.7.0**: Twix formatting internationalization (just French, really) is no longer supported. It doesn't seem to have had a lot of use, and it's pain to maintain. Don't worry, we still support Moment's internationalized tokens.
 
 ## Building
 
