@@ -14,12 +14,12 @@
       require.config({
         paths: {
           moment: "../vendor/moment/moment",
-          momentLang: "../vendor/moment/min/lang",
-          twixes: "../bin"
+          momentLang: "../vendor/moment/locale",
+          twixes: "../dist"
         }
       });
 
-      require(["moment", "momentLang/de", "momentLang/fr", "twixes/twix", "twixes/lang", "./bin/twix.spec.js"], function(moment){
+      require(["moment", "momentLang/en-gb", "twixes/twix", "./dist/twix.spec.js"], function(moment){
         mocha.run();
       })
     </script>

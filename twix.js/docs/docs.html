@@ -4,7 +4,7 @@
 
 <h3 id="browser">Browser</h3>
 
-<p>Grab <a href="https://raw.github.com/icambron/twix.js/master/bin/twix.min.js">the file</a> as well as <a href="https://raw.github.com/timrwood/moment/2.0.0/moment.min.js">moment.js</a>. Then simply reference twix after moment:</p>
+<p>Grab <a href="https://raw.github.com/icambron/twix.js/master/dist/twix.min.js">the file</a> as well as <a href="https://raw.github.com/timrwood/moment/2.0.0/moment.min.js">moment.js</a>. Then simply reference twix after moment:</p>
 
 <p><code>html
 &lt;script src="moment.min.js"&gt;&lt;/script&gt;
@@ -295,7 +295,7 @@ var range2 = moment("1982-05-27").twix("1982-06-13");</p>
 ```</p>
 
 <h3 id="xor">xor</h3>
-<p>Returns an array of ranges that aren't in one range or the other, but not both.</p>
+<p>Returns an array of ranges that are in one range or the other, but not both.</p>
 
 <p>```js
 var range1 = moment("1982-05-24").twix("1982-05-28", true);
@@ -494,14 +494,18 @@ twix.format({implicitYear: false}); //=&gt; Mar 28, 1:13 AM - Mar 29, 1:13 AM, 2
 
 <h3 id="hour-time">24-hour time</h3>
 
-<p>Right, not everyone is American:</p>
+<p>Right, not everyone is American. If you use a Moment locale for the range's start, like "en-gb", Twix will automatically use its hour format setting.</p>
+
+<p>Otherwise, simply override the <code>hourFormat</code> option.</p>
 
 <p><code>js
-moment("2012-05-25T16:00").twix("2012-05-25T17:00").format({twentyFourHour: true});
+moment("2012-05-25T16:00").twix("2012-05-25T17:00").format({hourFormat: "H"});
 //=&gt; May 25, 16:00 - 17:00
 </code></p>
 
-<p>Notice there's no hour abbreviation.</p>
+<p>This uses Moment's formatting tokens ("H" = 1- or 2-digit 24-hour time, "HH" = always 2-digit, whereas "h" and "hh" are the American versions). Notice there minutes are there in 24-hour time even if they're zero.</p>
+
+<p>The previous <code>twentyFourHour: true</code> setting is still supported, but is deprecated.</p>
 
 <h3 id="changing-the-format">Changing the format</h3>
 
@@ -551,7 +555,6 @@ moment("2012-01-25").twix("2012-01-25", {allDay: true}).format({showDate: false}
   spaceBeforeMeridiem: true,
   showDate: true,
   showDayOfWeek: false,
-  twentyFourHour: false,
   implicitMinutes: true,
   implicitYear: true,
   yearFormat: "YYYY",
@@ -567,34 +570,10 @@ moment("2012-01-25").twix("2012-01-25", {allDay: true}).format({showDate: false}
 }
 </code></p>
 
-<h2 id="internationalization">Internationalization</h2>
-
-<p>Moment supports a wide variety of languages, and if you set the language for moment (or individual moment instances), Twix will automatically use the localize formatting tokens. For example:</p>
-
-<p><code>js
-moment.lang("fr");
-moment().twix(moment().add(3, "month")).simpleFormat("MMMM"); //=&gt; 'juillet - octobre'
-</code></p>
-
-<p>However, when it comes to smart formatting, Twix has to make choices about what order the tokens go in, and those might not match the language. So Twix has its own language files that tell the smart formatter how to organize the range string. There are only a couple of language files right now, but will hopefully grow. <strong>This feature is experimental and currently only includes French.</strong></p>
-
-<p><code>js
-moment("1982-05-25").twix(moment("1982-05-27")).format(); //=&gt; '25 mai, 0:00 - 27 mai, 0:00, 1982'
-</code></p>
-
-<p>Unlike Moment, Twix currently puts all the language definitions in the same file, so there's only one thing to load. Here's how it works:</p>
-
-<ul>
-  <li><strong>Node</strong>: If you're using Node.js, Twix will automatically try to load the language for whatever language Moment is set to; there's nothing for you to do.</li>
-  <li><strong>Browser</strong>: The same goes for the browser, but you'll have to provide the <a href="https://github.com/icambron/twix.js/tree/master/bin/lang.js">language file</a>. So include it in a script tag after Moment and Twix (you will also want Moment's language file for the token translations).</li>
-  <li><strong>AMD support</strong>: The language file also supports AMD, so you can load it with RequireJS just like you did Twix itself.</li>
-  <li><strong>Defaults</strong>: If the Moment language doesn't have a corresponding Twix language, Twix will use the default (American English) formatting.</li>
-</ul>
-
 <h2 id="source-code">Source code</h2>
 
 <p>Twix is open source (MIT License) and hosted on Github <a href="http://github.com/icambron/twix.js">here</a>. Instructions for building/contributing are there.</p>
 
-<p><a href="https://npmjs.org/package/twix"><img alt="NPM version" src="http://img.shields.io/npm/v/twix.svg?style=flat" /></a> <a href="https://npmjs.org/package/twix"><img alt="NPM downloads" src="http://img.shields.io/npm/dm/twix.svg?style=flat" /></a> <a href="LICENSE"><img alt="MIT License" src="http://img.shields.io/badge/license-MIT-blue.svg?style=flat" /></a> <a href="http://travis-ci.org/icambron/twix.js"><img alt="Build Status" src="http://img.shields.io/travis/icambron/twix.js/develop.svg?style=flat" /></a></p>
+<p><a href="https://npmjs.org/package/twix"><img alt="NPM version" src="http://img.shields.io/npm/v/twix.svg?style=flat-square" /></a> <a href="https://npmjs.org/package/twix"><img alt="NPM downloads" src="http://img.shields.io/npm/dm/twix.svg?style=flat-square" /></a> <a href="LICENSE"><img alt="MIT License" src="http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" /></a> <a href="http://travis-ci.org/icambron/twix.js"><img alt="Build Status" src="http://img.shields.io/travis/icambron/twix.js/develop.svg?style=flat-square" /></a></p>
 
 </body></html>

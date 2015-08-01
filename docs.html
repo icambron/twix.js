@@ -4,7 +4,7 @@
 
 <h3 id="browser">Browser</h3>
 
-<p>Grab <a href="https://raw.github.com/icambron/twix.js/master/bin/twix.min.js">the file</a> as well as <a href="https://raw.github.com/timrwood/moment/2.0.0/moment.min.js">moment.js</a>. Then simply reference twix after moment:</p>
+<p>Grab <a href="https://raw.github.com/icambron/twix.js/master/dist/twix.min.js">the file</a> as well as <a href="https://raw.github.com/timrwood/moment/2.0.0/moment.min.js">moment.js</a>. Then simply reference twix after moment:</p>
 <pre class="html highlight"><code><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"moment.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
 <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"twix.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
 </code></pre>
@@ -248,7 +248,7 @@ Returns an iterator that will return each a moment for each time period included
 
 <h3 id="xor">xor</h3>
 
-<p>Returns an array of ranges that aren&#39;t in one range or the other, but not both.</p>
+<p>Returns an array of ranges that are in one range or the other, but not both.</p>
 <pre class="javascript highlight"><code><span class="kd">var</span> <span class="nx">range1</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-24"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"1982-05-28"</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
 <span class="kd">var</span> <span class="nx">range2</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-22"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"1982-05-26"</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
 <span class="kd">var</span> <span class="nx">xorred</span> <span class="o">=</span> <span class="nx">range1</span><span class="p">.</span><span class="nx">xor</span><span class="p">(</span><span class="nx">range2</span><span class="p">);</span>
@@ -416,12 +416,16 @@ Returns an iterator that will return each a moment for each time period included
 
 <h3 id="24-hour-time">24-hour time</h3>
 
-<p>Right, not everyone is American:</p>
-<pre class="javascript highlight"><code><span class="nx">moment</span><span class="p">(</span><span class="s2">"2012-05-25T16:00"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"2012-05-25T17:00"</span><span class="p">).</span><span class="nx">format</span><span class="p">({</span><span class="na">twentyFourHour</span><span class="p">:</span> <span class="kc">true</span><span class="p">});</span>
+<p>Right, not everyone is American. If you use a Moment locale for the range&#39;s start, like &quot;en-gb&quot;, Twix will automatically use its hour format setting.</p>
+
+<p>Otherwise, simply override the <code>hourFormat</code> option.</p>
+<pre class="javascript highlight"><code><span class="nx">moment</span><span class="p">(</span><span class="s2">"2012-05-25T16:00"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"2012-05-25T17:00"</span><span class="p">).</span><span class="nx">format</span><span class="p">({</span><span class="na">hourFormat</span><span class="p">:</span> <span class="s2">"H"</span><span class="p">});</span>
 <span class="c1">//=&gt; May 25, 16:00 - 17:00</span>
 </code></pre>
 
-<p>Notice there&#39;s no hour abbreviation.</p>
+<p>This uses Moment&#39;s formatting tokens (&quot;H&quot; = 1- or 2-digit 24-hour time, &quot;HH&quot; = always 2-digit, whereas &quot;h&quot; and &quot;hh&quot; are the American versions). Notice there minutes are there in 24-hour time even if they&#39;re zero.</p>
+
+<p>The previous <code>twentyFourHour: true</code> setting is still supported, but is deprecated.</p>
 
 <h3 id="changing-the-format">Changing the format</h3>
 
@@ -461,7 +465,6 @@ Returns an iterator that will return each a moment for each time period included
   <span class="nx">spaceBeforeMeridiem</span><span class="err">:</span> <span class="kc">true</span><span class="p">,</span>
   <span class="nx">showDate</span><span class="err">:</span> <span class="kc">true</span><span class="p">,</span>
   <span class="nx">showDayOfWeek</span><span class="err">:</span> <span class="kc">false</span><span class="p">,</span>
-  <span class="nx">twentyFourHour</span><span class="err">:</span> <span class="kc">false</span><span class="p">,</span>
   <span class="nx">implicitMinutes</span><span class="err">:</span> <span class="kc">true</span><span class="p">,</span>
   <span class="nx">implicitYear</span><span class="err">:</span> <span class="kc">true</span><span class="p">,</span>
   <span class="nx">yearFormat</span><span class="err">:</span> <span class="s2">"YYYY"</span><span class="p">,</span>
@@ -477,31 +480,11 @@ Returns an iterator that will return each a moment for each time period included
 <span class="p">}</span>
 </code></pre>
 
-<h2 id="internationalization">Internationalization</h2>
-
-<p>Moment supports a wide variety of languages, and if you set the language for moment (or individual moment instances), Twix will automatically use the localize formatting tokens. For example:</p>
-<pre class="javascript highlight"><code><span class="nx">moment</span><span class="p">.</span><span class="nx">lang</span><span class="p">(</span><span class="s2">"fr"</span><span class="p">);</span>
-<span class="nx">moment</span><span class="p">().</span><span class="nx">twix</span><span class="p">(</span><span class="nx">moment</span><span class="p">().</span><span class="nx">add</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">"month"</span><span class="p">)).</span><span class="nx">simpleFormat</span><span class="p">(</span><span class="s2">"MMMM"</span><span class="p">);</span> <span class="c1">//=&gt; 'juillet - octobre'</span>
-</code></pre>
-
-<p>However, when it comes to smart formatting, Twix has to make choices about what order the tokens go in, and those might not match the language. So Twix has its own language files that tell the smart formatter how to organize the range string. There are only a couple of language files right now, but will hopefully grow. <strong>This feature is experimental and currently only includes French.</strong></p>
-<pre class="javascript highlight"><code><span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-25"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-27"</span><span class="p">)).</span><span class="nx">format</span><span class="p">();</span> <span class="c1">//=&gt; '25 mai, 0:00 - 27 mai, 0:00, 1982'</span>
-</code></pre>
-
-<p>Unlike Moment, Twix currently puts all the language definitions in the same file, so there&#39;s only one thing to load. Here&#39;s how it works:</p>
-
-<ul>
-<li><strong>Node</strong>: If you&#39;re using Node.js, Twix will automatically try to load the language for whatever language Moment is set to; there&#39;s nothing for you to do.</li>
-<li><strong>Browser</strong>: The same goes for the browser, but you&#39;ll have to provide the <a href="https://github.com/icambron/twix.js/tree/master/bin/lang.js">language file</a>. So include it in a script tag after Moment and Twix (you will also want Moment&#39;s language file for the token translations).</li>
-<li><strong>AMD support</strong>: The language file also supports AMD, so you can load it with RequireJS just like you did Twix itself.</li>
-<li><strong>Defaults</strong>: If the Moment language doesn&#39;t have a corresponding Twix language, Twix will use the default (American English) formatting.</li>
-</ul>
-
 <h2 id="source-code">Source code</h2>
 
 <p>Twix is open source (MIT License) and hosted on Github <a href="http://github.com/icambron/twix.js">here</a>. Instructions for building/contributing are there.</p>
 
-<p><a href="https://npmjs.org/package/twix"><img src="http://img.shields.io/npm/v/twix.svg?style=flat" alt="NPM version"></a> <a href="https://npmjs.org/package/twix"><img src="http://img.shields.io/npm/dm/twix.svg?style=flat" alt="NPM downloads"></a> <a href="LICENSE"><img src="http://img.shields.io/badge/license-MIT-blue.svg?style=flat" alt="MIT License"></a> <a href="http://travis-ci.org/icambron/twix.js"><img src="http://img.shields.io/travis/icambron/twix.js/develop.svg?style=flat" alt="Build Status"></a></p>
+<p><a href="https://npmjs.org/package/twix"><img src="http://img.shields.io/npm/v/twix.svg?style=flat-square" alt="NPM version"></a> <a href="https://npmjs.org/package/twix"><img src="http://img.shields.io/npm/dm/twix.svg?style=flat-square" alt="NPM downloads"></a> <a href="LICENSE"><img src="http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt="MIT License"></a> <a href="http://travis-ci.org/icambron/twix.js"><img src="http://img.shields.io/travis/icambron/twix.js/develop.svg?style=flat-square" alt="Build Status"></a></p>
 </div><div class="col-md-3"><div data-offset-top="40" data-spy="affix" id="toc"><ul>
 <li>
 <a href="#getting-started">Getting started</a>
@@ -645,9 +628,6 @@ Returns an iterator that will return each a moment for each time period included
 <a href="#all-the-options">All the options</a>
 </li>
 </ul>
-</li>
-<li>
-<a href="#internationalization">Internationalization</a>
 </li>
 <li>
 <a href="#source-code">Source code</a>

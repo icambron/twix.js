@@ -1060,8 +1060,17 @@
         it("intersects with an engulfing range", function() {
           return assertTwixEqual(thatDay("05:30", "08:30"), someTime.intersection(thatDay("04:30", "09:30")));
         });
-        return it("does not intersect an adjacent range", function() {
+        it("does not intersect an adjacent range (later)", function() {
           return assertEqual(0, someTime.intersection(thatDay("08:30", "09:30")).length());
+        });
+        it("does not intersect an adjacent range (earlier)", function() {
+          return assertEqual(0, someTime.intersection(thatDay("04:30", "05:30")).length());
+        });
+        it("returns self for an identical range", function() {
+          return assertTwixEqual(someTime, someTime.intersection(someTime));
+        });
+        return it("returns self for a time that starts at the same time but ends later", function() {
+          return assertTwixEqual(someTime, someTime.intersection(thatDay("05:30", "09:30")));
         });
       });
       describe("one all-day range", function() {
@@ -1236,11 +1245,18 @@
           exed = thatDay("06:30", "07:30").difference(someTime);
           return assertEqual(0, exed.length);
         });
-        return it("returns self for an adjacent range", function() {
+        it("returns self for an adjacent range", function() {
           var exed;
           exed = someTime.difference(thatDay("08:30", "10:30"));
           assertEqual(1, exed.length);
           return assertTwixEqual(someTime, exed[0]);
+        });
+        return it("returns self for an adjacent range (inverse)", function() {
+          var exed, other;
+          other = thatDay("08:30", "10:30");
+          exed = other.difference(someTime);
+          assertEqual(1, exed.length);
+          return assertTwixEqual(other, exed[0]);
         });
       });
       describe("one all-day range", function() {
@@ -1773,28 +1789,11 @@
       });
     });
     return describe("internationalization", function() {
-      it("uses alternative language when specified by moment", function() {
+      return it("uses the moment locale's LT setting by default", function() {
         var range, start;
-        start = moment("1982-05-25").locale("fr");
-        range = start.twix(start.clone().add(1, 'days'));
-        return assertEqual('25 mai, 0:00 - 26 mai, 0:00, 1982', range.format());
-      });
-      it("uses English formatting rules when there's no format for the specified language", function() {
-        var range, start;
-        start = moment("1982-10-14").locale("de");
-        range = start.twix(start.clone().add(1, 'days'));
-        return assertEqual('Okt. 14, 12 AM - Okt. 15, 12 AM, 1982', range.format());
-      });
-      return it("uses alternative languages when they're set globally", function() {
-        var range, start;
-        try {
-          moment.locale("fr");
-          start = moment("1982-05-25");
-          range = start.twix(start.clone().add(1, 'days'));
-          return assertEqual('25 mai, 0:00 - 26 mai, 0:00, 1982', range.format());
-        } finally {
-          moment.locale("en");
-        }
+        start = moment("1982-05-25").locale("en-gb");
+        range = start.twix(start.clone().add(1, "days"));
+        return assertEqual("May 25, 0:00 - May 26, 0:00, 1982", range.format());
       });
     });
   };
@@ -1805,7 +1804,7 @@
     });
   } else {
     moment = (ref = typeof require === "function" ? require("moment") : void 0) != null ? ref : this.moment;
-    Twix = (ref1 = typeof require === "function" ? require("../../bin/twix") : void 0) != null ? ref1 : this.Twix;
+    Twix = (ref1 = typeof require === "function" ? require("../../dist/twix") : void 0) != null ? ref1 : this.Twix;
     test(moment, Twix);
   }
 

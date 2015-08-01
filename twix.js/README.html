@@ -22,7 +22,7 @@ t.count("days"); //=&gt; 1
 
 <p><strong>Attention Moment 2.10.x users</strong>: You need to upgrade to the latest Twix! You also should make sure not to be on Moment 2.10.0 (i.e. upgrade to the latest point release) because it has some compatibility issues with Twix.</p>
 
-<p><strong>Breaking change in 0.6.0</strong> Twix ranges will ignore changes to their endpoints; once you create the range, it's frozen in place. Construct new ranges to grow/shrink.</p>
+<p><strong>Breaking change in 0.7.0</strong>: Twix French internationalization (for French) is no longer supported. It doesn't seem to have had a lot of use, and it's pain to maintain.</p>
 
 <h2 id="building">Building</h2>
 
@@ -33,7 +33,7 @@ t.count("days"); //=&gt; 1
 
 <p>Configure just installs the NPMs (including CoffeeScript) and brings in Moment as a submodule, so you only have to do that part once.</p>
 
-<p>Note that the source is <code>src/twix.coffee</code>; the output is <code>bin/twix.js</code>. You can run the tests via</p>
+<p>Note that the source is <code>src/twix.coffee</code>; the output is <code>dist/twix.js</code>. You can run the tests via</p>
 
 <pre><code>make test
 </code></pre>
@@ -52,6 +52,12 @@ t.count("days"); //=&gt; 1
 <h2 id="changelog">Changelog</h2>
 
 <ul>
+  <li>
+    <p><strong>0.7.0</strong>: Fixed bug in <code>xor()</code> and <code>difference()</code>. Fixed compatibility with other plugins. Removed custom locale support. Deprecated <code>twentyFourHour</code>. Moved <code>bin</code> to <code>dist</code>.</p>
+  </li>
+  <li>
+    <p><strong>0.6.5</strong>: Fix for <code>contains()</code> on all-day ranges</p>
+  </li>
   <li>
     <p><strong>0.6.4</strong>: Use peerDependency for Moment</p>
   </li>
