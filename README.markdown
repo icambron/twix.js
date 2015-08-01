@@ -23,7 +23,7 @@ And much more.
 
 **Attention Moment 2.10.x users**: You need to upgrade to the latest Twix! You also should make sure not to be on Moment 2.10.0 (i.e. upgrade to the latest point release) because it has some compatibility issues with Twix.
 
-**Breaking change in 0.6.0** Twix ranges will ignore changes to their endpoints; once you create the range, it's frozen in place. Construct new ranges to grow/shrink.
+**Breaking change in 0.7.0**: Twix French internationalization (for French) is no longer supported. It doesn't seem to have had a lot of use, and it's pain to maintain.
 
 ## Building
 
@@ -33,7 +33,7 @@ If you want to build Twix for yourself, clone the repo and run this:
 
 Configure just installs the NPMs (including CoffeeScript) and brings in Moment as a submodule, so you only have to do that part once.
 
-Note that the source is `src/twix.coffee`; the output is `build/twix.js`. You can run the tests via
+Note that the source is `src/twix.coffee`; the output is `dist/twix.js`. You can run the tests via
 
     make test
 
@@ -47,6 +47,8 @@ Patches are welcome!
  * Don't include your changes to the generated `.js` files in the patch; they're much harder to merge. I'll generate them when I cut the release.
 
 ## Changelog
+
+ * **0.7.0**: Fixed bug in `xor()` and `difference()`. Fixed compatibility with other plugins. Removed custom locale support. Deprecated `twentyFourHour`. Moved `bin` to `dist`.
 
  * **0.6.5**: Fix for `contains()` on all-day ranges
 

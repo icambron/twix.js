@@ -7,11 +7,10 @@ endif
 VER=$(shell grep version package.json | sed "s/[a-z \":,]*//g")
 
 build: directories
-	@find src -name '*.coffee' | xargs node_modules/.bin/coffee -c -o build
-	@find test -name '*.coffee' | xargs node_modules/.bin/coffee -c -o test/build
+	@find src -name '*.coffee' | xargs node_modules/.bin/coffee -c -o dist
+	@find test -name '*.coffee' | xargs node_modules/.bin/coffee -c -o test/dist
 
-	@./node_modules/uglify-js/bin/uglifyjs -o build/twix.min.js build/twix.js
-	@./node_modules/uglify-js/bin/uglifyjs -o build/locale.min.js build/locale.js
+	@./node_modules/uglify-js/bin/uglifyjs -o dist/twix.min.js dist/twix.js
 
 	@$(seder) "s/  \"version\": [0-9.:\",]*/  \"version\": \"${VER}\",/g" bower.json
 	@$(seder) "s/  \"version\": [0-9.:\",]*/  \"version\": \"${VER}\",/g" component.json
@@ -22,10 +21,10 @@ configure:
 	@git submodule update --init --recursive
 
 directories:
-	@mkdir -p build test/build
+	@mkdir -p dist test/dist
 
 bench: build
-	@node test/build/twix.bench.js
+	@node test/dist/twix.bench.js
 
 test: build
-	@./node_modules/mocha/bin/mocha --reporter spec test/build/twix.spec.js
+	@./node_modules/mocha/bin/mocha --reporter spec test/dist/twix.spec.js

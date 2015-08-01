@@ -1452,31 +1452,14 @@ test = (moment, Twix) ->
           result: "May 25, 5 PM | May 26, 10 AM, 1982"
 
   describe "internationalization", ->
-    it "uses alternative language when specified by moment", ->
-      start = moment("1982-05-25").locale "fr"
-      range = start.twix(start.clone().add 1, 'days')
-
-      assertEqual '25 mai, 0:00 - 26 mai, 0:00, 1982', range.format()
-
-    it "uses English formatting rules when there's no format for the specified language", ->
-      start = moment("1982-10-14").locale "de"
-      range = start.twix(start.clone().add 1, 'days')
-
-      assertEqual 'Okt. 14, 12 AM - Okt. 15, 12 AM, 1982', range.format()
-
-    it "uses alternative languages when they're set globally", ->
-      try
-        moment.locale("fr")
-        start = moment("1982-05-25")
-        range = start.twix(start.clone().add 1, 'days')
-
-        assertEqual '25 mai, 0:00 - 26 mai, 0:00, 1982', range.format()
-      finally
-        moment.locale("en")
+    it "uses the moment locale's LT setting by default", ->
+      start = moment("1982-05-25").locale "en-gb"
+      range = start.twix(start.clone().add 1, "days")
+      assertEqual "May 25, 0:00 - May 26, 0:00, 1982", range.format()
 
 if define?
   define(["moment", "twix"], (moment, Twix) -> test moment, Twix)
 else
   moment = require?("moment") ? @moment
-  Twix = require?("../../build/twix") ? @Twix
+  Twix = require?("../../dist/twix") ? @Twix
   test moment, Twix

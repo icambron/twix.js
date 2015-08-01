@@ -1,4 +1,4 @@
 node_modules
-test/build
+test/dist
 *.bak
 npm-debug.log

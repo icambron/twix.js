@@ -4,7 +4,7 @@ Twix.js is a [Moment.js](http://momentjs.com) plugin for working with time range
 
 ###Browser
 
-Grab [the file](https://raw.github.com/icambron/twix.js/master/build/twix.min.js) as well as [moment.js](https://raw.github.com/timrwood/moment/2.0.0/moment.min.js). Then simply reference twix after moment:
+Grab [the file](https://raw.github.com/icambron/twix.js/master/dist/twix.min.js) as well as [moment.js](https://raw.github.com/timrwood/moment/2.0.0/moment.min.js). Then simply reference twix after moment:
 
 ```html
 <script src="moment.min.js"></script>
@@ -488,14 +488,18 @@ twix.format({implicitYear: false}); //=> Mar 28, 1:13 AM - Mar 29, 1:13 AM, 2013
 
 ### 24-hour time
 
-Right, not everyone is American:
+Right, not everyone is American. If you use a Moment locale for the range's start, like "en-gb", Twix will automatically use its hour format setting.
+
+Otherwise, simply override the `hourFormat` option.
 
 ```js
-moment("2012-05-25T16:00").twix("2012-05-25T17:00").format({twentyFourHour: true});
+moment("2012-05-25T16:00").twix("2012-05-25T17:00").format({hourFormat: "H"});
 //=> May 25, 16:00 - 17:00
 ```
 
-Notice there's no hour abbreviation.
+This uses Moment's formatting tokens ("H" = 1- or 2-digit 24-hour time, "HH" = always 2-digit, whereas "h" and "hh" are the American versions). Notice there minutes are there in 24-hour time even if they're zero.
+
+The previous `twentyFourHour: true` setting is still supported, but is deprecated.
 
 ### Changing the format
 
@@ -545,7 +549,6 @@ Here are all the options and their defaults
   spaceBeforeMeridiem: true,
   showDate: true,
   showDayOfWeek: false,
-  twentyFourHour: false,
   implicitMinutes: true,
   implicitYear: true,
   yearFormat: "YYYY",
@@ -561,40 +564,18 @@ Here are all the options and their defaults
 }
 ```
 
-##Internationalization
-
-Moment supports a wide variety of languages, and if you set the language for moment (or individual moment instances), Twix will automatically use the localize formatting tokens. For example:
-
-```js
-moment.lang("fr");
-moment().twix(moment().add(3, "month")).simpleFormat("MMMM"); //=> 'juillet - octobre'
-```
-
-However, when it comes to smart formatting, Twix has to make choices about what order the tokens go in, and those might not match the language. So Twix has its own language files that tell the smart formatter how to organize the range string. There are only a couple of language files right now, but will hopefully grow. **This feature is experimental and currently only includes French.**
-
-```js
-moment("1982-05-25").twix(moment("1982-05-27")).format(); //=> '25 mai, 0:00 - 27 mai, 0:00, 1982'
-```
-
-Unlike Moment, Twix currently puts all the language definitions in the same file, so there's only one thing to load. Here's how it works:
-
-* **Node**: If you're using Node.js, Twix will automatically try to load the language for whatever language Moment is set to; there's nothing for you to do.
-* **Browser**: The same goes for the browser, but you'll have to provide the [locale file](https://github.com/icambron/twix.js/tree/master/build/locale.js). So include it in a script tag after Moment and Twix (you will also want Moment's language file for the token translations).
-* **AMD support**: The language file also supports AMD, so you can load it with RequireJS just like you did Twix itself.
-* **Defaults**: If the Moment language doesn't have a corresponding Twix language, Twix will use the default (American English) formatting.
-
 ##Source code
 
 Twix is open source (MIT License) and hosted on Github [here](http://github.com/icambron/twix.js). Instructions for building/contributing are there.
 
 [![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![MIT License][license-image]][license-url] [![Build Status][travis-image]][travis-url]
 
-[license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat
+[license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [license-url]: LICENSE
 
 [npm-url]: https://npmjs.org/package/twix
-[npm-version-image]: http://img.shields.io/npm/v/twix.svg?style=flat
-[npm-downloads-image]: http://img.shields.io/npm/dm/twix.svg?style=flat
+[npm-version-image]: http://img.shields.io/npm/v/twix.svg?style=flat-square
+[npm-downloads-image]: http://img.shields.io/npm/dm/twix.svg?style=flat-square
 
 [travis-url]: http://travis-ci.org/icambron/twix.js
-[travis-image]: http://img.shields.io/travis/icambron/twix.js/develop.svg?style=flat
+[travis-image]: http://img.shields.io/travis/icambron/twix.js/develop.svg?style=flat-square
