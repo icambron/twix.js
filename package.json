@@ -29,9 +29,5 @@
   "bugs": {
     "url": "https://github.com/icambron/twix.js/issues"
   },
-  "licenses": [
-    {
-      "type": "MIT"
-    }
-  ]
+  "license": "MIT"
 }

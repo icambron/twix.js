@@ -291,7 +291,7 @@ range1.intersection(range2); //=> 5/27/82 - 5/30/1982
 ```
 
 ###xor
-Returns an array of ranges that aren't in one range or the other, but not both.
+Returns an array of ranges that are in one range or the other, but not both.
 
 ```js
 var range1 = moment("1982-05-24").twix("1982-05-28", true);
