@@ -4,7 +4,7 @@ Twix.js is a [Moment.js](http://momentjs.com) plugin for working with time range
 
 ###Browser
 
-Grab [the file](https://raw.github.com/icambron/twix.js/master/bin/twix.min.js) as well as [moment.js](https://raw.github.com/timrwood/moment/2.0.0/moment.min.js). Then simply reference twix after moment:
+Grab [the file](https://raw.github.com/icambron/twix.js/master/build/twix.min.js) as well as [moment.js](https://raw.github.com/timrwood/moment/2.0.0/moment.min.js). Then simply reference twix after moment:
 
 ```html
 <script src="moment.min.js"></script>
@@ -579,7 +579,7 @@ moment("1982-05-25").twix(moment("1982-05-27")).format(); //=> '25 mai, 0:00 - 2
 Unlike Moment, Twix currently puts all the language definitions in the same file, so there's only one thing to load. Here's how it works:
 
 * **Node**: If you're using Node.js, Twix will automatically try to load the language for whatever language Moment is set to; there's nothing for you to do.
-* **Browser**: The same goes for the browser, but you'll have to provide the [language file](https://github.com/icambron/twix.js/tree/master/bin/lang.js). So include it in a script tag after Moment and Twix (you will also want Moment's language file for the token translations).
+* **Browser**: The same goes for the browser, but you'll have to provide the [locale file](https://github.com/icambron/twix.js/tree/master/build/locale.js). So include it in a script tag after Moment and Twix (you will also want Moment's language file for the token translations).
 * **AMD support**: The language file also supports AMD, so you can load it with RequireJS just like you did Twix itself.
 * **Defaults**: If the Moment language doesn't have a corresponding Twix language, Twix will use the default (American English) formatting.
 

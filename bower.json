@@ -4,6 +4,6 @@
   "dependencies": {
     "moment": "*"
   },
-  "main": "bin/twix.js",
+  "main": "build/twix.js",
   "description": "A date range plugin for moment.js"
 }

@@ -15,7 +15,7 @@
     "uglify-js" : "latest",
     "coffee-script" : "latest"
   },
-  "main": "bin/twix",
+  "main": "build/twix",
   "scripts": {
     "test": "make test"
   },

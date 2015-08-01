@@ -1478,5 +1478,5 @@ if define?
   define(["moment", "twix"], (moment, Twix) -> test moment, Twix)
 else
   moment = require?("moment") ? @moment
-  Twix = require?("../../bin/twix") ? @Twix
+  Twix = require?("../../build/twix") ? @Twix
   test moment, Twix

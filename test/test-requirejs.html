@@ -15,11 +15,11 @@
         paths: {
           moment: "../vendor/moment/moment",
           momentLang: "../vendor/moment/min/lang",
-          twixes: "../bin"
+          twixes: "../build"
         }
       });
 
-      require(["moment", "momentLang/de", "momentLang/fr", "twixes/twix", "twixes/lang", "./bin/twix.spec.js"], function(moment){
+      require(["moment", "momentLang/de", "momentLang/fr", "twixes/twix", "twixes/lang", "./build/twix.spec.js"], function(moment){
         mocha.run();
       })
     </script>

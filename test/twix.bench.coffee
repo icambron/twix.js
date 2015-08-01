@@ -1,6 +1,6 @@
 Benchmark = require('benchmark')
 moment = require("moment")
-Twix = require("../../bin/twix")
+Twix = require("../../build/twix")
 
 range = moment.twix("2013-07-11", "2013-07-13", true)
 
