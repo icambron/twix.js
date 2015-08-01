@@ -1,5 +1,5 @@
 <!DOCTYPE html><html><head><title>Twix.js</title><link href="../../stylesheets/twix.css" rel="stylesheet" type="text/css" /><script src="../../javascripts/twix-site.js" type="text/javascript"></script></head><body><div id="navbar"><div class="container"><div class="pull-left" id="title"><a href="index.html">Twix.js</a></div><ul class="nav nav-pills pull-right"><li><a href="index.html">Home</a></li><li><a href="docs.html">Docs</a></li><li><a href="https://github.com/icambron/twix.js">Github</a></li></ul></div></div>(function() {
-  var Twix, moment, test, _ref, _ref1;
+  var Twix, moment, ref, ref1, test;
 
   test = function(moment, Twix) {
     var assertEqual, assertMomentEqual, assertTwixEqual, nextYear, thatDay, thisYear, tomorrow, yesterday;
@@ -21,7 +21,7 @@
     };
     thisYear = function(partial, time) {
       var fullDate;
-      fullDate = "" + (moment().year()) + "-" + partial;
+      fullDate = (moment().year()) + "-" + partial;
       if (time) {
         fullDate += "T" + time;
       }
@@ -327,12 +327,12 @@
           duration = moment.duration(20, 'minutes');
           iter = start.twix(end).iterate(duration);
           results = (function() {
-            var _results;
-            _results = [];
+            var results1;
+            results1 = [];
             while (iter.hasNext()) {
-              _results.push(iter.next());
+              results1.push(iter.next());
             }
-            return _results;
+            return results1;
           })();
           assertSameMinute(start.clone().add(20, "minutes"), results[1]);
           return assertEqual(4, results.length);
@@ -348,12 +348,12 @@
           });
           iter = start.twix(end).iterate(duration);
           results = (function() {
-            var _results;
-            _results = [];
+            var results1;
+            results1 = [];
             while (iter.hasNext()) {
-              _results.push(iter.next());
+              results1.push(iter.next());
             }
-            return _results;
+            return results1;
           })();
           assertSameMinute(start.clone().add(30, "minutes").add(2, "hours").add(20, "seconds"), results[1]);
           return assertEqual(5, results.length);
@@ -370,12 +370,12 @@
           end = thisYear("05-25", "04:00");
           iter = start.twix(end).iterate(20, "minutes", 0);
           results = (function() {
-            var _results;
-            _results = [];
+            var results1;
+            results1 = [];
             while (iter.hasNext()) {
-              _results.push(iter.next());
+              results1.push(iter.next());
             }
-            return _results;
+            return results1;
           })();
           assertSameMinute(start.clone().add(20, "minutes"), results[1]);
           return assertEqual(4, results.length);
@@ -409,12 +409,12 @@
           end = moment("2014-05-25T03:00").add(1, "year");
           iter = start.twix(end).iterate("days");
           results = (function() {
-            var _results;
-            _results = [];
+            var results1;
+            results1 = [];
             while (iter.hasNext()) {
-              _results.push(iter.next());
+              results1.push(iter.next());
             }
-            return _results;
+            return results1;
           })();
           return assertEqual(366, results.length);
         });
@@ -510,12 +510,12 @@
           duration = moment.duration(20, 'minutes');
           iter = start.twix(end).iterateInner(duration);
           results = (function() {
-            var _results;
-            _results = [];
+            var results1;
+            results1 = [];
             while (iter.hasNext()) {
-              _results.push(iter.next());
+              results1.push(iter.next());
             }
-            return _results;
+            return results1;
           })();
           assertSameMinute(start.clone().add(20, "minutes"), results[1]);
           return assertEqual(3, results.length);
@@ -531,12 +531,12 @@
           });
           iter = start.twix(end).iterateInner(duration);
           results = (function() {
-            var _results;
-            _results = [];
+            var results1;
+            results1 = [];
             while (iter.hasNext()) {
-              _results.push(iter.next());
+              results1.push(iter.next());
             }
-            return _results;
+            return results1;
           })();
           assertSameMinute(start.clone().add(30, "minutes").add(2, "hours").add(20, "seconds"), results[1]);
           return assertEqual(4, results.length);
@@ -553,12 +553,12 @@
           end = thisYear("05-25", "04:00");
           iter = start.twix(end).iterateInner("minutes", 20);
           results = (function() {
-            var _results;
-            _results = [];
+            var results1;
+            results1 = [];
             while (iter.hasNext()) {
-              _results.push(iter.next());
+              results1.push(iter.next());
             }
-            return _results;
+            return results1;
           })();
           assertSameMinute(start.clone().add(20, "minutes"), results[1]);
           return assertEqual(3, results.length);
@@ -569,12 +569,12 @@
           end = thisYear("05-26", "03:00");
           iter = start.twix(end).iterateInner("minutes", 60);
           results = (function() {
-            var _results;
-            _results = [];
+            var results1;
+            results1 = [];
             while (iter.hasNext()) {
-              _results.push(iter.next());
+              results1.push(iter.next());
             }
-            return _results;
+            return results1;
           })();
           return assertEqual(24, results.length);
         });
@@ -590,12 +590,12 @@
           end = thisYear("05-25", "10:00");
           iter = start.twix(end).iterateInner(2, "hours");
           results = (function() {
-            var _results;
-            _results = [];
+            var results1;
+            results1 = [];
             while (iter.hasNext()) {
-              _results.push(iter.next());
+              results1.push(iter.next());
             }
-            return _results;
+            return results1;
           })();
           assertSameHour(start.clone().add(2, "hours"), results[1]);
           return assertEqual(3, results.length);
@@ -1441,7 +1441,7 @@
         var s;
         s = thisYear("05-25").twix(thisYear("05-26"), true).simpleFormat(null, {
           template: function(first, second) {
-            return "" + first + " | " + second;
+            return first + " | " + second;
           }
         });
         return assertEqual(true, s.indexOf("|") > -1);
@@ -1763,7 +1763,7 @@
               end: "1982-05-26 10:00",
               options: {
                 template: function(first, second) {
-                  return "" + first + " | " + second;
+                  return first + " | " + second;
                 }
               },
               result: "May 25, 5 PM | May 26, 10 AM, 1982"
@@ -1804,8 +1804,8 @@
       return test(moment, Twix);
     });
   } else {
-    moment = (_ref = typeof require === "function" ? require("moment") : void 0) != null ? _ref : this.moment;
-    Twix = (_ref1 = typeof require === "function" ? require("../../bin/twix") : void 0) != null ? _ref1 : this.Twix;
+    moment = (ref = typeof require === "function" ? require("moment") : void 0) != null ? ref : this.moment;
+    Twix = (ref1 = typeof require === "function" ? require("../../bin/twix") : void 0) != null ? ref1 : this.Twix;
     test(moment, Twix);
   }
 
