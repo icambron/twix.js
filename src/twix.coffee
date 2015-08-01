@@ -29,10 +29,8 @@ makeTwix = (moment) ->
       @end = moment end, parseFormat, options.parseStrict
       @allDay = options.allDay ? false
 
-      @_trueStart = if @allDay then @start.clone().startOf("day") else @start
-      @_lastMilli = if @allDay then @end.clone().endOf("day") else @end
-      @_transferrableEnd = if @allDay then @end.clone().startOf("day") else @end
-      @_displayEnd = if @allDay then @_transferrableEnd.clone().add(1, "day") else @end
+      @_mutated()
+
 
     @_extend: (first, others...) ->
       for other in others
@@ -197,6 +195,7 @@ makeTwix = (moment) ->
             last = results[results.length - 1]
             if last && last.end.isSame(start)
               last.end = other.time
+              last._mutated()
             else
               #because we used the diffable end, we have to subtract back off a day. blech
               endTime = if allDay then other.time.clone().subtract(1, 'd') else other.time
@@ -449,6 +448,12 @@ makeTwix = (moment) ->
       end.subtract(modulus, period)
 
       [start, end]
+
+    _mutated: ->
+      @_trueStart = if @allDay then @start.clone().startOf("day") else @start
+      @_lastMilli = if @allDay then @end.clone().endOf("day") else @end
+      @_transferrableEnd = if @allDay then @end.clone().startOf("day") else @end
+      @_displayEnd = if @allDay then @_transferrableEnd.clone().add(1, "day") else @end
 
     _lazyLocale: ->
       localeData = @start.localeData()

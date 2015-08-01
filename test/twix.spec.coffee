@@ -858,8 +858,17 @@ test = (moment, Twix) ->
       it "intersects with an engulfing range", ->
         assertTwixEqual thatDay("05:30", "08:30"), someTime.intersection(thatDay "04:30", "09:30")
 
-      it "does not intersect an adjacent range", ->
+      it "does not intersect an adjacent range (later)", ->
         assertEqual 0, someTime.intersection(thatDay "08:30", "09:30").length()
+
+      it "does not intersect an adjacent range (earlier)", ->
+        assertEqual 0, someTime.intersection(thatDay "04:30", "05:30").length()
+
+      it "returns self for an identical range", ->
+        assertTwixEqual someTime, someTime.intersection(someTime)
+
+      it "returns self for a time that starts at the same time but ends later", ->
+        assertTwixEqual someTime, someTime.intersection(thatDay("05:30", "09:30"))
 
     describe "one all-day range", ->
       it "intersects with a later time", ->
@@ -1015,6 +1024,12 @@ test = (moment, Twix) ->
         exed = someTime.difference(thatDay("08:30", "10:30"))
         assertEqual 1, exed.length
         assertTwixEqual someTime, exed[0]
+
+      it "returns self for an adjacent range (inverse)", ->
+        other = thatDay("08:30", "10:30")
+        exed = other.difference(someTime)
+        assertEqual 1, exed.length
+        assertTwixEqual other, exed[0]
 
     describe "one all-day range", ->
       it "uses the full day", ->

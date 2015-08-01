@@ -51,10 +51,7 @@
         this.start = moment(start, parseFormat, options.parseStrict);
         this.end = moment(end, parseFormat, options.parseStrict);
         this.allDay = (ref = options.allDay) != null ? ref : false;
-        this._trueStart = this.allDay ? this.start.clone().startOf("day") : this.start;
-        this._lastMilli = this.allDay ? this.end.clone().endOf("day") : this.end;
-        this._transferrableEnd = this.allDay ? this.end.clone().startOf("day") : this.end;
-        this._displayEnd = this.allDay ? this._transferrableEnd.clone().add(1, "day") : this.end;
+        this._mutated();
       }
 
       Twix._extend = function() {
@@ -338,6 +335,7 @@
               last = results[results.length - 1];
               if (last && last.end.isSame(start)) {
                 last.end = other.time;
+                last._mutated();
               } else {
                 endTime = allDay ? other.time.clone().subtract(1, 'd') : other.time;
                 t = new Twix(start, endTime, allDay);
@@ -692,6 +690,13 @@
         modulus = durationCount % intervalAmount;
         end.subtract(modulus, period);
         return [start, end];
+      };
+
+      Twix.prototype._mutated = function() {
+        this._trueStart = this.allDay ? this.start.clone().startOf("day") : this.start;
+        this._lastMilli = this.allDay ? this.end.clone().endOf("day") : this.end;
+        this._transferrableEnd = this.allDay ? this.end.clone().startOf("day") : this.end;
+        return this._displayEnd = this.allDay ? this._transferrableEnd.clone().add(1, "day") : this.end;
       };
 
       Twix.prototype._lazyLocale = function() {
