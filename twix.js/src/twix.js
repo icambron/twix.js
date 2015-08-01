@@ -51,7 +51,9 @@
         this.end = moment(end, parseFormat, options.parseStrict);
         this.allDay = (_ref = options.allDay) != null ? _ref : false;
         this._trueStart = this.allDay ? this.start.clone().startOf("day") : this.start;
-        this._trueEnd = this.allDay ? this.end.startOf('d').clone().add(1, "day") : this.end;
+        this._lastMilli = this.allDay ? this.end.clone().endOf("day") : this.end;
+        this._transferrableEnd = this.allDay ? this.end.clone().startOf("day") : this.end;
+        this._displayEnd = this.allDay ? this._transferrableEnd.clone().add(1, "day") : this.end;
       }
 
       Twix._extend = function() {
@@ -171,7 +173,7 @@
       };
 
       Twix.prototype.length = function(period) {
-        return this._trueEnd.diff(this._trueStart, period);
+        return this._displayEnd.diff(this._trueStart, period);
       };
 
       Twix.prototype.count = function(period) {
@@ -241,19 +243,11 @@
       };
 
       Twix.prototype.isPast = function() {
-        if (this.allDay) {
-          return this.end.clone().endOf("day") < moment();
-        } else {
-          return this.end < moment();
-        }
+        return this._lastMilli < moment();
       };
 
       Twix.prototype.isFuture = function() {
-        if (this.allDay) {
-          return this.start.clone().startOf("day") > moment();
-        } else {
-          return this.start > moment();
-        }
+        return this._trueStart > moment();
       };
 
       Twix.prototype.isCurrent = function() {
@@ -264,44 +258,34 @@
         if (!moment.isMoment(mom)) {
           mom = moment(mom);
         }
-        return this._trueStart <= mom && this._trueEnd >= mom;
+        return this._trueStart <= mom && this._lastMilli >= mom;
       };
 
       Twix.prototype.isEmpty = function() {
-        return this._trueStart.isSame(this._trueEnd);
+        return this._trueStart.isSame(this._displayEnd);
       };
 
       Twix.prototype.overlaps = function(other) {
-        return this._trueEnd.isAfter(other._trueStart) && this._trueStart.isBefore(other._trueEnd);
+        return this._displayEnd.isAfter(other._trueStart) && this._trueStart.isBefore(other._displayEnd);
       };
 
       Twix.prototype.engulfs = function(other) {
-        return this._trueStart <= other._trueStart && this._trueEnd >= other._trueEnd;
+        return this._trueStart <= other._trueStart && this._displayEnd >= other._displayEnd;
       };
 
       Twix.prototype.union = function(other) {
         var allDay, newEnd, newStart;
         allDay = this.allDay && other.allDay;
-        if (allDay) {
-          newStart = this.start < other.start ? this.start : other.start;
-          newEnd = this.end > other.end ? this.end : other.end;
-        } else {
-          newStart = this._trueStart < other._trueStart ? this._trueStart : other._trueStart;
-          newEnd = this._trueEnd > other._trueEnd ? this._trueEnd : other._trueEnd;
-        }
+        newStart = this._trueStart < other._trueStart ? this._trueStart : other._trueStart;
+        newEnd = this._lastMilli > other._lastMilli ? (allDay ? this._transferrableEnd : this._displayEnd) : (allDay ? other._transferrableEnd : other._displayEnd);
         return new Twix(newStart, newEnd, allDay);
       };
 
       Twix.prototype.intersection = function(other) {
         var allDay, newEnd, newStart;
         allDay = this.allDay && other.allDay;
-        if (allDay) {
-          newStart = this.start > other.start ? this.start : other.start;
-          newEnd = this.end < other.end ? this.end : other.end;
-        } else {
-          newStart = this._trueStart > other._trueStart ? this._trueStart : other._trueStart;
-          newEnd = this._trueEnd < other._trueEnd ? this._trueEnd : other._trueEnd;
-        }
+        newStart = this._trueStart > other._trueStart ? this._trueStart : other._trueStart;
+        newEnd = this._lastMilli < other._lastMilli ? (allDay ? this._transferrableEnd : this._displayEnd) : (allDay ? other._transferrableEnd : other._displayEnd);
         return new Twix(newStart, newEnd, allDay);
       };
 
@@ -332,7 +316,7 @@
             type: 0
           });
           arr.push({
-            time: item._trueEnd,
+            time: item._displayEnd,
             i: i,
             type: 1
           });
@@ -428,7 +412,7 @@
         }
         vals = [];
         i = 0;
-        final = this._trueEnd;
+        final = this._displayEnd;
         while (start < final && ((times == null) || times[i])) {
           end = dur ? start.clone().add(dur) : times[i].clone();
           end = moment.min(final, end);
@@ -438,14 +422,14 @@
           start = end;
           i += 1;
         }
-        if (!end.isSame(this._trueEnd) && times) {
-          vals.push(moment.twix(end, this._trueEnd));
+        if (!end.isSame(this._displayEnd) && times) {
+          vals.push(moment.twix(end, this._displayEnd));
         }
         return vals;
       };
 
       Twix.prototype.isValid = function() {
-        return this._trueStart <= this._trueEnd;
+        return this._trueStart <= this._displayEnd;
       };
 
       Twix.prototype.equals = function(other) {
@@ -695,7 +679,7 @@
           intervalAmount = 1;
         }
         start = this._trueStart.clone();
-        end = this._trueEnd.clone();
+        end = this._displayEnd.clone();
         if (start > start.clone().startOf(period)) {
           start.startOf(period).add(intervalAmount, period);
         }
@@ -777,7 +761,7 @@
       return Twix;
 
     })();
-    Twix._extend(moment._locale, {
+    Twix._extend(moment.locale(), {
       _twix: Twix.defaults
     });
     Twix.formatTemplate = function(leftSide, rightSide) {
@@ -800,12 +784,14 @@
     moment.fn.forDuration = function(duration, allDay) {
       return new Twix(this, this.clone().add(duration), allDay);
     };
-    moment.duration.fn.afterMoment = function(startingTime, allDay) {
-      return new Twix(startingTime, moment(startingTime).clone().add(this), allDay);
-    };
-    moment.duration.fn.beforeMoment = function(startingTime, allDay) {
-      return new Twix(moment(startingTime).clone().subtract(this), startingTime, allDay);
-    };
+    if (moment.duration.fn) {
+      moment.duration.fn.afterMoment = function(startingTime, allDay) {
+        return new Twix(startingTime, moment(startingTime).clone().add(this), allDay);
+      };
+      moment.duration.fn.beforeMoment = function(startingTime, allDay) {
+        return new Twix(moment(startingTime).clone().subtract(this), startingTime, allDay);
+      };
+    }
     moment.twixClass = Twix;
     return Twix;
   };

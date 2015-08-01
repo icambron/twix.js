@@ -405,8 +405,8 @@
         });
         it("provides 366 days if the range is a year", function() {
           var end, iter, results, start;
-          start = moment("2014-05-25", "16:00");
-          end = moment("2014-05-25", "03:00").add(1, "year");
+          start = moment("2014-05-25T16:00");
+          end = moment("2014-05-25T03:00").add(1, "year");
           iter = start.twix(end).iterate("days");
           results = (function() {
             var _results;
@@ -677,9 +677,7 @@
         return assertEqual(false, thatDay("12:00", "13:00").isEmpty());
       });
       return it("returns false for 'empty' all-day ranges", function() {
-        return assertEqual(false, moment("1982-05-25").twix("1982-05-25", {
-          allDay: true
-        }).isEmpty());
+        return assertEqual(false, moment("1982-05-25").twix("1982-05-25", true).isEmpty());
       });
     });
     describe("asDuration()", function() {
@@ -814,6 +812,9 @@
         });
         it("returns false for moments before the range", function() {
           return assertEqual(false, range.contains(thisYear("05-24")));
+        });
+        it("returns false for moments after the end of the range", function() {
+          return assertEqual(false, range.contains(thisYear("05-26", "00:00:00")));
         });
         return it("returns false for moments after the range", function() {
           return assertEqual(false, range.contains(thisYear("05-26", "00:00:01")));
@@ -1262,14 +1263,14 @@
           first = new Twix("1982-05-24", "1982-05-25", true);
           second = new Twix("1982-05-25", "1982-05-27", true);
           firstStart = first._trueStart.clone();
-          firstEnd = first._trueEnd.clone();
+          firstEnd = first._displayEnd.clone();
           secondStart = second._trueStart.clone();
-          secondEnd = second._trueEnd.clone();
+          secondEnd = second._displayEnd.clone();
           first.difference(second);
           assertMomentEqual(firstStart, first._trueStart);
-          assertMomentEqual(firstEnd, first._trueEnd);
+          assertMomentEqual(firstEnd, first._displayEnd);
           assertMomentEqual(secondStart, second._trueStart);
-          return assertMomentEqual(secondEnd, second._trueEnd);
+          return assertMomentEqual(secondEnd, second._displayEnd);
         });
       });
       return describe("multiple ranges", function() {
@@ -1778,11 +1779,22 @@
         range = start.twix(start.clone().add(1, 'days'));
         return assertEqual('25 mai, 0:00 - 26 mai, 0:00, 1982', range.format());
       });
-      return it("uses English formatting rules when there's no format for the specified language", function() {
+      it("uses English formatting rules when there's no format for the specified language", function() {
         var range, start;
         start = moment("1982-10-14").locale("de");
         range = start.twix(start.clone().add(1, 'days'));
         return assertEqual('Okt. 14, 12 AM - Okt. 15, 12 AM, 1982', range.format());
+      });
+      return it("uses alternative languages when they're set globally", function() {
+        var range, start;
+        try {
+          moment.locale("fr");
+          start = moment("1982-05-25");
+          range = start.twix(start.clone().add(1, 'days'));
+          return assertEqual('25 mai, 0:00 - 26 mai, 0:00, 1982', range.format());
+        } finally {
+          moment.locale("en");
+        }
       });
     });
   };

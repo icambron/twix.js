@@ -6,10 +6,9 @@ endif
 
 VER=$(shell grep version package.json | sed "s/[a-z \":,]*//g")
 
-
 build: directories
-	@find src -name '*.coffee' | xargs coffee -c -o bin
-	@find test -name '*.coffee' | xargs coffee -c -o test/bin
+	@find src -name '*.coffee' | xargs node_modules/.bin/coffee -c -o bin
+	@find test -name '*.coffee' | xargs node_modules/.bin/coffee -c -o test/bin
 
 	@./node_modules/uglify-js/bin/uglifyjs -o bin/twix.min.js bin/twix.js
 	@./node_modules/uglify-js/bin/uglifyjs -o bin/locale.min.js bin/locale.js
