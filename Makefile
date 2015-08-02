@@ -33,7 +33,7 @@ test: build
 	@mocha -R dot
 
 coverage: build
-	@mocha --require blanket -R html-cov > dist/coverage.html
+	@mocha --require blanket -R html-cov > test/coverage.html
 
 coveralls: build
 	@mocha --require blanket -R mocha-lcov-reporter | coveralls

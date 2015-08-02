@@ -1,6 +1,6 @@
 node_modules
 test/*.js
-dist/coverage.html
+test/coverage.html
 *.bak
 npm-debug.log
 .DS_Store
