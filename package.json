@@ -10,17 +10,17 @@
   },
   "devDependencies": {
     "benchmark": "latest",
+    "blanket": "latest",
     "coffee-script" : "latest",
-    "coveralls" : "latest",
-    "mocha" : "latest",
+    "coveralls": "latest",
+    "mocha": "latest",
     "mocha-lcov-reporter": "latest",
     "moment": ">= 2.10.0",
     "uglify-js" : "latest"
   },
   "main": "dist/twix",
   "scripts": {
-    "test": "mocha -R dot test/dist/twix.spec.js",
-    "coverage": "mocha -R mocha-lcov-reporter test/dist/twix.spec.js"
+    "test": "mocha -R dot test/dist/twix.spec.js"
   },
   "engines": {
     "node": "*"
@@ -32,5 +32,10 @@
   "bugs": {
     "url": "https://github.com/icambron/twix.js/issues"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "config": {
+    "blanket": {
+      "pattern": ["dist/twix.js"]
+    }
+  }
 }

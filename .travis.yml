@@ -1,3 +1,4 @@
+sudo: false
 language: node_js
 
 node_js:
@@ -5,15 +6,11 @@ node_js:
   - 0.12
 
 before_install:
-  - npm install
-
-before_script:
-  - export PATH=$PATH:./node_modules/.bin
+  - make configure
 
 script:
-  - make build
-  - npm run test
-  - npm run coverage | coveralls
+  - make test
+  - make coverall
 
 branches:
   except:

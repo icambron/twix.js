@@ -1,4 +1,6 @@
 node_modules
-test/dist
+test/*.js
+dist/coverage.html
 *.bak
 npm-debug.log
+.DS_Store

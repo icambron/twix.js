@@ -11,7 +11,7 @@ SHELL := /bin/bash
 
 build: directories
 	@find src -name '*.coffee' | xargs coffee -c -o dist
-	@find test -name '*.coffee' | xargs coffee -c -o test/dist
+	@find test -name '*.coffee' | xargs coffee -c -o test
 
 	@uglifyjs -o dist/twix.min.js dist/twix.js
 
@@ -24,10 +24,16 @@ configure:
 	@git submodule update --init --recursive
 
 directories:
-	@mkdir -p dist test/dist
+	@mkdir -p dist
 
 bench: build
-	@node test/dist/twix.bench.js
+	@node test/twix.bench.js
 
 test: build
-	@mocha -R dot test/dist/twix.spec.js
+	@mocha -R dot
+
+coverage: build
+	@mocha --require blanket -R html-cov > dist/coverage.html
+
+coveralls: build
+	@mocha --require blanket -R mocha-lcov-reporter | coveralls

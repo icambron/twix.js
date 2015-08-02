@@ -287,7 +287,6 @@ test = (moment, Twix) ->
         assertSameMinute start.clone().add(20, "minutes"), results[1]
         assertEqual(4, results.length)
 
-
     describe "days", ->
       assertSameDay = (first, second) -> assertEqual true, first.isSame(second, "day")
 
@@ -1364,17 +1363,30 @@ test = (moment, Twix) ->
         options: {spaceBeforeMeridiem: false, groupMeridiems: false}
         result: "May 25, 5:30AM - 7:30AM"
 
+   describe "hour format", ->
+     test "can override to 2-digit hours",
+        start: thisYear "05-25", "05:30"
+        end: thisYear "05-25", "19:30"
+        options: {hourFormat: "hh"}
+        result: "May 25, 05:30 AM - 07:30 PM"
+
+     test "can override to 24-hour time",
+        start: thisYear "05-25", "05:30"
+        end: thisYear "05-25", "19:30"
+        options: {hourFormat: "HH"}
+        result: "May 25, 05:30 - 19:30"
+
     describe "24 hours", ->
       test "shouldn't show meridians",
         start: thisYear "05-25", "05:30"
         end: thisYear "05-25", "19:30"
-        options: {twentyFourHour: true},
+        options: {twentyFourHour: true}
         result: "May 25, 5:30 - 19:30"
 
       test "always shows the :00",
         start: thisYear "05-25", "12:00"
         end: thisYear "05-25", "15:00"
-        options: {twentyFourHour: true},
+        options: {twentyFourHour: true}
         result: "May 25, 12:00 - 15:00"
 
     describe "show day of week", ->
@@ -1451,15 +1463,25 @@ test = (moment, Twix) ->
           options: {template: (first, second) -> "#{first} | #{second}"}
           result: "May 25, 5 PM | May 26, 10 AM, 1982"
 
+  describe "toString", ->
+    it "returns a string", ->
+      stringed = moment("1982-05-25").twix("1982-05-25", allDay: true).toString()
+      assertEqual "{start: 1982-05-25T00:00:00-04:00, end: 1982-05-25T00:00:00-04:00, allDay: true}", stringed
+
   describe "internationalization", ->
-    it "uses the moment locale's LT setting by default", ->
+    it "uses the moment locale's 24-hour setting by default", ->
       start = moment("1982-05-25").locale "en-gb"
       range = start.twix(start.clone().add 1, "days")
       assertEqual "May 25, 0:00 - May 26, 0:00, 1982", range.format()
+
+    it "uses the moment locale's settings by default", ->
+      start = moment("1982-05-25").locale "fr"
+      range = start.twix(start.clone().add 1, "days")
+      assertEqual "mai 25, 0:00 - mai 26, 0:00, 1982", range.format()
 
 if define?
   define(["moment", "twix"], (moment, Twix) -> test moment, Twix)
 else
   moment = require?("moment") ? @moment
-  Twix = require?("../../dist/twix") ? @Twix
+  Twix = require?("../dist/twix") ? @Twix
   test moment, Twix

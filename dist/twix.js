@@ -93,9 +93,6 @@
 
       Twix.prototype.iterate = function(intervalAmount, period, minHours) {
         var end, hasNext, ref, start;
-        if (intervalAmount == null) {
-          intervalAmount = 1;
-        }
         ref = this._prepIterateInputs(intervalAmount, period, minHours), intervalAmount = ref[0], period = ref[1], minHours = ref[2];
         start = this._trueStart.clone().startOf(period);
         end = this.end.clone().startOf(period);
@@ -112,9 +109,6 @@
 
       Twix.prototype.iterateInner = function(intervalAmount, period) {
         var end, hasNext, ref, ref1, start;
-        if (intervalAmount == null) {
-          intervalAmount = 1;
-        }
         ref = this._prepIterateInputs(intervalAmount, period), intervalAmount = ref[0], period = ref[1];
         ref1 = this._inner(period, intervalAmount), start = ref1[0], end = ref1[1];
         hasNext = function() {
@@ -556,9 +550,6 @@
       };
 
       Twix.prototype._iterateHelper = function(period, iter, hasNext, intervalAmount) {
-        if (intervalAmount == null) {
-          intervalAmount = 1;
-        }
         return {
           next: (function(_this) {
             return function() {

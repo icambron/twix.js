@@ -52,7 +52,7 @@ makeTwix = (moment) ->
       return 0 if start >= end
       end.diff(start, period)
 
-    iterate: (intervalAmount = 1, period, minHours) ->
+    iterate: (intervalAmount, period, minHours) ->
       [intervalAmount, period, minHours] = @_prepIterateInputs intervalAmount, period, minHours
 
       start = @_trueStart.clone().startOf period
@@ -62,7 +62,7 @@ makeTwix = (moment) ->
 
       @_iterateHelper period, start, hasNext, intervalAmount
 
-    iterateInner: (intervalAmount = 1, period) ->
+    iterateInner: (intervalAmount, period) ->
       [intervalAmount, period] = @_prepIterateInputs intervalAmount, period
 
       [start, end] = @_inner period, intervalAmount
@@ -373,7 +373,7 @@ makeTwix = (moment) ->
       fold common_bucket
 
     # -- INTERNAL
-    _iterateHelper: (period, iter, hasNext, intervalAmount = 1) ->
+    _iterateHelper: (period, iter, hasNext, intervalAmount) ->
       next: =>
         unless hasNext()
           null
