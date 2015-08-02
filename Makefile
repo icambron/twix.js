@@ -31,6 +31,3 @@ bench: build
 
 test: build
 	@mocha -R dot test/dist/twix.spec.js
-
-coverage:
-	@mocha -R mocha-lcov-reporter test/dist/twix.spec.js

@@ -5,11 +5,14 @@ node_js:
   - 0.12
 
 before_install:
-  - make configure
+  - npm install
+
+before_script:
+  - export PATH=$PATH:./node_modules/.bin
 
 script:
-  - make test
-  - make coverage | ./node_modules/.bin/coveralls
+  - npm run test
+  - npm run coverage | coveralls
 
 branches:
   except:
