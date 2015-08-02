@@ -27,4 +27,7 @@ bench: build
 	@node test/dist/twix.bench.js
 
 test: build
-	@./node_modules/mocha/bin/mocha --reporter spec test/dist/twix.spec.js
+	@npm test
+
+coverage:
+	@npm run coverage

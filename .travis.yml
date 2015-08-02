@@ -7,8 +7,9 @@ node_js:
 before_install:
   - make configure
 
-before_script:
-  - make build
+script:
+  - make test
+  - make coverage | ./node_modules/.bin/coveralls
 
 branches:
   except:
