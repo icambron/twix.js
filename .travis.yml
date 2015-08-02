@@ -10,7 +10,7 @@ before_install:
 
 script:
   - make test
-  - make coverall
+  - make coveralls
 
 branches:
   except:
