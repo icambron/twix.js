@@ -1,4 +1,2 @@
-*.html linguist-vendored
-dest/** linguist-vendored
-vendor/** linguist-vendored
+test/*.html linguist-vendored
 package.js linguist-vendored
