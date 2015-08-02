@@ -568,7 +568,7 @@ Here are all the options and their defaults
 
 Twix is open source (MIT License) and hosted on Github [here](http://github.com/icambron/twix.js). Instructions for building/contributing are there.
 
-[![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![MIT License][license-image]][license-url] [![Build Status][travis-image]][travis-url] [![Code Coverate][coveralls-image]][coveralls-url]
+[![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![MIT License][license-image]][license-url] [![Build Status][travis-image]][travis-url] [![Code Coverate][coveralls-image]][coveralls-url] ![Phasers to stun][phasers-image]
 
 [license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [license-url]: http://opensource.org/licenses/MIT
@@ -582,3 +582,5 @@ Twix is open source (MIT License) and hosted on Github [here](http://github.com/
 
 [coveralls-url]: https://coveralls.io/github/icambron/twix.js
 [coveralls-image]: https://img.shields.io/coveralls/icambron/twix.js/develop.svg?style=flat-square
+
+[phasers-image]: https://img.shields.io/badge/phasers-stun-yellow.svg?style=flat-square
