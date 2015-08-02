@@ -1655,7 +1655,7 @@
           result: "May 25, 7 PM - 9 PM"
         });
       });
-      describe("no meridiem spaces", function() {
+      return describe("no meridiem spaces", function() {
         return test("should skip the meridiem space", {
           start: thisYear("05-25", "05:30"),
           end: thisYear("05-25", "07:30"),
@@ -1666,70 +1666,123 @@
           result: "May 25, 5:30AM - 7:30AM"
         });
       });
-      describe("24 hours", function() {
-        test("shouldn't show meridians", {
-          start: thisYear("05-25", "05:30"),
-          end: thisYear("05-25", "19:30"),
-          options: {
-            twentyFourHour: true
-          },
-          result: "May 25, 5:30 - 19:30"
-        });
-        return test("always shows the :00", {
-          start: thisYear("05-25", "12:00"),
-          end: thisYear("05-25", "15:00"),
-          options: {
-            twentyFourHour: true
-          },
-          result: "May 25, 12:00 - 15:00"
-        });
+    });
+    describe("hour format", function() {
+      test("can override to 2-digit hours", {
+        start: thisYear("05-25", "05:30"),
+        end: thisYear("05-25", "19:30"),
+        options: {
+          hourFormat: "hh"
+        },
+        result: "May 25, 05:30 AM - 07:30 PM"
       });
-      describe("show day of week", function() {
-        test("should show day of week", {
-          start: "2013-05-25T05:30",
-          end: "2013-05-28T19:30",
-          options: {
-            showDayOfWeek: true
-          },
-          result: "Sat May 25, 5:30 AM - Tue May 28, 7:30 PM, 2013"
-        });
-        test("should show day of week, specify day of week format", {
-          start: "2013-08-25T05:30",
-          end: "2013-08-28T19:30",
-          options: {
-            showDayOfWeek: true,
-            weekdayFormat: "dddd"
-          },
-          result: "Sunday Aug 25, 5:30 AM - Wednesday Aug 28, 7:30 PM, 2013"
-        });
-        test("collapses show day of week", {
-          start: "2013-05-25T05:30",
-          end: "2013-05-25T19:30",
-          options: {
-            showDayOfWeek: true
-          },
-          result: "Sat May 25, 2013, 5:30 AM - 7:30 PM"
-        });
-        return test("doesn't collapse with one week of separation", {
-          start: "2013-05-25",
-          end: "2013-06-01",
-          allDay: true,
-          options: {
-            showDayOfWeek: true
-          },
-          result: "Sat May 25 - Sat Jun 1, 2013"
-        });
+      return test("can override to 24-hour time", {
+        start: thisYear("05-25", "05:30"),
+        end: thisYear("05-25", "19:30"),
+        options: {
+          hourFormat: "HH"
+        },
+        result: "May 25, 05:30 - 19:30"
       });
-      return describe("goes into the morning", function() {
-        test("elides late nights", {
+    });
+    describe("24 hours", function() {
+      test("shouldn't show meridians", {
+        start: thisYear("05-25", "05:30"),
+        end: thisYear("05-25", "19:30"),
+        options: {
+          twentyFourHour: true
+        },
+        result: "May 25, 5:30 - 19:30"
+      });
+      return test("always shows the :00", {
+        start: thisYear("05-25", "12:00"),
+        end: thisYear("05-25", "15:00"),
+        options: {
+          twentyFourHour: true
+        },
+        result: "May 25, 12:00 - 15:00"
+      });
+    });
+    describe("show day of week", function() {
+      test("should show day of week", {
+        start: "2013-05-25T05:30",
+        end: "2013-05-28T19:30",
+        options: {
+          showDayOfWeek: true
+        },
+        result: "Sat May 25, 5:30 AM - Tue May 28, 7:30 PM, 2013"
+      });
+      test("should show day of week, specify day of week format", {
+        start: "2013-08-25T05:30",
+        end: "2013-08-28T19:30",
+        options: {
+          showDayOfWeek: true,
+          weekdayFormat: "dddd"
+        },
+        result: "Sunday Aug 25, 5:30 AM - Wednesday Aug 28, 7:30 PM, 2013"
+      });
+      test("collapses show day of week", {
+        start: "2013-05-25T05:30",
+        end: "2013-05-25T19:30",
+        options: {
+          showDayOfWeek: true
+        },
+        result: "Sat May 25, 2013, 5:30 AM - 7:30 PM"
+      });
+      return test("doesn't collapse with one week of separation", {
+        start: "2013-05-25",
+        end: "2013-06-01",
+        allDay: true,
+        options: {
+          showDayOfWeek: true
+        },
+        result: "Sat May 25 - Sat Jun 1, 2013"
+      });
+    });
+    describe("goes into the morning", function() {
+      test("elides late nights", {
+        start: "1982-05-25 17:00",
+        end: "1982-05-26 02:00",
+        options: {
+          lastNightEndsAt: 5
+        },
+        result: "May 25, 1982, 5 PM - 2 AM"
+      });
+      test("keeps late mornings", {
+        start: "1982-05-25 17:00",
+        end: "1982-05-26 10:00",
+        options: {
+          lastNightEndsAt: 5
+        },
+        result: "May 25, 5 PM - May 26, 10 AM, 1982"
+      });
+      test("morning start is adjustable", {
+        start: "1982-05-25 17:00",
+        end: "1982-05-26 10:00",
+        options: {
+          lastNightEndsAt: 11
+        },
+        result: "May 25, 1982, 5 PM - 10 AM"
+      });
+      test("doesn't elide if you start in the AM", {
+        start: "1982-05-25 05:00",
+        end: "1982-05-26 04:00",
+        options: {
+          lastNightEndsAt: 5
+        },
+        result: "May 25, 5 AM - May 26, 4 AM, 1982"
+      });
+      describe("and we're trying to hide the date", function() {
+        test("elides the date too for early mornings", {
           start: "1982-05-25 17:00",
           end: "1982-05-26 02:00",
           options: {
-            lastNightEndsAt: 5
+            lastNightEndsAt: 5,
+            showDate: false
           },
-          result: "May 25, 1982, 5 PM - 2 AM"
+          result: "5 PM - 2 AM"
         });
-        test("keeps late mornings", {
+        return test("doesn't elide if the morning ends late", {
           start: "1982-05-25 17:00",
           end: "1982-05-26 10:00",
           options: {
@@ -1737,63 +1790,43 @@
           },
           result: "May 25, 5 PM - May 26, 10 AM, 1982"
         });
-        test("morning start is adjustable", {
-          start: "1982-05-25 17:00",
-          end: "1982-05-26 10:00",
-          options: {
-            lastNightEndsAt: 11
-          },
-          result: "May 25, 1982, 5 PM - 10 AM"
-        });
-        test("doesn't elide if you start in the AM", {
-          start: "1982-05-25 05:00",
-          end: "1982-05-26 04:00",
-          options: {
-            lastNightEndsAt: 5
-          },
-          result: "May 25, 5 AM - May 26, 4 AM, 1982"
-        });
-        describe("and we're trying to hide the date", function() {
-          test("elides the date too for early mornings", {
-            start: "1982-05-25 17:00",
-            end: "1982-05-26 02:00",
-            options: {
-              lastNightEndsAt: 5,
-              showDate: false
-            },
-            result: "5 PM - 2 AM"
-          });
-          return test("doesn't elide if the morning ends late", {
+      });
+      return describe("other options", function() {
+        return it("accepts a custom format", function() {
+          return {
             start: "1982-05-25 17:00",
             end: "1982-05-26 10:00",
             options: {
-              lastNightEndsAt: 5
+              template: function(first, second) {
+                return first + " | " + second;
+              }
             },
-            result: "May 25, 5 PM - May 26, 10 AM, 1982"
-          });
-        });
-        return describe("other options", function() {
-          return it("accepts a custom format", function() {
-            return {
-              start: "1982-05-25 17:00",
-              end: "1982-05-26 10:00",
-              options: {
-                template: function(first, second) {
-                  return first + " | " + second;
-                }
-              },
-              result: "May 25, 5 PM | May 26, 10 AM, 1982"
-            };
-          });
+            result: "May 25, 5 PM | May 26, 10 AM, 1982"
+          };
         });
       });
     });
+    describe("toString", function() {
+      return it("returns a string", function() {
+        var stringed;
+        stringed = moment.utc("1982-05-25").twix(moment.utc("1982-05-25"), {
+          allDay: true
+        }).toString();
+        return assertEqual("{start: 1982-05-25T00:00:00+00:00, end: 1982-05-25T00:00:00+00:00, allDay: true}", stringed);
+      });
+    });
     return describe("internationalization", function() {
-      return it("uses the moment locale's LT setting by default", function() {
+      it("uses the moment locale's 24-hour setting by default", function() {
         var range, start;
         start = moment("1982-05-25").locale("en-gb");
         range = start.twix(start.clone().add(1, "days"));
         return assertEqual("May 25, 0:00 - May 26, 0:00, 1982", range.format());
+      });
+      return it("uses the moment locale's settings by default", function() {
+        var range, start;
+        start = moment("1982-05-25").locale("fr");
+        range = start.twix(start.clone().add(1, "days"));
+        return assertEqual("mai 25, 0:00 - mai 26, 0:00, 1982", range.format());
       });
     });
   };
@@ -1804,7 +1837,7 @@
     });
   } else {
     moment = (ref = typeof require === "function" ? require("moment") : void 0) != null ? ref : this.moment;
-    Twix = (ref1 = typeof require === "function" ? require("../../dist/twix") : void 0) != null ? ref1 : this.Twix;
+    Twix = (ref1 = typeof require === "function" ? require("../dist/twix") : void 0) != null ? ref1 : this.Twix;
     test(moment, Twix);
   }
 
