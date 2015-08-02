@@ -1,3 +1,0 @@
-[submodule "vendor/moment"]
-	path = vendor/moment
-	url = git://github.com/timrwood/moment.git

@@ -1,20 +1,19 @@
 <html>
   <head>
-    <link rel="stylesheet" href="../vendor/test/mocha.css" />
-
+    <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
   <body>
     <div id="mocha"></div>
 
-    <script src="../vendor/test/mocha.js"></script>
+    <script src="../node_modules/mocha/mocha.js"></script>
     <script>mocha.setup('bdd')</script>
 
-    <script src="../vendor/test/require.js"></script>
+    <script src="../node_modules/requirejs/require.js"></script>
 
     <script>
       require.config({
         paths: {
-          moment: "../vendor/moment/moment",
-          momentLang: "../vendor/moment/locale",
+          moment: "../node_modules/moment/moment",
+          momentLang: "../node_modules/moment/locale",
           twixes: "../dist"
         }
       });

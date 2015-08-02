@@ -16,6 +16,7 @@
     "mocha": "latest",
     "mocha-lcov-reporter": "latest",
     "moment": ">= 2.10.0",
+    "requirejs": "latest",
     "uglify-js" : "latest"
   },
   "main": "dist/twix",
