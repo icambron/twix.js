@@ -21,7 +21,7 @@
   },
   "main": "dist/twix",
   "scripts": {
-    "test": "mocha -R dot test/dist/twix.spec.js"
+    "test": "mocha -R dot test/twix.spec.js"
   },
   "engines": {
     "node": "*"
