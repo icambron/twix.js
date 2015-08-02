@@ -581,4 +581,4 @@ Twix is open source (MIT License) and hosted on Github [here](http://github.com/
 [travis-image]: http://img.shields.io/travis/icambron/twix.js/develop.svg?style=flat-square
 
 [coveralls-url]: https://coveralls.io/github/icambron/twix.js
-[coveralls-image]: https://img.shields.io/coveralls/icambron/twix.js.svg?style=flat-square
+[coveralls-image]: https://img.shields.io/coveralls/icambron/twix.js/develop.svg?style=flat-square
