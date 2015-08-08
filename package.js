@@ -17,7 +17,6 @@ Package.onUse(function(api) {
   api.imply("momentjs:moment@2.10.6", where);
 
   api.add_files([
-    "dist/twix.js",
-    "dist/locale.js"
+    "dist/twix.js"
   ], where);
 });
