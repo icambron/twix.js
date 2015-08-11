@@ -571,7 +571,7 @@ Twix is open source (MIT License) and hosted on Github [here](http://github.com/
 [![NPM version][npm-version-image]][npm-url] [![NPM downloads][npm-downloads-image]][npm-url] [![MIT License][license-image]][license-url] [![Build Status][travis-image]][travis-url] [![Code Coverage][coveralls-image]][coveralls-url] ![Phasers to stun][phasers-image]
 
 [license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
-[license-url]: http://opensource.org/licenses/MIT
+[license-url]: http://github.com/icambron/twix.js/LICENSE.md
 
 [npm-url]: https://npmjs.org/package/twix
 [npm-version-image]: http://img.shields.io/npm/v/twix.svg?style=flat-square
