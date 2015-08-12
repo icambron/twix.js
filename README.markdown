@@ -80,7 +80,7 @@ Patches are welcome!
 
 ## Copyright
 
-Copyright 2012-2015 Isaac Cambron and contributors. See [LICENSE][] for details.
+Copyright 2012-2015 Isaac Cambron and contributors. Distributed under the MIT License. See [LICENSE][] for details.
 
 [license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [license]: LICENSE.md
