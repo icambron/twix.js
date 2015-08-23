@@ -7,4 +7,3 @@ ratings:
   - "**.coffee"
 exclude_paths:
 - node_modules/**/*
-- test/**/*
