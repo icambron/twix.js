@@ -5,6 +5,7 @@
 [![MIT License][license-image]][license]
 [![Build Status][travis-image]][travis-url]
 [![Code Coverage][coveralls-image]][coveralls-url]
+[![Dependencies][gemnasium-image]][gemnasium-url]
 ![Phasers to stun][phasers-image]
 
 
@@ -99,5 +100,8 @@ Copyright 2012-2015 Isaac Cambron and contributors. Distributed under the MIT Li
 
 [coveralls-url]: https://coveralls.io/github/icambron/twix.js
 [coveralls-image]: https://img.shields.io/coveralls/icambron/twix.js/develop.svg?style=flat-square
+
+[gemnasium-url]: https://gemnasium.com/icambron/twix.js
+[gemnasium-image]: https://img.shields.io/gemnasium/icambron/twix.js.svg?style=flat-square
 
 [phasers-image]: https://img.shields.io/badge/phasers-stun-yellow.svg?style=flat-square
