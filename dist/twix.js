@@ -12,7 +12,7 @@
   makeTwix = function(moment) {
     var Twix;
     if (moment == null) {
-      throw new Exception("Can't find moment");
+      throw new Error("Can't find moment");
     }
     Twix = (function() {
       function Twix(start, end, parseFormat, options) {
@@ -361,9 +361,9 @@
           options.hourFormat = inopts.twentyFourHour ? options.hourFormat.replace('h', 'H') : options.hourFormat.replace('H', 'h');
         }
         needsMeridiem = options.hourFormat && options.hourFormat[0] === 'h';
-        goesIntoTheMorning = options.lastNightEndsAt > 0 && !this.allDay && this.end.clone().startOf('day').valueOf() === this.start.clone().add(1, 'day').startOf('day').valueOf() && this.start.hours() > 12 && this.end.hours() < options.lastNightEndsAt;
-        needDate = options.showDate || (!this.isSame('day') && !goesIntoTheMorning);
-        if (this.allDay && this.isSame('day') && (!options.showDate || options.explicitAllDay)) {
+        goesIntoTheMorning = options.lastNightEndsAt > 0 && !this.allDay && this.end.clone().startOf('d').valueOf() === this.start.clone().add(1, 'd').startOf('d').valueOf() && this.start.hours() > 12 && this.end.hours() < options.lastNightEndsAt;
+        needDate = options.showDate || (!this.isSame('d') && !goesIntoTheMorning);
+        if (this.allDay && this.isSame('d') && (!options.showDate || options.explicitAllDay)) {
           fs.push({
             name: 'all day simple',
             fn: function() {

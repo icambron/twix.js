@@ -122,7 +122,7 @@ makeTwix = (moment) ->
       allDay = (o for o in others when o.allDay).length == others.length
 
       arr = []
-      for item, i in [@].concat(others)
+      for item, i in [this].concat(others)
         arr.push({time: item._trueStart, i: i, type: 0})
         arr.push({time: item._displayEnd, i: i, type: 1})
       arr = arr.sort((a, b) -> a.time - b.time)
@@ -166,7 +166,7 @@ makeTwix = (moment) ->
         times = (moment(time) for time in times)
         times = (mom for mom in times when mom.isValid() && mom >= start).sort()
 
-      return [@] if (dur && dur.asMilliseconds() == 0) || (times && times.length == 0)
+      return [this] if (dur && dur.asMilliseconds() == 0) || (times && times.length == 0)
 
       vals = []; i = 0; final = @_displayEnd
       while start < final && (!times? || times[i])

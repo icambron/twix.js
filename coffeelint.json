@@ -28,7 +28,7 @@
     "level": "error"
   },
   "empty_constructor_needs_parens": {
-    "level": "ignore"
+    "level": "error"
   },
   "ensure_comprehensions": {
     "level": "error"
@@ -41,7 +41,7 @@
     "level": "error"
   },
   "line_endings": {
-    "level": "ignore",
+    "level": "error",
     "value": "unix"
   },
   "max_line_length": {
@@ -55,7 +55,7 @@
   },
   "newlines_after_classes": {
     "value": 3,
-    "level": "ignore"
+    "level": "error"
   },
   "no_backticks": {
     "level": "error"
@@ -65,7 +65,7 @@
     "console": false
   },
   "no_empty_functions": {
-    "level": "ignore"
+    "level": "error"
   },
   "no_empty_param_list": {
     "level": "ignore"
@@ -91,7 +91,7 @@
     "level": "error"
   },
   "no_stand_alone_at": {
-    "level": "ignore"
+    "level": "error"
   },
   "no_tabs": {
     "level": "error"
@@ -117,17 +117,17 @@
     "level": "error"
   },
   "non_empty_constructor_needs_parens": {
-    "level": "ignore"
+    "level": "error"
   },
   "prefer_english_operator": {
     "level": "ignore",
     "doubleNotLevel": "ignore"
   },
   "space_operators": {
-    "level": "ignore"
+    "level": "error"
   },
   "spacing_after_comma": {
-    "level": "ignore"
+    "level": "error"
   },
   "transform_messes_up_line_numbers": {
     "level": "error"

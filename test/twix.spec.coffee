@@ -769,7 +769,7 @@ test = (moment, Twix) ->
   describe 'union()', ->
 
     someTime = thatDay '05:30', '08:30'
-    someDays = new Twix '1982-05-24', '1982-05-25', true
+    someDays = new Twix('1982-05-24', '1982-05-25', true)
 
     describe 'non-all-day ranges', ->
 
@@ -831,7 +831,7 @@ test = (moment, Twix) ->
   describe 'intersection()', ->
 
     someTime = thatDay '05:30', '08:30'
-    someDays = new Twix '1982-05-24', '1982-05-25', true
+    someDays = new Twix('1982-05-24', '1982-05-25', true)
 
     describe 'non-all-day ranges', ->
 
@@ -909,7 +909,7 @@ test = (moment, Twix) ->
   describe 'xor()', ->
 
     someTime = thatDay '05:30', '08:30'
-    someDays = new Twix '1982-05-24', '1982-05-25', true
+    someDays = new Twix('1982-05-24', '1982-05-25', true)
 
     describe 'non-all-day ranges', ->
       it 'returns non-overlapping ranges as-is (later)', ->
@@ -984,7 +984,7 @@ test = (moment, Twix) ->
 
   describe 'difference()', ->
     someTime = thatDay '05:30', '08:30'
-    someDays = new Twix '1982-05-24', '1982-05-25', true
+    someDays = new Twix('1982-05-24', '1982-05-25', true)
 
     describe 'non-all-day ranges', ->
       it 'returns self for non-overlapping ranges (later)', ->
@@ -1043,8 +1043,8 @@ test = (moment, Twix) ->
         assertTwixEqual new Twix('1982-05-24', '1982-05-24', true), exed[0]
 
       it "doesn't mutate its inputs", ->
-        first = new Twix '1982-05-24', '1982-05-25', true
-        second = new Twix '1982-05-25', '1982-05-27', true
+        first = new Twix('1982-05-24', '1982-05-25', true)
+        second = new Twix('1982-05-25', '1982-05-27', true)
 
         firstStart = first._trueStart.clone()
         firstEnd = first._displayEnd.clone()
