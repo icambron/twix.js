@@ -43,7 +43,7 @@ If you want to build Twix for yourself, clone the repo and run this:
 make configure build
 ```
 
-Configure just installs the NPMs (including CoffeeScript) and brings in Moment as a submodule, so you only have to do that part once.
+Configure just installs the NPMs (including CoffeeScript), so you only have to do that part once.
 
 Note that the source is `src/twix.coffee`; the output is `dist/twix.js`. You can run the tests via
 

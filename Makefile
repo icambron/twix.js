@@ -21,7 +21,6 @@ build: directories
 
 configure:
 	@npm install
-	@git submodule update --init --recursive
 
 directories:
 	@mkdir -p dist
