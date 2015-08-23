@@ -37,27 +37,15 @@ Breaking change in 0.7.0: Twix formatting internationalization (just French, rea
 
 ## Building
 
-If you want to build Twix for yourself, clone the repo and run this:
+If you want to build and test Twix for yourself, `make` wraps everything you need:
 
-```
-make configure build
-```
-
-Configure just installs the NPMs (including CoffeeScript), so you only have to do that part once.
-
-Note that the source is `src/twix.coffee`; the output is `dist/twix.js`. You can run the tests via
-
-```
-make test
-```
-
-You can also run the tests in-browser by building and then loading `test/test.html`.
-
-Finally, you can run the linter via
-
-```
-make lint
-```
+Command          | Function
+-----------------|---------
+`make configure` | Install dependencies (same as `npm install`)
+`make build`     | Compile JS
+`make test`      | Run Mocha suite
+`make lint`      | Linter
+`make bench`     | Microbenchmarks
 
 ## Contributing
 
