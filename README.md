@@ -1,6 +1,6 @@
 # Twix.js
 
-Twix is a simple but opinionated JS library for working with date ranges, and includes a customizable smart formatter. It's written in CoffeeScript and it depends on [Moment.js](http://momentjs.com/).
+Twix is a comprehensive JS library for working with date ranges, and includes a customizable smart formatter. It's written in CoffeeScript and it depends on [Moment.js](http://momentjs.com/).
 
 It allows you to do, among other things, this:
 
@@ -12,9 +12,10 @@ t.format();  //=> Jan 25, 1982, 9:30 AM - 1:30 PM
 t.isSame("day"); //=> true
 t.humanizeLength(); //=> "4 hours"
 t.count("days"); //=> 1
+t.intersection(otherRange); //=> another range
 ```
 
-And much more.
+And much more. See the [documentation][documentation-url] for more.
 
 ## Vitals
 
@@ -31,7 +32,7 @@ Phasers       | ![Phasers to stun][phasers-image]|
 
 You can find comprehensive docs here:
 
-**[Detailed documentation](http://icambron.github.io/twix.js/docs.html)**
+**[Detailed documentation][documenation-url]**
 
 Breaking change in 0.7.0: Twix formatting internationalization (just French, really) is no longer supported. It doesn't seem to have had a lot of use, and it's pain to maintain. Don't worry, we still support Moment's internationalized tokens.
 
@@ -62,6 +63,8 @@ Patches are welcome!
 ## Copyright and License
 
 Copyright 2012-2015 Isaac Cambron and contributors. Distributed under the MIT License. See [LICENSE][] for details.
+
+[documentation-url]: http://icambron.github.io/twix.js/docs.html
 
 [license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [license]: LICENSE.md
