@@ -32,6 +32,9 @@ bench: build
 test: build
 	@mocha -R dot
 
+lint: build
+	@coffeelint src test
+
 coverage: build
 	@mocha --require blanket -R html-cov > test/coverage.html
 

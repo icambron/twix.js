@@ -11,13 +11,14 @@
   "devDependencies": {
     "benchmark": "latest",
     "blanket": "latest",
-    "coffee-script" : "latest",
+    "coffee-script": "latest",
+    "coffeelint": "latest",
     "coveralls": "latest",
     "mocha": "latest",
     "mocha-lcov-reporter": "latest",
     "moment": ">= 2.10.0",
     "requirejs": "latest",
-    "uglify-js" : "latest"
+    "uglify-js": "latest"
   },
   "main": "dist/twix",
   "scripts": {
