@@ -4,7 +4,7 @@ isArray = (input) ->
   Object.prototype.toString.call(input) == '[object Array]'
 
 makeTwix = (moment) ->
-  throw new Exception("Can't find moment") unless moment?
+  throw new Error("Can't find moment") unless moment?
 
   class Twix
     constructor: (start, end, parseFormat, options = {}) ->
