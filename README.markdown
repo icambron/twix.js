@@ -16,7 +16,7 @@ t.count("days"); //=> 1
 
 And much more.
 
-##Vitals
+## Vitals
 
 Info          | Badges
 ------------- | -------------
