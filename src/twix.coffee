@@ -243,13 +243,13 @@ makeTwix = (moment) ->
       goesIntoTheMorning =
         options.lastNightEndsAt > 0 &&
         !@allDay &&
-        @end.clone().startOf('day').valueOf() == @start.clone().add(1, 'day').startOf('day').valueOf() &&
+        @end.clone().startOf('d').valueOf() == @start.clone().add(1, 'd').startOf('d').valueOf() &&
         @start.hours() > 12 &&
         @end.hours() < options.lastNightEndsAt
 
-      needDate = options.showDate || (!@isSame('day') && !goesIntoTheMorning)
+      needDate = options.showDate || (!@isSame('d') && !goesIntoTheMorning)
 
-      if @allDay && @isSame('day') && (!options.showDate || options.explicitAllDay)
+      if @allDay && @isSame('d') && (!options.showDate || options.explicitAllDay)
         fs.push
           name: 'all day simple'
           fn: () -> options.allDay
