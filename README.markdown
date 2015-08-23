@@ -78,6 +78,8 @@ Copyright 2012-2015 Isaac Cambron and contributors. Distributed under the MIT Li
 [license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [license]: LICENSE.md
 
+[changelog]: CHANGELOG.md
+
 [release-url]: https://github.com/icambron/twix.js/releases/latest
 [release-version-image]: https://img.shields.io/github/release/icambron/twix.js.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/twix
