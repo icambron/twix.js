@@ -88,4 +88,4 @@ Copyright 2012-2015 Isaac Cambron and contributors. Distributed under the MIT Li
 [gemnasium-url]: https://gemnasium.com/icambron/twix.js
 [gemnasium-image]: https://img.shields.io/gemnasium/icambron/twix.js.svg?style=flat-square
 
-[phasers-image]: https://img.shields.io/badge/phasers-stun-yellow.svg?style=flat-square
+[phasers-image]: https://img.shields.io/badge/phasers-stun-green.svg?style=flat-square
