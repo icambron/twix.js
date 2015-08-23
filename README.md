@@ -32,7 +32,7 @@ Phasers       | ![Phasers to stun][phasers-image]|
 
 You can find comprehensive docs here:
 
-**[Detailed documentation][documenation-url]**
+**[Detailed documentation][documentation-url]**
 
 Breaking change in 0.7.0: Twix formatting internationalization (just French, really) is no longer supported. It doesn't seem to have had a lot of use, and it's pain to maintain. Don't worry, we still support Moment's internationalized tokens.
 
