@@ -1,14 +1,5 @@
 # Twix
 
-[![NPM version][npm-version-image]][npm-url]
-[![NPM downloads][npm-downloads-image]][npm-url]
-[![MIT License][license-image]][license]
-[![Build Status][travis-image]][travis-url]
-[![Code Coverage][coveralls-image]][coveralls-url]
-[![Dependencies][gemnasium-image]][gemnasium-url]
-![Phasers to stun][phasers-image]
-
-
 Twix is a simple but opinionated JS library for working with date ranges, and includes a customizable smart formatter. It's written in CoffeeScript and it depends on [Moment.js](http://momentjs.com/).
 
 It allows you to do, among other things, this:
@@ -25,7 +16,22 @@ t.count("days"); //=> 1
 
 And much more.
 
-## [Documentation](http://icambron.github.io/twix.js/docs.html)
+##Vitals
+
+Info          | Badges
+------------- | -------------
+Version       | [![Version][release-version-image]][release-url] [![NPM version][npm-version-image]][npm-url] ![Bower version][bower-version-image]
+License       | [![MIT License][license-image]][license]
+Popularity    | [![NPM downloads][npm-downloads-image]][npm-url]
+Testing       | [![Build Status][travis-image]][travis-url] [![Code Coverage][coveralls-image]][coveralls-url]
+Quality       | [![Dependencies][gemnasium-image]][gemnasium-url]
+Phasers       | ![Phasers to stun][phasers-image]|
+
+## Documentation
+
+You can find comprehensive docs here:
+
+[Detailed documentation](http://icambron.github.io/twix.js/docs.html)
 
 **Attention Moment 2.10.x users**: You need to upgrade to the latest Twix! You also should make sure not to be on Moment 2.10.0 (i.e. upgrade to the latest point release) because it has some compatibility issues with Twix.
 
@@ -91,8 +97,12 @@ Copyright 2012-2015 Isaac Cambron and contributors. Distributed under the MIT Li
 [license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
 [license]: LICENSE.md
 
+[release-url]: https://github.com/icambron/twix.js/releases/latest
+[release-version-image]: https://img.shields.io/github/release/icambron/twix.js.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/twix
 [npm-version-image]: http://img.shields.io/npm/v/twix.svg?style=flat-square
+[bower-version-image]: https://img.shields.io/bower/v/twix.svg?style=flat-square
+
 [npm-downloads-image]: http://img.shields.io/npm/dm/twix.svg?style=flat-square
 
 [travis-url]: http://travis-ci.org/icambron/twix.js
