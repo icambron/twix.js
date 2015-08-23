@@ -39,13 +39,13 @@ Breaking change in 0.7.0: Twix formatting internationalization (just French, rea
 
 If you want to build and test Twix for yourself, `make` wraps everything you need:
 
-Command          | Function
------------------|---------
-`make configure` | Install dependencies (same as `npm install`)
-`make build`     | Compile JS
-`make test`      | Run Mocha suite
-`make lint`      | Linter
-`make bench`     | Microbenchmarks
+Command                | Function
+-----------------------|---------
+`make configure`       | Install dependencies (same as `npm install`)
+`make` or `make build` | Compile `src/*.coffee` to `dist/*.js`
+`make test`            | Run Mocha suite
+`make lint`            | Linter
+`make bench`           | Microbenchmarks
 
 ## Contributing
 
