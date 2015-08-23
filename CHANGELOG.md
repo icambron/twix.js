@@ -1,4 +1,4 @@
- # Changelog
+# Changelog
 
  * **0.7.0**: Fixed bug in `xor()` and `difference()`. Fixed compatibility with other plugins. Removed custom locale support. Deprecated `twentyFourHour`. Moved `bin` to `dist`.
 
