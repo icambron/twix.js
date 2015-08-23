@@ -2,7 +2,7 @@
 
 Twix is a comprehensive JS library for working with date ranges, and includes a customizable smart formatter. It's written in CoffeeScript and it depends on [Moment.js](http://momentjs.com/).
 
-It allows you to do, among other things, this:
+Some examples:
 
 ```js
 var t = moment("1982-01-25T09:30").twix("1982-01-25T13:30");
@@ -15,7 +15,7 @@ t.count("days"); //=> 1
 t.intersection(otherRange); //=> another range
 ```
 
-And much more. See the [documentation][documentation-url] for more.
+See the [documentation][documentation-url] for more.
 
 ## Vitals
 
