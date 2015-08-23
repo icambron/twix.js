@@ -33,8 +33,6 @@ You can find comprehensive docs here:
 
 **[Detailed documentation](http://icambron.github.io/twix.js/docs.html)**
 
-### Specific notes
-
 Breaking change in 0.7.0: Twix formatting internationalization (just French, really) is no longer supported. It doesn't seem to have had a lot of use, and it's pain to maintain. Don't worry, we still support Moment's internationalized tokens.
 
 ## Building
