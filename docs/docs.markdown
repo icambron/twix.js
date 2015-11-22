@@ -236,6 +236,25 @@ iter.next(); //=> null
 
 `iterateInner` takes all the same duration arguments as `iterate`.
 
+###start
+
+An accessor returning a moment object for the start of the range. For ranges built with the `allDay` option,
+returns the start of the first day. Useful when new ranges have been created with the `split` function.
+
+```js
+var start  = moment("1982-05-24T5:00").twix("1982-05-27T6:00").start();
+var start  = moment("1982-05-24T5:00").twix("1982-05-27T6:00", {allDay: true}).start();
+```
+###end
+
+An accessor returning a moment object for the end of the range. For ranges built with the `allDay` option,
+returns the start of the last day. Useful when new ranges have been created with the `split` function.
+
+```js
+var end  = moment("1982-05-24T5:00").twix("1982-05-27T6:00").end();
+var end  = moment("1982-05-24T5:00").twix("1982-05-27T6:00", {allDay: true}).end();
+```
+
 ##Multiple ranges
 
 ###overlaps
@@ -333,7 +352,8 @@ splits[2].format({showDate: false}); //=> '7:01 - 7:30 AM'
 range.split(moment.duration({"h": 1})).length; //=> 3
 range.split(moment("1982-05-25T06:00")).length; //=> 2
 range.split(moment("1982-05-25T06:00"), moment("1982-05-25T07:00")).length; //=> 3
-```
+
+The `start()` and `end()` accessors are useful to check the start and end times of the new ranges.
 
 ##Moment durations
 
