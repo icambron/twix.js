@@ -160,8 +160,7 @@ makeTwix = (moment) ->
 
       if moment.isDuration(args[0])
         dur = args[0]
-      else if (!moment.isMoment(args[0]) && !isArray(args[0]) && typeof args[0] == 'object') ||
-       (typeof args[0] == 'number' && typeof args[1] == 'string')
+      else if (!moment.isMoment(args[0]) && !isArray(args[0]) && typeof args[0] == 'object') || (typeof args[0] == 'number' && typeof args[1] == 'string')
         dur = moment.duration args[0], args[1]
       else if isArray(args[0])
         times = args[0]
@@ -440,8 +439,9 @@ makeTwix = (moment) ->
 # -- MAKE AVAILABLE
 return module.exports = makeTwix(require 'moment') if hasModule
 
-if  typeof(define) == 'function'
+if typeof(define) == 'function'
   define 'twix', ['moment'], (moment) -> makeTwix(moment)
+
 
 if @moment
   @Twix = makeTwix(@moment)
