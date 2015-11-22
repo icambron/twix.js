@@ -67,8 +67,8 @@
 
       Twix.prototype.count = function(period) {
         var end, start;
-        start = this._start.clone().startOf(period);
-        end = this._end.clone().startOf(period);
+        start = this.start().startOf(period);
+        end = this.end().startOf(period);
         return end.diff(start, period) + 1;
       };
 
@@ -84,8 +84,8 @@
       Twix.prototype.iterate = function(intervalAmount, period, minHours) {
         var end, hasNext, ref, start;
         ref = this._prepIterateInputs(intervalAmount, period, minHours), intervalAmount = ref[0], period = ref[1], minHours = ref[2];
-        start = this._start.clone().startOf(period);
-        end = this._end.clone().startOf(period);
+        start = this.start().startOf(period);
+        end = this.end().startOf(period);
         if (this.allDay) {
           end = end.add(1, 'd');
         }
@@ -112,7 +112,7 @@
           if (this.isSame('d')) {
             return 'all day';
           } else {
-            return this._start.from(this._end.clone().add(1, 'd'), true);
+            return this._start.from(this.end().add(1, 'd'), true);
           }
         } else {
           return this._start.from(this._end, true);
@@ -259,7 +259,7 @@
       Twix.prototype.split = function() {
         var args, dur, end, final, i, mom, start, time, times, vals;
         args = 1 <= arguments.length ? slice.call(arguments, 0) : [];
-        end = start = this._start.clone();
+        end = start = this.start();
         if (moment.isDuration(args[0])) {
           dur = args[0];
         } else if ((!moment.isMoment(args[0]) && !isArray(args[0]) && typeof args[0] === 'object') || (typeof args[0] === 'number' && typeof args[1] === 'string')) {
@@ -369,7 +369,7 @@
           options.hourFormat = inopts.twentyFourHour ? options.hourFormat.replace('h', 'H') : options.hourFormat.replace('H', 'h');
         }
         needsMeridiem = options.hourFormat && options.hourFormat[0] === 'h';
-        goesIntoTheMorning = options.lastNightEndsAt > 0 && !this.allDay && this._end.clone().startOf('d').valueOf() === this._start.clone().add(1, 'd').startOf('d').valueOf() && this._start.hours() > 12 && this._end.hours() < options.lastNightEndsAt;
+        goesIntoTheMorning = options.lastNightEndsAt > 0 && !this.allDay && this.end().startOf('d').valueOf() === this.start().add(1, 'd').startOf('d').valueOf() && this._start.hours() > 12 && this._end.hours() < options.lastNightEndsAt;
         needDate = options.showDate || (!this.isSame('d') && !goesIntoTheMorning);
         if (this.allDay && this.isSame('d') && (!options.showDate || options.explicitAllDay)) {
           fs.push({
@@ -576,7 +576,7 @@
         if (intervalAmount == null) {
           intervalAmount = 1;
         }
-        start = this._start.clone();
+        start = this.start();
         end = this._displayEnd.clone();
         if (start > start.clone().startOf(period)) {
           start.startOf(period).add(intervalAmount, period);

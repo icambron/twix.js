@@ -39,8 +39,8 @@ makeTwix = (moment) ->
       @_displayEnd.diff @_start, period
 
     count: (period) ->
-      start = @_start.clone().startOf period
-      end = @_end.clone().startOf period
+      start = @start().startOf period
+      end = @end().startOf period
       end.diff(start, period) + 1
 
     countInner: (period) ->
@@ -52,8 +52,8 @@ makeTwix = (moment) ->
     iterate: (intervalAmount, period, minHours) ->
       [intervalAmount, period, minHours] = @_prepIterateInputs intervalAmount, period, minHours
 
-      start = @_start.clone().startOf period
-      end = @_end.clone().startOf period
+      start = @start().startOf period
+      end = @end().startOf period
       end = end.add(1, 'd') if @allDay
       hasNext = => (!@allDay && start <= end && (!minHours || !start.isSame(end) || @_end.hours() > minHours)) || (@allDay && start < end)
 
@@ -72,7 +72,7 @@ makeTwix = (moment) ->
         if @isSame 'd'
           'all day'
         else
-          @_start.from(@_end.clone().add(1, 'd'), true)
+          @_start.from(@end().add(1, 'd'), true)
       else
         @_start.from(@_end, true)
 
@@ -156,7 +156,7 @@ makeTwix = (moment) ->
       t for t in @xor(others...).map((i) => @intersection(i)) when !t.isEmpty() && t.isValid()
 
     split: (args...) ->
-      end = start = @_start.clone()
+      end = start = @start()
 
       if moment.isDuration(args[0])
         dur = args[0]
@@ -249,7 +249,7 @@ makeTwix = (moment) ->
       goesIntoTheMorning =
         options.lastNightEndsAt > 0 &&
         !@allDay &&
-        @_end.clone().startOf('d').valueOf() == @_start.clone().add(1, 'd').startOf('d').valueOf() &&
+        @end().startOf('d').valueOf() == @start().add(1, 'd').startOf('d').valueOf() &&
         @_start.hours() > 12 &&
         @_end.hours() < options.lastNightEndsAt
 
@@ -401,7 +401,7 @@ makeTwix = (moment) ->
       [intervalAmount, period, minHours]
 
     _inner: (period = 'ms', intervalAmount = 1) ->
-      start = @_start.clone()
+      start = @start()
       end = @_displayEnd.clone()
 
       start.startOf(period).add(intervalAmount, period) if start > start.clone().startOf(period)
