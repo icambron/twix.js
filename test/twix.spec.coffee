@@ -49,10 +49,10 @@ test = (moment, Twix) ->
 
       it "uses a parseStrict object argument", ->
         t = moment("1981-05-25").twix("A05/25/1982", "MM/DD/YYYY", parseStrict: true)
-        assertEqual t.end.isValid(), false
+        assertEqual t.end().isValid(), false
 
         t = moment("1981-05-25").twix("05/25/1982", "MM/DD/YYYY", parseStrict: true)
-        assertEqual t.end.isValid(), true
+        assertEqual t.end().isValid(), true
 
       it "uses an allDay option argument", ->
         t = moment("1981-05-25").twix("05/25/1982", "MM/DD/YYYY", allDay: true)
@@ -106,6 +106,22 @@ test = (moment, Twix) ->
         d = moment.duration(2, "days")
         twix = d.beforeMoment thisYear("05-25"), true
         assertTwixEqual new Twix(thisYear("05-23"), thisYear("05-25"), true), twix
+
+  describe "start()", ->
+
+    it "returns the start of the range", ->
+        assertMomentEqual moment("1982-05-25"), moment("1982-05-25").twix("1983-10-14").start()
+
+    it "returns the start of the start day for all day ranges", ->
+        assertMomentEqual moment("1982-05-25"), moment("1982-05-25T04:45:45").twix("1983-10-14", true).start()
+
+  describe "end()", ->
+
+    it "returns the end of the range", ->
+        assertMomentEqual moment("1983-10-14"), moment("1982-05-25").twix("1983-10-14").end()
+
+    it "returns the start of the ened day for all day ranges", ->
+        assertMomentEqual moment("1983-10-14"), moment("1982-05-25").twix("1983-10-14T09:30:23", true).end()
 
   describe "isSame()", ->
 
@@ -247,8 +263,8 @@ test = (moment, Twix) ->
         end = thisYear "05-26"
         range = moment(start).twix end
         range.countInner("years")
-        assertMomentEqual thisYear("05-25"), range.start
-        assertMomentEqual thisYear("05-26"), range.end
+        assertMomentEqual thisYear("05-25"), range.start()
+        assertMomentEqual thisYear("05-26"), range.end()
 
   describe "iterate()", ->
 
@@ -1046,16 +1062,16 @@ test = (moment, Twix) ->
         first = new Twix("1982-05-24", "1982-05-25", true)
         second = new Twix("1982-05-25", "1982-05-27", true)
 
-        firstStart = first._trueStart.clone()
+        firstStart = first.start()
         firstEnd = first._displayEnd.clone()
-        secondStart = second._trueStart.clone()
+        secondStart = second.start()
         secondEnd = second._displayEnd.clone()
 
         first.difference(second)
 
-        assertMomentEqual firstStart, first._trueStart
+        assertMomentEqual firstStart, first.start()
         assertMomentEqual firstEnd, first._displayEnd
-        assertMomentEqual secondStart, second._trueStart
+        assertMomentEqual secondStart, second.start()
         assertMomentEqual secondEnd, second._displayEnd
 
     describe "multiple ranges", ->
