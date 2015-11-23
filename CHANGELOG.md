@@ -1,5 +1,9 @@
 # Changelog
 
+ * **0.8.1**: `isValid()` now checks if the start and end are valid moments.
+
+ * **0.8.0**: Added `start()` and `end()`. Lots of code cleanup.
+
  * **0.7.0**: Fixed bug in `xor()` and `difference()`. Fixed compatibility with other plugins. Removed custom locale support. Deprecated `twentyFourHour`. Moved `bin` to `dist`.
 
  * **0.6.5**: Fix for `contains()` on all-day ranges

@@ -36,8 +36,6 @@ You can find comprehensive docs here:
 
 **Breaking change in 0.8.0**: Twix now provides `start()` and `end()` accessors. Previously, it was possible to access Twix *fields* called `start` and `end`, though they weren't documented. Because they're now functions, that will break. I did this to prevent people from mutating those dates and breaking Twix.
 
-Breaking change in 0.7.0: Twix formatting internationalization (just French, really) is no longer supported. It doesn't seem to have had a lot of use, and it's pain to maintain. Don't worry, we still support Moment's internationalized tokens.
-
 ## Building
 
 If you want to build and test Twix for yourself, `make` wraps everything you need:
