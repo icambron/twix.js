@@ -1,0 +1,27 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+  <body>
+    <div id="mocha"></div>
+
+    <script src="../node_modules/mocha/mocha.js"></script>
+    <script>mocha.setup('bdd')</script>
+
+    <script src="../node_modules/requirejs/require.js"></script>
+
+    <script>
+      require.config({
+        paths: {
+          moment: "../node_modules/moment/moment",
+          momentLang: "../node_modules/moment/locale",
+          twixes: "../dist"
+        }
+      });
+
+      require(["moment", "momentLang/fr", "momentLang/en-gb", "twixes/twix", "./twix.spec.js"], function(moment){
+        mocha.run();
+      })
+    </script>
+
+  </body>
+</html>

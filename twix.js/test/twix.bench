@@ -1,0 +1,41 @@
+<!DOCTYPE html><html><head><title>Twix.js</title><link href="../../stylesheets/twix.css" rel="stylesheet" type="text/css" /><script src="../../javascripts/twix-site.js" type="text/javascript"></script></head><body><div id="navbar"><div class="container"><div class="pull-left" id="title"><a href="index.html">Twix.js</a></div><ul class="nav nav-pills pull-right"><li><a href="index.html">Home</a></li><li><a href="docs.html">Docs</a></li><li><a href="tests.html">Tests ↗</a></li><li><a href="https://github.com/icambron/twix.js">Github ↗</a></li></ul></div></div>(function() {
+  var Benchmark, Twix, moment, momentInRange, momentOutsideRange, range;
+
+  Benchmark = require('benchmark');
+
+  moment = require('moment');
+
+  Twix = require('../dist/twix');
+
+  range = moment.twix('2013-07-11', '2013-07-13', true);
+
+  momentInRange = moment('2013-07-12');
+
+  momentOutsideRange = moment('2013-07-14');
+
+  new Benchmark.Suite('Twix').add('#contains (non-moment)', function() {
+    return range.contains('2013-07-12');
+  }).add('#contains (moment)', function() {
+    return range.contains(momentInRange);
+  }).add('#overlaps', function() {
+    return range.contains(range);
+  }).add('#engulfs', function() {
+    return range.contains(range);
+  }).add('#length', function() {
+    return range.length();
+  }).add('#count', function() {
+    return range.count('days');
+  }).add('#countInner', function() {
+    return range.countInner('days');
+  }).add('#isEmpty', function() {
+    return range.isEmpty();
+  }).add('#isValid', function() {
+    return range.isValid();
+  }).on('cycle', function(event) {
+    return console.log(String(event.target));
+  }).run({
+    async: true
+  });
+
+}).call(this);
+</body></html>
