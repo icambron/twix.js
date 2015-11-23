@@ -184,7 +184,8 @@ makeTwix = (moment) ->
         vals.push(moment.twix(end, @_displayEnd))
       vals
 
-    isValid: -> @_start <= @_displayEnd
+    isValid: ->
+      @_start.isValid() && @_end.isValid() && @_start <= @_displayEnd
 
     equals: (other) ->
       (other instanceof Twix) &&

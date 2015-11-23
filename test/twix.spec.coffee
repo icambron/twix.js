@@ -1170,6 +1170,13 @@ test = (moment, Twix) ->
         assertTwixEqual range, splits[0]
 
   describe 'isValid()', ->
+
+    it 'should return false when the start time is invalid', ->
+      assertEqual false, new Twix('1980-13-45', '1982-05-26').isValid()
+
+    it 'should return false when the end time is invalid', ->
+      assertEqual false, new Twix('1982-05-25', '1985-13-45').isValid()
+
     it 'should validate an interval with an earlier start', ->
       assertEqual true, new Twix('1982-05-24', '1982-05-26').isValid()
       assertEqual true, new Twix('1982-05-24', '1982-05-26', true).isValid()
