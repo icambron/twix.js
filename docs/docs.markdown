@@ -351,8 +351,7 @@ splits[2].format({showDate: false}); //=> '7:01 - 7:30 AM'
 range.split(moment.duration({"h": 1})).length; //=> 3
 range.split(moment("1982-05-25T06:00")).length; //=> 2
 range.split(moment("1982-05-25T06:00"), moment("1982-05-25T07:00")).length; //=> 3
-
-The `start()` and `end()` accessors are useful to check the start and end times of the new ranges.
+```
 
 ##Moment durations
 
