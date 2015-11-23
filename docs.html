@@ -51,7 +51,6 @@
 
 <p>More comprehensively, this is the signature:</p>
 <pre class="javascript highlight"><code><span class="nx">moment</span><span class="p">.</span><span class="nx">twix</span><span class="p">(</span><span class="nx">anyMomentArg</span><span class="p">,</span> <span class="p">[</span><span class="nx">parseFormatString</span><span class="p">,]</span> <span class="nx">optionsObject</span><span class="p">);</span>
-
 </code></pre>
 
 <p>That allows you to pass:</p>
@@ -298,18 +297,16 @@ Returns an iterator that will return each a moment for each time period included
 <span class="nx">range</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="nx">moment</span><span class="p">.</span><span class="nx">duration</span><span class="p">({</span><span class="s2">"h"</span><span class="p">:</span> <span class="mi">1</span><span class="p">})).</span><span class="nx">length</span><span class="p">;</span> <span class="c1">//=&gt; 3</span>
 <span class="nx">range</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-25T06:00"</span><span class="p">)).</span><span class="nx">length</span><span class="p">;</span> <span class="c1">//=&gt; 2</span>
 <span class="nx">range</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-25T06:00"</span><span class="p">),</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-25T07:00"</span><span class="p">)).</span><span class="nx">length</span><span class="p">;</span> <span class="c1">//=&gt; 3</span>
+</code></pre>
 
-<span class="nx">The</span> <span class="err">`</span><span class="nx">start</span><span class="p">()</span><span class="err">`</span> <span class="nx">and</span> <span class="err">`</span><span class="nx">end</span><span class="p">()</span><span class="err">`</span> <span class="nx">accessors</span> <span class="nx">are</span> <span class="nx">useful</span> <span class="nx">to</span> <span class="nx">check</span> <span class="nx">the</span> <span class="nx">start</span> <span class="nx">and</span> <span class="nx">end</span> <span class="nx">times</span> <span class="nx">of</span> <span class="nx">the</span> <span class="k">new</span> <span class="nx">ranges</span><span class="p">.</span>
+<h2 id="moment-durations">Moment durations</h2>
 
-<span class="err">##</span><span class="nx">Moment</span> <span class="nx">durations</span>
+<p>Moment now has <a href="http://momentjs.com/docs/#/durations/">durations</a>, which represent a block of time, but not a <em>specific</em> block of time, just a period of, say, hours or days. Twix provides some utilities for working with durations.</p>
 
-<span class="nx">Moment</span> <span class="nx">now</span> <span class="nx">has</span> <span class="p">[</span><span class="nx">durations</span><span class="p">](</span><span class="nx">http</span><span class="err">:</span><span class="c1">//momentjs.com/docs/#/durations/), which represent a block of time, but not a *specific* block of time, just a period of, say, hours or days. Twix provides some utilities for working with durations.</span>
+<h3 id="creating-a-range-from-a-duration">Creating a range from a duration</h3>
 
-<span class="err">###</span><span class="nx">Creating</span> <span class="nx">a</span> <span class="nx">range</span> <span class="nx">from</span> <span class="nx">a</span> <span class="nx">duration</span>
-<span class="nx">You</span> <span class="nx">can</span> <span class="nx">create</span> <span class="nx">a</span> <span class="nx">range</span> <span class="nx">from</span> <span class="nx">a</span> <span class="nx">duration</span> <span class="nx">by</span> <span class="nx">anchoring</span> <span class="nx">it</span> <span class="nx">to</span> <span class="nx">a</span> <span class="nx">time</span><span class="err">:</span>
-
-<span class="err">```</span><span class="nx">js</span>
-<span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">.</span><span class="nx">duration</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">"days"</span><span class="p">);</span>
+<p>You can create a range from a duration by anchoring it to a time:</p>
+<pre class="javascript highlight"><code><span class="kd">var</span> <span class="nx">d</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">.</span><span class="nx">duration</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">"days"</span><span class="p">);</span>
 <span class="kd">var</span> <span class="nx">range</span> <span class="o">=</span> <span class="nx">d</span><span class="p">.</span><span class="nx">afterMoment</span><span class="p">(</span><span class="s2">"1982-05-25"</span><span class="p">);</span> <span class="c1">//=&gt; 5/25/1982 - 5/27/1982</span>
 </code></pre>
 
