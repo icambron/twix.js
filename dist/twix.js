@@ -313,7 +313,7 @@
       };
 
       Twix.prototype.isValid = function() {
-        return this._start <= this._displayEnd;
+        return this._start.isValid() && this._end.isValid() && this._start <= this._displayEnd;
       };
 
       Twix.prototype.equals = function(other) {
