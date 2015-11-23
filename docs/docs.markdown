@@ -238,21 +238,20 @@ iter.next(); //=> null
 
 ###start
 
-An accessor returning a moment object for the start of the range. For ranges built with the `allDay` option,
-returns the start of the first day. Useful when new ranges have been created with the `split` function.
+Returns the start of the range as a Moment instance. Mutating the returned value does not affect the range. This accessor is often useful when using Twix functions that create ranges, such as `split()` and `intersection()`.
+
 
 ```js
-var start  = moment("1982-05-24T5:00").twix("1982-05-27T6:00").start();
-var start  = moment("1982-05-24T5:00").twix("1982-05-27T6:00", {allDay: true}).start();
+ moment("1982-05-24T05:00").twix(someTime).start(); //=> moment("1982-05-25T05:00")
 ```
+
 ###end
 
-An accessor returning a moment object for the end of the range. For ranges built with the `allDay` option,
-returns the start of the last day. Useful when new ranges have been created with the `split` function.
+Returns the end of the range as a Moment instance. Mutating the returned value does not affect the range. This accessor is often useful when using Twix functions that create ranges, such as `split()` and `intersection()`.
+
 
 ```js
-var end  = moment("1982-05-24T5:00").twix("1982-05-27T6:00").end();
-var end  = moment("1982-05-24T5:00").twix("1982-05-27T6:00", {allDay: true}).end();
+ moment(someTime).twix("1982-05-27T06:00").end(); //=> moment("1982-05-27T06:00")
 ```
 
 ##Multiple ranges
