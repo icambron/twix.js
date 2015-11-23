@@ -67,7 +67,6 @@ More comprehensively, this is the signature:
 
 ```js
 moment.twix(anyMomentArg, [parseFormatString,] optionsObject);
-
 ```
 
 That allows you to pass:
