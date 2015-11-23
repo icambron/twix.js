@@ -9225,96 +9225,93 @@ code {
   color: darkslateblue; }
 
 /* line 41, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
-.highlight .nt {
+.highlight .nt, .highlight .kd, .highlight .o {
   color: orangered; }
 /* line 45, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
 .highlight .na {
   color: teal; }
 /* line 49, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
-.highlight .mi {
-  color: dodgerblue; }
+.highlight .mi, .highlight .kc {
+  color: mediumvioletred; }
 /* line 53, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
 .highlight .s, .highlight .s1, .highlight .s2 {
-  color: darkmagenta; }
+  color: slateblue; }
 /* line 57, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
-.highlight .kd, .highlight .o {
-  color: darkred; }
-/* line 61, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
 .highlight .p {
   color: dimgray; }
-/* line 65, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
+/* line 61, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
 .highlight .c1, .highlight .c2 {
   color: forestgreen; }
 
-/* line 70, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
+/* line 66, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
 #toc.affix {
   top: 10px; }
 
-/* line 74, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
+/* line 70, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
 #navbar {
   background-color: black;
   margin-bottom: 10px; }
-  /* line 78, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
+  /* line 74, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
   #navbar #title {
     font-size: 30px;
     margin-top: 7px;
     margin-bottom: 7px; }
-    /* line 83, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
+    /* line 79, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
     #navbar #title a {
       color: #337ab7; }
-      /* line 86, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
+      /* line 82, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
       #navbar #title a:hover {
         text-decoration: none; }
-  /* line 92, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
+  /* line 88, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
   #navbar .nav-pills {
     margin-top: 7px;
     margin-bottom: 7px; }
 
-/* line 99, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
+/* line 95, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
 #toc > ul {
   overflow-y: auto;
   font-size: 14px;
   line-height: 18px;
   padding-left: 4px;
   list-style-type: none; }
-  /* line 107, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
+  /* line 103, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
   #toc > ul li {
     border-left: 2px solid transparent; }
-  /* line 111, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
+  /* line 107, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
   #toc > ul a {
     display: inline-block;
     width: 100%;
     text-decoration: none; }
-  /* line 120, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
+  /* line 116, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
   #toc > ul > li > a {
     color: black;
     font-size: 18px;
     line-height: 24px;
     padding-top: 10px;
     padding-bottom: 4px; }
-    /* line 127, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
+    /* line 123, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
     #toc > ul > li > a:hover {
       background-color: none; }
-  /* line 133, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
+  /* line 129, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
   #toc > ul > li.active a {
     font-weight: bold; }
-  /* line 138, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
+  /* line 134, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
   #toc > ul > li > ul {
     padding-left: 0; }
-  /* line 142, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
+  /* line 138, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
   #toc > ul > li > ul > li {
     display: none;
     border-left-color: rgba(51, 122, 183, 0.3); }
-    /* line 147, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
+    /* line 143, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
     #toc > ul > li > ul > li:hover, #toc > ul > li > ul > li.active {
       background: rgba(51, 122, 183, 0.1);
       border-left-color: #337ab7; }
-    /* line 153, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
+    /* line 149, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
     #toc > ul > li > ul > li a {
       color: #337ab7;
       padding-left: 40px;
       padding-top: 4px;
       padding-bottom: 4px; }
-  /* line 162, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
+  /* line 158, /Users/isaac/code/twix-docs/source/stylesheets/twix.scss */
   #toc > ul > li.active > ul > li {
     display: block; }
