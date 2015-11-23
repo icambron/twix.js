@@ -115,13 +115,19 @@ test = (moment, Twix) ->
     it 'returns the start of the start day for all day ranges', ->
       assertMomentEqual moment('1982-05-25'), moment('1982-05-25T04:45:45').twix('1983-10-14', true).start()
 
+    it 'returns start time for for non-all-day ranges', ->
+      assertMomentEqual moment('1982-05-25T04:45:45'), moment('1982-05-25T04:45:45').twix('1983-10-14T01:01:01').start()
+
   describe 'end()', ->
 
     it 'returns the end of the range', ->
       assertMomentEqual moment('1983-10-14'), moment('1982-05-25').twix('1983-10-14').end()
 
-    it 'returns the start of the ened day for all day ranges', ->
+    it 'returns the start of the end day for all day ranges', ->
       assertMomentEqual moment('1983-10-14'), moment('1982-05-25').twix('1983-10-14T09:30:23', true).end()
+
+    it 'returns end time for for non-all-day ranges', ->
+      assertMomentEqual moment('1983-10-14T01:01:01'), moment('1982-05-25T04:45:45').twix('1983-10-14T01:01:01').end()
 
   describe 'isSame()', ->
 
