@@ -55,6 +55,7 @@ Patches are welcome!
  * Submit pull requests to the `develop` branch. I merge develop to master when we cut a release.
  * Don't include your changes to the generated `.js` files in the patch; they're much harder to merge. I'll generate them when I cut the release.
  * Make sure you run the linter and the tests before submitting a PR. Use `make lint` and `make test`.
+ * If you make a change that will need documentation, make the appropriate update to [docs](docs/docs.md). It will get published to the website on the next release.
 
 ## Changelog
 
