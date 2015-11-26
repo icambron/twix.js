@@ -52,7 +52,6 @@ Command                | Function
 
 Patches are welcome!
 
- * Submit pull requests to the `develop` branch. I merge develop to master when we cut a release.
  * Don't include your changes to the generated `.js` files in the patch; they're much harder to merge. I'll generate them when I cut the release.
  * Make sure you run the linter and the tests before submitting a PR. Use `make lint` and `make test`.
  * If you make a change that will need documentation, make the appropriate update to [docs](docs/docs.md). It will get published to the website on the next release.
@@ -81,10 +80,10 @@ Copyright 2012-2015 Isaac Cambron and contributors. Distributed under the MIT Li
 [npm-downloads-image]: http://img.shields.io/npm/dm/twix.svg?style=flat-square
 
 [travis-url]: http://travis-ci.org/icambron/twix.js
-[travis-image]: http://img.shields.io/travis/icambron/twix.js/develop.svg?style=flat-square
+[travis-image]: http://img.shields.io/travis/icambron/twix.js/master.svg?style=flat-square
 
 [coveralls-url]: https://coveralls.io/github/icambron/twix.js
-[coveralls-image]: https://img.shields.io/coveralls/icambron/twix.js/develop.svg?style=flat-square
+[coveralls-image]: https://img.shields.io/coveralls/icambron/twix.js/master.svg?style=flat-square
 
 [code-climate-img]: https://img.shields.io/codeclimate/github/icambron/twix.js.svg?style=flat-square
 [code-climate-url]: https://codeclimate.com/github/icambron/twix.js
