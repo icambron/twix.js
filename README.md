@@ -1,5 +1,7 @@
 # Twix.js
 
+[![MIT License][license-image]][license] [![Build Status][travis-image]][travis-url] [![Code Coverage][coveralls-image]][coveralls-url] [![Code Climate][code-climate-img]][code-climate-url] [![Dependencies][gemnasium-image]][gemnasium-url] [![Version][release-version-image]][release-url] [![NPM version][npm-version-image]][npm-url] ![Bower version][bower-version-image]
+
 Twix is a comprehensive JS library for working with date ranges, and includes a customizable smart formatter. It's written in CoffeeScript and it depends on [Moment.js](http://momentjs.com/).
 
 Some examples:
@@ -16,17 +18,6 @@ t.intersection(otherRange); //=> another range
 ```
 
 See the [documentation][documentation-url] for more.
-
-## Vitals
-
-Info          | Badges
-------------- | -------------
-Version       | [![Version][release-version-image]][release-url] [![NPM version][npm-version-image]][npm-url] ![Bower version][bower-version-image]
-License       | [![MIT License][license-image]][license]
-Popularity    | [![NPM downloads][npm-downloads-image]][npm-url]
-Testing       | [![Build Status][travis-image]][travis-url] [![Code Coverage][coveralls-image]][coveralls-url]
-Quality       | [![Code Climate][code-climate-img]][code-climate-url] [![Dependencies][gemnasium-image]][gemnasium-url]
-Phasers       | ![Phasers to stun][phasers-image]|
 
 ## Documentation
 
@@ -64,6 +55,8 @@ Patches are welcome!
 
 Copyright 2012-2015 Isaac Cambron and contributors. Distributed under the MIT License. See [LICENSE][] for details.
 
+![Phasers to stun][phasers-image]
+
 [documentation-url]: http://icambron.github.io/twix.js/docs.html
 
 [license-image]: http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square
@@ -76,8 +69,6 @@ Copyright 2012-2015 Isaac Cambron and contributors. Distributed under the MIT Li
 [npm-url]: https://npmjs.org/package/twix
 [npm-version-image]: http://img.shields.io/npm/v/twix.svg?style=flat-square
 [bower-version-image]: https://img.shields.io/bower/v/twix.svg?style=flat-square
-
-[npm-downloads-image]: http://img.shields.io/npm/dm/twix.svg?style=flat-square
 
 [travis-url]: http://travis-ci.org/icambron/twix.js
 [travis-image]: http://img.shields.io/travis/icambron/twix.js/master.svg?style=flat-square
