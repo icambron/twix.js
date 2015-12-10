@@ -3,7 +3,6 @@ Package.describe({
   summary: "Twix.js (official) by Isaac Cambron: a Moment.js plugin for working with date ranges.",
   version: "0.8.1",
   git: "https://github.com/icambron/twix.js.git",
-  documentation: "README.markdown",
 });
 
 // Makes Twix available both on the server and on the client
