@@ -4,7 +4,7 @@ Twix.js is a [Moment.js](http://momentjs.com) plugin for working with time range
 
 ###Browser
 
-Grab [the file](https://raw.github.com/icambron/twix.js/master/dist/twix.min.js) as well as [moment.js](https://raw.github.com/timrwood/moment/2.0.0/moment.min.js). Then simply reference twix after moment:
+Grab [the file](https://raw.github.com/icambron/twix.js/master/dist/twix.min.js) as well as [moment.js](https://raw.github.com/timrwood/moment/2.0.0/moment.min.js). Then simply reference twix after Moment:
 
 ```html
 <script src="moment.min.js"></script>
@@ -29,7 +29,7 @@ To install, run
 npm install twix
 ```
 
-And then in your application, just `require` moment and twix.
+And then in your application, just `require` Moment and Twix.
 
 ```js
 var moment = require('moment');
@@ -38,13 +38,13 @@ require('twix');
 
 ##Creating ranges
 
-Twix mixes the `twix()` method into all moment objects. You use that to create a time range from that moment:
+Twix mixes the `twix()` method into all Moment objects. You use that to create a time range from that Moment:
 
 ```js
 var range = moment(startTime).twix(endTime); //=> from start time until end time
 ```
 
-You can also create a range directly from the moment constructor:
+You can also create a range "statically":
 
 ```js
 var range = moment.twix(startTime, endTime);
@@ -86,10 +86,10 @@ var range = startTime.twix(endTime); //=> from July 1 to August 1
 
 ###Using all-day ranges
 
-Regular ranges last from a specific moment in time to another specific moment in time. All-day ranges, on the other hand, capture the concept of the entire day. It's an important distinction in several respects:
+Regular ranges last from a specific millisecond another specific millisecond. All-day ranges, on the other hand, capture the concept of the entire day. It's an important distinction in several respects:
 
  * The ranges are actually different times. A regular range from 5/25 - 5/26 is from 5/25, 12:00 AM to 5/26, 12:00, where as the all day range is over both days.
- * All of Twix's functions respect the all-day semantics when comparing or
+ * All of Twix's functions respect all-day semantics.
  * The time range is formatted differently -- see [below](#formatting-all-day) for more information.
 
 You create an all-day range by specifying the `allDay` option:
@@ -119,7 +119,7 @@ moment().twix(moment().subtract(1, "day")).isValid(); //=> false
 
 ###isSame
 
-Does the range begin and end on the same minute/hour/day/month/year? Any time period understood by moment will work.
+Does the range begin and end on the same minute/hour/day/month/year? Any time period understood by Moment will work.
 
 ```js
 moment("1982-05-25T05:00").twix("1982-05-26T06:00").isSame("day");  //=> false
@@ -153,14 +153,14 @@ moment.subtract(1, "hour").twix(moment().add(1, "hour")).isCurrent(); //=> true
 
 ###contains
 
-Determine whether a range contains a time. You can pass in a moment object, a JS date, or a string parsable by the Date constructor. The range is considered inclusive of its endpoints.
+Determine whether a range contains a time. You can pass in a Moment object, a JS date, or a string parsable by the Date constructor. The range is considered inclusive of its endpoints.
 
 ```js
 moment("1982-05-25").twix("1982-05-28").contains("1982-05-26"); //=> true
 ```
 
 ###length
-Calculate the length of the range in terms of minutes/hours/days/months/etc. Any time period understood by moment will work.
+Calculate the length of the range in terms of minutes/hours/days/months/etc. Any time period understood by Moment will work.
 
 ```js
 moment("1982-05-25T5:30").twix("1982-05-25T6:30").length("hours")  //=> 1
@@ -170,7 +170,7 @@ moment("1982-05-25T5:00").twix("1982-05-30T6:00").length("days")   //=> 6
 See also [asDuration()](#reating-a-duration-from-a-range).
 
 ###count
-The number of minutes/hours/days/months/years the range includes, even in part. Any time period understood by moment will work.
+The number of minutes/hours/days/months/years the range includes, even in part. Any time period understood by Moment will work.
 
 ```js
 moment("1982-05-25T5:00").twix("1982-05-25T6:00").count("days")  //=> 1
@@ -181,7 +181,7 @@ Note that this is counting sections of the calendar, not periods of time. So it 
 
 ###countInner
 <a id="counter-inner-int"></a>
-The number of minutes/hours/days/months/years that are completely contained, such that both the beginning and end of the period fall inside the range. Any time period understood by moment will work.
+The number of minutes/hours/days/months/years that are completely contained, such that both the beginning and end of the period fall inside the range. Any time period understood by Moment will work.
 
 ```js
 moment("1982-05-25T5:00").twix("1982-05-25T6:00").countInner("days")  //=> 0
@@ -192,7 +192,7 @@ See also [count()](#count) and [length()](#length).
 
 ###iterate
 <a id="iterate-int"></a>
-Returns an iterator that will return each a moment for each time period included in the range. Any time period understood by moment will work.
+Returns an iterator that will return each a Moment for each time period included in the range. Any time period understood by Moment will work.
 
 ```js
 var iter = moment("1982-05-25T5:00").twix("1982-05-26T6:00").iterate("days");
@@ -241,7 +241,7 @@ Returns the start of the range as a Moment instance. Mutating the returned value
 
 
 ```js
- moment("1982-05-24T05:00").twix(someTime).start(); //=> moment("1982-05-25T05:00")
+moment("1982-05-24T05:00").twix(someTime).start(); //=> moment("1982-05-25T05:00")
 ```
 
 ###end
