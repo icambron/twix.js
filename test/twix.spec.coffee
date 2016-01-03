@@ -1405,19 +1405,6 @@ test = (moment, Twix) ->
         options: {hourFormat: 'HH'}
         result: 'May 25, 05:30 - 19:30'
 
-    describe '24 hours', ->
-      test "shouldn't show meridians",
-        start: thisYear '05-25', '05:30'
-        end: thisYear '05-25', '19:30'
-        options: {twentyFourHour: true}
-        result: 'May 25, 5:30 - 19:30'
-
-      test 'always shows the :00',
-        start: thisYear '05-25', '12:00'
-        end: thisYear '05-25', '15:00'
-        options: {twentyFourHour: true}
-        result: 'May 25, 12:00 - 15:00'
-
     describe 'show day of week', ->
 
       test 'should show day of week',

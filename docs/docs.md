@@ -516,7 +516,7 @@ moment("2012-05-25T16:00").twix("2012-05-25T17:00").format({hourFormat: "H"});
 
 This uses Moment's formatting tokens ("H" = 1- or 2-digit 24-hour time, "HH" = always 2-digit, whereas "h" and "hh" are the American versions). Notice there minutes are there in 24-hour time even if they're zero.
 
-The previous `twentyFourHour: true` setting is still supported, but is deprecated.
+The old `twentyFourHour: true` setting is no longer supported.
 
 ### Changing the format
 

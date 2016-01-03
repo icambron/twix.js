@@ -95,7 +95,6 @@ makeTwix = (moment) ->
     isEmpty: ->
       @_start.isSame(@_displayEnd)
 
-
     # -- WORK WITH MULTIPLE RANGES --
     overlaps: (other) -> (@_displayEnd.isAfter(other._start) && @_start.isBefore(other._displayEnd))
 
@@ -236,14 +235,6 @@ makeTwix = (moment) ->
 
       fs = []
 
-      #the twentyFourHour option is deprecated, but support it for now anyway
-      if inopts && inopts.twentyFourHour?
-        options.hourFormat =
-          if inopts.twentyFourHour
-            options.hourFormat.replace('h', 'H')
-          else
-            options.hourFormat.replace('H', 'h')
-
       needsMeridiem = options.hourFormat && options.hourFormat[0] == 'h'
 
       goesIntoTheMorning =
@@ -373,7 +364,7 @@ makeTwix = (moment) ->
 
       fold common_bucket
 
-    # -- INTERNAL
+    # -- INTERNAL --
     _iterateHelper: (period, iter, hasNext, intervalAmount) ->
       next: ->
         unless hasNext()

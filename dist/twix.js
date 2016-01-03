@@ -365,9 +365,6 @@
         };
         Twix._extend(options, inopts || {});
         fs = [];
-        if (inopts && (inopts.twentyFourHour != null)) {
-          options.hourFormat = inopts.twentyFourHour ? options.hourFormat.replace('h', 'H') : options.hourFormat.replace('H', 'h');
-        }
         needsMeridiem = options.hourFormat && options.hourFormat[0] === 'h';
         goesIntoTheMorning = options.lastNightEndsAt > 0 && !this.allDay && this.end().startOf('d').valueOf() === this.start().add(1, 'd').startOf('d').valueOf() && this._start.hours() > 12 && this._end.hours() < options.lastNightEndsAt;
         needDate = options.showDate || (!this.isSame('d') && !goesIntoTheMorning);
