@@ -554,6 +554,18 @@ If you combine an all-day range with `showDate:false`, you get this:
 moment("2012-01-25").twix("2012-01-25", {allDay: true}).format({showDate: false}); //=> All day
 ```
 
+If you would like to hide the times for mutliple days you can use `showTime:false`:
+
+```js
+moment("2012-05-25T8:00").twix("2012-05-27T17:00").format({showTime: false}); //=> May 25 - May 27, 2012
+```
+
+If you would like to hide the year, specify `showYear:false`:
+
+```js
+moment("2012-05-25").twix("2012-05-27").format({showYear: false}); //=> May 25 - May 27
+```
+
 That text is customizable through the `allDay` option.
 
 ### All the options
@@ -566,6 +578,8 @@ Here are all the options and their defaults
   spaceBeforeMeridiem: true,
   showDate: true,
   showDayOfWeek: false,
+  showTime: true,
+  showYear: true,
   implicitMinutes: true,
   implicitYear: true,
   yearFormat: "YYYY",
