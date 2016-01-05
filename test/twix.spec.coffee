@@ -1257,6 +1257,12 @@ test = (moment, Twix) ->
         end: '1982-05-25 15:30'
         result: 'May 25, 1982, 5:30 AM - 3:30 PM'
 
+      test 'same day, different times shows date once and hides year if requested',
+        start: '1982-05-25 05:30'
+        end: '1982-05-25 15:30'
+        options: {showYear: false}
+        result: 'May 25, 5:30 AM - 3:30 PM'
+
       test 'same day, different times, same meridian shows date and meridiem once',
         start: '1982-05-25T05:30'
         end: '1982-05-25T06:30'
@@ -1364,6 +1370,12 @@ test = (moment, Twix) ->
         end: thisYear '05-27', '06:30'
         options: {showDate: false}
         result: 'May 25, 5:30 AM - May 27, 6:30 AM'
+
+      test 'should show the dates for multiday but hide times if requested',
+        start: thisYear '05-25', '05:30'
+        end: thisYear '05-27', '06:30'
+        options: {showDate: false, showTime: false}
+        result: 'May 25 - May 27'
 
       test "should just say 'all day' for all day rangess",
         start: thisYear('05-25')

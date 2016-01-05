@@ -217,6 +217,8 @@ makeTwix = (moment) ->
         spaceBeforeMeridiem: true
         showDate: true
         showDayOfWeek: false
+        showTime: true
+        showYear: true
         implicitMinutes: true
         implicitYear: true
         yearFormat: 'YYYY'
@@ -253,7 +255,7 @@ makeTwix = (moment) ->
           pre: ' '
           slot: 0
 
-      if needDate && (!options.implicitYear || @_start.year() != moment().year() || !@isSame('y'))
+      if needDate && options.showYear && (!options.implicitYear || @_start.year() != moment().year() || !@isSame('y'))
         fs.push
           name: 'year',
           fn: (date) -> date.format options.yearFormat
@@ -289,14 +291,14 @@ makeTwix = (moment) ->
           pre: ' '
           slot: 1
 
-      if options.groupMeridiems && needsMeridiem && !@allDay
+      if options.groupMeridiems && needsMeridiem && !@allDay && options.showTime
         fs.push
           name: 'meridiem',
           fn: (t) -> t.format options.meridiemFormat
           slot: 6
           pre: if options.spaceBeforeMeridiem then ' ' else ''
 
-      if !@allDay
+      if !@allDay && options.showTime
         fs.push
 
           name: 'time',
