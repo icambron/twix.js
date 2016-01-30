@@ -1638,31 +1638,118 @@
           result: 'all day May 25, 1982'
         });
       });
-      describe('no single dates', function() {
-        test("shouldn't show dates for intraday", {
-          start: '2010-05-25 05:30',
-          end: '2010-05-25 06:30',
-          options: {
-            showDate: false
-          },
-          result: '5:30 - 6:30 AM'
-        });
-        test('should show the dates for multiday', {
+      describe('hidden times', function() {
+        test('hide times if requested', {
           start: thisYear('05-25', '05:30'),
           end: thisYear('05-27', '06:30'),
           options: {
-            showDate: false
+            hideTime: true
           },
-          result: 'May 25, 5:30 AM - May 27, 6:30 AM'
+          result: 'May 25 - May 27'
         });
-        return test("should just say 'all day' for all day rangess", {
-          start: thisYear('05-25'),
-          end: thisYear('05-25'),
+        return test('hide times even for a single day', {
+          start: thisYear('05-25', '05:30'),
+          end: thisYear('05-25', '06:30'),
           options: {
-            showDate: false
+            hideTime: true
+          },
+          result: 'May 25'
+        });
+      });
+      describe('implicit dates', function() {
+        var todayAt, tomorrowAt;
+        todayAt = function(h, m) {
+          return moment().set('h', h).set('m', m);
+        };
+        tomorrowAt = function(h, m) {
+          return tomorrow().set('h', h).set('m', m);
+        };
+        test('should show dates for non-today dates', {
+          start: '2010-05-25 05:30',
+          end: '2010-05-25 06:30',
+          options: {
+            implicitDate: true
+          },
+          result: 'May 25, 2010, 5:30 - 6:30 AM'
+        });
+        test("shouldn't show dates for today", {
+          start: todayAt(5, 30),
+          end: todayAt(6, 30),
+          options: {
+            implicitDate: true
+          },
+          result: '5:30 - 6:30 AM'
+        }, test("shouldn't show the dates running into early tomorrow", {
+          start: todayAt(17, 0),
+          end: todayAt(2, 0),
+          options: {
+            lastNightEndsAt: 5,
+            implicitDate: true
+          },
+          result: '5 PM - 2 AM'
+        }));
+        it('should show the dates for multiday', function() {
+          var end, range, start;
+          start = todayAt(6, 30);
+          end = tomorrowAt(4, 45);
+          range = start.twix(end);
+          return assertEqual(range.format({
+            implicitDate: true
+          }), range.format());
+        });
+        return test("should just say 'all day' for all day ranges", {
+          start: moment().startOf('d'),
+          end: moment().startOf('d'),
+          options: {
+            implicitDate: true
           },
           allDay: true,
           result: 'all day'
+        });
+      });
+      describe('hidden dates', function() {
+        test('should hide dates', {
+          start: '2010-05-25 05:30',
+          end: '2010-05-25 06:30',
+          options: {
+            hideDate: true
+          },
+          result: '5:30 - 6:30 AM'
+        });
+        return test('should hide dates even if multiday', {
+          start: '2010-05-25 05:30',
+          end: '2010-05-26 06:30',
+          options: {
+            hideDate: true
+          },
+          result: '5:30 - 6:30 AM'
+        });
+      });
+      describe('hidden years', function() {
+        test('differs to implicitYear by default', {
+          start: thisYear('05-25', '05:30'),
+          end: thisYear('05-26', '15:30'),
+          options: {
+            hideYear: false,
+            implicitYear: true
+          },
+          result: 'May 25, 5:30 AM - May 26, 3:30 PM'
+        });
+        test('hides year if requested', {
+          start: '1982-05-25 05:30',
+          end: '1982-05-25 15:30',
+          options: {
+            hideYear: true
+          },
+          result: 'May 25, 5:30 AM - 3:30 PM'
+        });
+        return test('hides year even if multiyear', {
+          start: '1982-05-25 05:30',
+          end: '1985-05-25 15:30',
+          options: {
+            hideYear: true
+          },
+          result: 'May 25, 5:30 AM - 3:30 PM'
         });
       });
       describe('ungroup meridiems', function() {
@@ -1710,24 +1797,6 @@
             hourFormat: 'HH'
           },
           result: 'May 25, 05:30 - 19:30'
-        });
-      });
-      describe('24 hours', function() {
-        test("shouldn't show meridians", {
-          start: thisYear('05-25', '05:30'),
-          end: thisYear('05-25', '19:30'),
-          options: {
-            twentyFourHour: true
-          },
-          result: 'May 25, 5:30 - 19:30'
-        });
-        return test('always shows the :00', {
-          start: thisYear('05-25', '12:00'),
-          end: thisYear('05-25', '15:00'),
-          options: {
-            twentyFourHour: true
-          },
-          result: 'May 25, 12:00 - 15:00'
         });
       });
       describe('show day of week', function() {
@@ -1800,15 +1869,6 @@
           result: 'May 25, 5 AM - May 26, 4 AM, 1982'
         });
         describe("and we're trying to hide the date", function() {
-          test('elides the date too for early mornings', {
-            start: '1982-05-25 17:00',
-            end: '1982-05-26 02:00',
-            options: {
-              lastNightEndsAt: 5,
-              showDate: false
-            },
-            result: '5 PM - 2 AM'
-          });
           return test("doesn't elide if the morning ends late", {
             start: '1982-05-25 17:00',
             end: '1982-05-26 10:00',

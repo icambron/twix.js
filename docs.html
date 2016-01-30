@@ -289,9 +289,9 @@ Returns an iterator that will return each a Moment for each time period included
 <pre class="javascript highlight"><code><span class="kd">var</span> <span class="nx">range</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-25T05:01"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"1982-05-25T07:30"</span><span class="p">);</span>
 
 <span class="kd">var</span> <span class="nx">splits</span> <span class="o">=</span> <span class="nx">range</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">"hour"</span><span class="p">);</span>
-<span class="nx">splits</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">format</span><span class="p">({</span><span class="na">showDate</span><span class="p">:</span> <span class="kc">false</span><span class="p">});</span> <span class="c1">//=&gt; '5:01 - 6:01 AM'</span>
-<span class="nx">splits</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">format</span><span class="p">({</span><span class="na">showDate</span><span class="p">:</span> <span class="kc">false</span><span class="p">});</span> <span class="c1">//=&gt; '6:01 - 7:01 AM'</span>
-<span class="nx">splits</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="nx">format</span><span class="p">({</span><span class="na">showDate</span><span class="p">:</span> <span class="kc">false</span><span class="p">});</span> <span class="c1">//=&gt; '7:01 - 7:30 AM'</span>
+<span class="nx">splits</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">format</span><span class="p">({</span><span class="na">hideDate</span><span class="p">:</span> <span class="kc">true</span><span class="p">});</span> <span class="c1">//=&gt; '5:01 - 6:01 AM'</span>
+<span class="nx">splits</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">format</span><span class="p">({</span><span class="na">hideDate</span><span class="p">:</span> <span class="kc">true</span><span class="p">});</span> <span class="c1">//=&gt; '6:01 - 7:01 AM'</span>
+<span class="nx">splits</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="nx">format</span><span class="p">({</span><span class="na">hideDate</span><span class="p">:</span> <span class="kc">true</span><span class="p">});</span> <span class="c1">//=&gt; '7:01 - 7:30 AM'</span>
 
 <span class="c1">//other signatures</span>
 <span class="nx">range</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="nx">moment</span><span class="p">.</span><span class="nx">duration</span><span class="p">({</span><span class="s2">"h"</span><span class="p">:</span> <span class="mi">1</span><span class="p">})).</span><span class="nx">length</span><span class="p">;</span> <span class="c1">//=&gt; 3</span>
@@ -425,6 +425,8 @@ Returns an iterator that will return each a Moment for each time period included
 <span class="nx">twix</span><span class="p">.</span><span class="nx">format</span><span class="p">({</span><span class="na">implicitYear</span><span class="p">:</span> <span class="kc">false</span><span class="p">});</span> <span class="c1">//=&gt; Mar 28, 1:13 AM - Mar 29, 1:13 AM, 2013</span>
 </code></pre>
 
+<p>Finally, <code>implicitDate</code> is just like <code>implicitYear</code> but for hiding the date if it&#39;s today. But it defaults to <code>false</code>.</p>
+
 <h3 id="24-hour-time">24-hour time</h3>
 
 <p>Right, not everyone is American. If you use a Moment locale for the range&#39;s start, like &quot;en-gb&quot;, Twix will automatically use its hour format setting.</p>
@@ -436,7 +438,7 @@ Returns an iterator that will return each a Moment for each time period included
 
 <p>This uses Moment&#39;s formatting tokens (&quot;H&quot; = 1- or 2-digit 24-hour time, &quot;HH&quot; = always 2-digit, whereas &quot;h&quot; and &quot;hh&quot; are the American versions). Notice there minutes are there in 24-hour time even if they&#39;re zero.</p>
 
-<p>The previous <code>twentyFourHour: true</code> setting is still supported, but is deprecated.</p>
+<p>The old <code>twentyFourHour: true</code> setting is no longer supported.</p>
 
 <h3 id="changing-the-format">Changing the format</h3>
 
@@ -449,7 +451,7 @@ Returns an iterator that will return each a Moment for each time period included
 
 <p>See all the <code>*Format</code> options below. You should look at <a href="http://momentjs.com/docs/#/displaying/format/">Moment&#39;s format documentation</a> for more info. YMMV -- because of the string munging, not everything will act quite like you expect.</p>
 
-<h3 id="odds-and-ends">Odds and ends</h3>
+<h3 id="hiding-things">Hiding things</h3>
 
 <p>You can get rid of the space before the meridiem:</p>
 <pre class="javascript highlight"><code><span class="nx">moment</span><span class="p">(</span><span class="s2">"2012-05-25T8:00"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"2012-05-25T17:00"</span><span class="p">).</span><span class="nx">format</span><span class="p">({</span><span class="na">spaceBeforeMeridiem</span><span class="p">:</span> <span class="kc">false</span><span class="p">});</span>
@@ -457,16 +459,22 @@ Returns an iterator that will return each a Moment for each time period included
 </code></pre>
 
 <p>If you&#39;re showing the date somewhere else, it&#39;s sometimes useful to only show the times:</p>
-<pre class="javascript highlight"><code><span class="nx">moment</span><span class="p">(</span><span class="s2">"2012-05-25T8:00"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"2012-05-25T17:00"</span><span class="p">).</span><span class="nx">format</span><span class="p">({</span><span class="na">showDate</span><span class="p">:</span> <span class="kc">false</span><span class="p">});</span> <span class="c1">//=&gt; 8 AM - 5 PM</span>
+<pre class="javascript highlight"><code><span class="nx">moment</span><span class="p">(</span><span class="s2">"2012-05-25T8:00"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"2012-05-25T17:00"</span><span class="p">).</span><span class="nx">format</span><span class="p">({</span><span class="na">hideDate</span><span class="p">:</span> <span class="kc">true</span><span class="p">});</span> <span class="c1">//=&gt; 8 AM - 5 PM</span>
 </code></pre>
 
-<p>This doesn&#39;t affect ranges that span multiple days; they still show the dates.</p>
-
-<p>If you combine an all-day range with <code>showDate:false</code>, you get this:</p>
-<pre class="javascript highlight"><code><span class="nx">moment</span><span class="p">(</span><span class="s2">"2012-01-25"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"2012-01-25"</span><span class="p">,</span> <span class="p">{</span><span class="na">allDay</span><span class="p">:</span> <span class="kc">true</span><span class="p">}).</span><span class="nx">format</span><span class="p">({</span><span class="na">showDate</span><span class="p">:</span> <span class="kc">false</span><span class="p">});</span> <span class="c1">//=&gt; All day</span>
+<p>If you combine an all-day range with <code>hideDate: true</code>, you get this:</p>
+<pre class="javascript highlight"><code><span class="nx">moment</span><span class="p">(</span><span class="s2">"2012-01-25"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"2012-01-25"</span><span class="p">,</span> <span class="p">{</span><span class="na">allDay</span><span class="p">:</span> <span class="kc">true</span><span class="p">}).</span><span class="nx">format</span><span class="p">({</span><span class="na">hideDate</span><span class="p">:</span> <span class="kc">true</span><span class="p">});</span> <span class="c1">//=&gt; All day</span>
 </code></pre>
 
 <p>That text is customizable through the <code>allDay</code> option.</p>
+
+<p>If you would like to hide the times you can use <code>hideTime: true</code>:</p>
+<pre class="javascript highlight"><code><span class="nx">moment</span><span class="p">(</span><span class="s2">"2012-05-25T8:00"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"2012-05-27T17:00"</span><span class="p">).</span><span class="nx">format</span><span class="p">({</span><span class="na">hideTime</span><span class="p">:</span> <span class="kc">true</span><span class="p">});</span> <span class="c1">//=&gt; May 25 - May 27, 2012</span>
+</code></pre>
+
+<p>If you would like to hide the year, specify <code>hideYear: true</code>:</p>
+<pre class="javascript highlight"><code><span class="nx">moment</span><span class="p">(</span><span class="s2">"2012-05-25"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"2012-05-27"</span><span class="p">).</span><span class="nx">format</span><span class="p">({</span><span class="na">hideYear</span><span class="p">:</span> <span class="kc">true</span><span class="p">});</span> <span class="c1">//=&gt; May 25 - May 27</span>
+</code></pre>
 
 <h3 id="all-the-options">All the options</h3>
 
@@ -474,9 +482,12 @@ Returns an iterator that will return each a Moment for each time period included
 <pre class="javascript highlight"><code><span class="p">{</span>
   <span class="nl">groupMeridiems</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
   <span class="nx">spaceBeforeMeridiem</span><span class="err">:</span> <span class="kc">true</span><span class="p">,</span>
-  <span class="nx">showDate</span><span class="err">:</span> <span class="kc">true</span><span class="p">,</span>
   <span class="nx">showDayOfWeek</span><span class="err">:</span> <span class="kc">false</span><span class="p">,</span>
+  <span class="nx">hideTime</span><span class="err">:</span> <span class="kc">false</span><span class="p">,</span>
+  <span class="nx">hideDate</span><span class="err">:</span> <span class="kc">false</span><span class="p">,</span>
+  <span class="nx">hideYear</span><span class="err">:</span> <span class="kc">false</span><span class="p">,</span>
   <span class="nx">implicitMinutes</span><span class="err">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nx">implicitDate</span><span class="err">:</span> <span class="kc">false</span><span class="p">,</span>
   <span class="nx">implicitYear</span><span class="err">:</span> <span class="kc">true</span><span class="p">,</span>
   <span class="nx">yearFormat</span><span class="err">:</span> <span class="s2">"YYYY"</span><span class="p">,</span>
   <span class="nx">monthFormat</span><span class="err">:</span> <span class="s2">"MMM"</span><span class="p">,</span>
@@ -637,7 +648,7 @@ Returns an iterator that will return each a Moment for each time period included
 <a href="#changing-the-format">Changing the format</a>
 </li>
 <li>
-<a href="#odds-and-ends">Odds and ends</a>
+<a href="#hiding-things">Hiding things</a>
 </li>
 <li>
 <a href="#all-the-options">All the options</a>
