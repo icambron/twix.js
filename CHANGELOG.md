@@ -1,5 +1,7 @@
 # Changelog
 
+ * **0.9.0**: Deprecated the `show` options to `format()` and added `explicitDate`.
+
  * **0.8.1**: `isValid()` now checks if the start and end are valid moments.
 
  * **0.8.0**: Added `start()` and `end()`. Lots of code cleanup.

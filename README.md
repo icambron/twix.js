@@ -25,7 +25,7 @@ You can find comprehensive docs here:
 
 **[Detailed documentation][documentation-url]**
 
-**Breaking change in 0.8.0**: Twix now provides `start()` and `end()` accessors. Previously, it was possible to access Twix *fields* called `start` and `end`, though they weren't documented. Because they're now functions, that will break. I did this to prevent people from mutating those dates and breaking Twix.
+**Breaking change in 0.9.0**: The `showDate` smart format option has been deprecated but also modified. It previously hid the date if the range spanned only one day, regardless of the day. I found that confusing, so you now have two options: a. hide the date with `hideDate: true` or b. use `implicitDate: true` to elide the date if it spans one day *and* that day is today. `showDate` has been aliased to `!implicitDate`, though that behavior is not consistent with the old behavior. If for some reason "hide the date if the range spans only one day" is a real use case for you that I just broke, please let me know.
 
 ## Building
 
