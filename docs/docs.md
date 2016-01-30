@@ -342,9 +342,9 @@ Splits a range into multiple ranges. Can take either a duration, the arguments f
 var range = moment("1982-05-25T05:01").twix("1982-05-25T07:30");
 
 var splits = range.split(1, "hour");
-splits[0].format({showDate: false}); //=> '5:01 - 6:01 AM'
-splits[1].format({showDate: false}); //=> '6:01 - 7:01 AM'
-splits[2].format({showDate: false}); //=> '7:01 - 7:30 AM'
+splits[0].format({hideDate: true}); //=> '5:01 - 6:01 AM'
+splits[1].format({hideDate: true}); //=> '6:01 - 7:01 AM'
+splits[2].format({hideDate: true}); //=> '7:01 - 7:30 AM'
 
 //other signatures
 range.split(moment.duration({"h": 1})).length; //=> 3
@@ -503,6 +503,8 @@ var twix = moment().twix(moment().add('days', 1));
 twix.format({implicitYear: false}); //=> Mar 28, 1:13 AM - Mar 29, 1:13 AM, 2013
 ```
 
+Finally, `implicitDate` is just like `implicitYear` but for hiding the date if it's today. But it defaults to `false`.
+
 ### 24-hour time
 
 Right, not everyone is American. If you use a Moment locale for the range's start, like "en-gb", Twix will automatically use its hour format setting.
@@ -531,7 +533,7 @@ moment("2012-01-25T8:00").twix("2012-01-25T17:00").format({
 
 See all the `*Format` options below. You should look at [Moment's format documentation](http://momentjs.com/docs/#/displaying/format/) for more info. YMMV -- because of the string munging, not everything will act quite like you expect.
 
-### Odds and ends
+### Hiding things
 
 You can get rid of the space before the meridiem:
 
@@ -543,30 +545,28 @@ moment("2012-05-25T8:00").twix("2012-05-25T17:00").format({spaceBeforeMeridiem: 
 If you're showing the date somewhere else, it's sometimes useful to only show the times:
 
 ```js
-moment("2012-05-25T8:00").twix("2012-05-25T17:00").format({showDate: false}); //=> 8 AM - 5 PM
+moment("2012-05-25T8:00").twix("2012-05-25T17:00").format({hideDate: true}); //=> 8 AM - 5 PM
 ```
 
-This doesn't affect ranges that span multiple days; they still show the dates.
-
-If you combine an all-day range with `showDate:false`, you get this:
+If you combine an all-day range with `hideDate: true`, you get this:
 
 ```js
-moment("2012-01-25").twix("2012-01-25", {allDay: true}).format({showDate: false}); //=> All day
-```
-
-If you would like to hide the times for mutliple days you can use `showTime:false`:
-
-```js
-moment("2012-05-25T8:00").twix("2012-05-27T17:00").format({showTime: false}); //=> May 25 - May 27, 2012
-```
-
-If you would like to hide the year, specify `showYear:false`:
-
-```js
-moment("2012-05-25").twix("2012-05-27").format({showYear: false}); //=> May 25 - May 27
+moment("2012-01-25").twix("2012-01-25", {allDay: true}).format({hideDate: true}); //=> All day
 ```
 
 That text is customizable through the `allDay` option.
+
+If you would like to hide the times you can use `hideTime: true`:
+
+```js
+moment("2012-05-25T8:00").twix("2012-05-27T17:00").format({hideTime: true}); //=> May 25 - May 27, 2012
+```
+
+If you would like to hide the year, specify `hideYear: true`:
+
+```js
+moment("2012-05-25").twix("2012-05-27").format({hideYear: true}); //=> May 25 - May 27
+```
 
 ### All the options
 
@@ -576,11 +576,12 @@ Here are all the options and their defaults
 {
   groupMeridiems: true,
   spaceBeforeMeridiem: true,
-  showDate: true,
   showDayOfWeek: false,
-  showTime: true,
-  showYear: true,
+  hideTime: false,
+  hideDate: false,
+  hideYear: false,
   implicitMinutes: true,
+  implicitDate: false,
   implicitYear: true,
   yearFormat: "YYYY",
   monthFormat: "MMM",

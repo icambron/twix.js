@@ -215,11 +215,11 @@ makeTwix = (moment) ->
       options =
         groupMeridiems: true
         spaceBeforeMeridiem: true
-        showDate: true
         showDayOfWeek: false
-        showTime: true
-        showYear: true
+        hideTime: false
+        hideYear: false
         implicitMinutes: true
+        implicitDate: false
         implicitYear: true
         yearFormat: 'YYYY'
         monthFormat: 'MMM'
@@ -239,6 +239,11 @@ makeTwix = (moment) ->
 
       needsMeridiem = options.hourFormat && options.hourFormat[0] == 'h'
 
+      #deprecated to make things consistent
+      options.hideTime = !options.showTime if options.showTime?
+      options.hideYear = !options.showYear if options.showYear?
+      options.implicitDate = !options.showDate if options.showDate?
+
       goesIntoTheMorning =
         options.lastNightEndsAt > 0 &&
         !@allDay &&
@@ -246,16 +251,17 @@ makeTwix = (moment) ->
         @_start.hours() > 12 &&
         @_end.hours() < options.lastNightEndsAt
 
-      needDate = options.showDate || (!@isSame('d') && !goesIntoTheMorning)
+      needDate = !options.hideDate &&
+        (!options.implicitDate || @start().startOf('d').valueOf() != moment().startOf('d').valueOf() || !(@isSame('d') || goesIntoTheMorning))
 
-      if @allDay && @isSame('d') && (!options.showDate || options.explicitAllDay)
+      if @allDay && @isSame('d') && (options.implicitDate || options.explicitAllDay)
         fs.push
           name: 'all day simple'
           fn: () -> options.allDay
           pre: ' '
           slot: 0
 
-      if needDate && options.showYear && (!options.implicitYear || @_start.year() != moment().year() || !@isSame('y'))
+      if needDate && !options.hideYear && (!options.implicitYear || @_start.year() != moment().year() || !@isSame('y'))
         fs.push
           name: 'year',
           fn: (date) -> date.format options.yearFormat
@@ -291,14 +297,14 @@ makeTwix = (moment) ->
           pre: ' '
           slot: 1
 
-      if options.groupMeridiems && needsMeridiem && !@allDay && options.showTime
+      if options.groupMeridiems && needsMeridiem && !@allDay && !options.hideTime
         fs.push
           name: 'meridiem',
           fn: (t) -> t.format options.meridiemFormat
           slot: 6
           pre: if options.spaceBeforeMeridiem then ' ' else ''
 
-      if !@allDay && options.showTime
+      if !@allDay && !options.hideTime
         fs.push
 
           name: 'time',

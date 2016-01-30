@@ -1257,12 +1257,6 @@ test = (moment, Twix) ->
         end: '1982-05-25 15:30'
         result: 'May 25, 1982, 5:30 AM - 3:30 PM'
 
-      test 'same day, different times shows date once and hides year if requested',
-        start: '1982-05-25 05:30'
-        end: '1982-05-25 15:30'
-        options: {showYear: false}
-        result: 'May 25, 5:30 AM - 3:30 PM'
-
       test 'same day, different times, same meridian shows date and meridiem once',
         start: '1982-05-25T05:30'
         end: '1982-05-25T06:30'
@@ -1358,31 +1352,86 @@ test = (moment, Twix) ->
         options: {explicitAllDay: true}
         result: 'all day May 25, 1982'
 
-    describe 'no single dates', ->
-      test "shouldn't show dates for intraday",
-        start: '2010-05-25 05:30'
-        end: '2010-05-25 06:30'
-        options: {showDate: false}
-        result: '5:30 - 6:30 AM'
-
-      test 'should show the dates for multiday',
+    describe 'hidden times', ->
+      test 'hide times if requested',
         start: thisYear '05-25', '05:30'
         end: thisYear '05-27', '06:30'
-        options: {showDate: false}
-        result: 'May 25, 5:30 AM - May 27, 6:30 AM'
-
-      test 'should show the dates for multiday but hide times if requested',
-        start: thisYear '05-25', '05:30'
-        end: thisYear '05-27', '06:30'
-        options: {showDate: false, showTime: false}
+        options: {hideTime: true}
         result: 'May 25 - May 27'
 
-      test "should just say 'all day' for all day rangess",
-        start: thisYear('05-25')
-        end: thisYear('05-25')
-        options: {showDate: false}
+      test 'hide times even for a single day',
+        start: thisYear '05-25', '05:30'
+        end: thisYear '05-25', '06:30'
+        options: {hideTime: true}
+        result: 'May 25'
+
+    describe 'implicit dates', ->
+      todayAt = (h, m) -> moment().set('h', h).set('m', m)
+      tomorrowAt = (h, m) -> tomorrow().set('h', h).set('m', m)
+
+      test 'should show dates for non-today dates',
+        start: '2010-05-25 05:30'
+        end: '2010-05-25 06:30'
+        options: {implicitDate: true}
+        result: 'May 25, 2010, 5:30 - 6:30 AM'
+
+      test "shouldn't show dates for today",
+        start: todayAt(5, 30)
+        end: todayAt(6, 30)
+        options: {implicitDate: true}
+        result: '5:30 - 6:30 AM'
+
+        test "shouldn't show the dates running into early tomorrow",
+        start: todayAt(17, 0)
+        end: todayAt(2, 0)
+        options: {lastNightEndsAt: 5, implicitDate: true},
+        result: '5 PM - 2 AM'
+
+      it 'should show the dates for multiday', ->
+        start = todayAt(6, 30)
+        end = tomorrowAt(4, 45)
+        range = start.twix(end)
+        assertEqual(range.format({implicitDate: true}), range.format())
+
+      test "should just say 'all day' for all day ranges",
+        start: moment().startOf('d')
+        end: moment().startOf('d')
+        options: {implicitDate: true}
         allDay: true
         result: 'all day'
+
+    describe 'hidden dates', ->
+      test 'should hide dates',
+        start: '2010-05-25 05:30'
+        end: '2010-05-25 06:30'
+        options: {hideDate: true}
+        result: '5:30 - 6:30 AM'
+
+      test 'should hide dates even if multiday',
+        start: '2010-05-25 05:30'
+        end: '2010-05-26 06:30'
+        options: {hideDate: true}
+        result: '5:30 - 6:30 AM'
+
+    describe 'hidden years', ->
+
+      test 'differs to implicitYear by default',
+        start: thisYear('05-25', '05:30')
+        end: thisYear('05-26', '15:30')
+        options: {hideYear: false, implicitYear: true}
+        result: 'May 25, 5:30 AM - May 26, 3:30 PM'
+
+      test 'hides year if requested',
+        start: '1982-05-25 05:30'
+        end: '1982-05-25 15:30'
+        options: {hideYear: true}
+        result: 'May 25, 5:30 AM - 3:30 PM'
+
+      test 'hides year even if multiyear',
+        start: '1982-05-25 05:30'
+        end: '1985-05-25 15:30'
+        options: {hideYear: true}
+        result: 'May 25, 5:30 AM - 3:30 PM'
 
     describe 'ungroup meridiems', ->
       test 'should put meridiems on both sides',
@@ -1471,12 +1520,6 @@ test = (moment, Twix) ->
         result: 'May 25, 5 AM - May 26, 4 AM, 1982'
 
       describe "and we're trying to hide the date", ->
-
-        test 'elides the date too for early mornings',
-          start: '1982-05-25 17:00'
-          end: '1982-05-26 02:00'
-          options: {lastNightEndsAt: 5, showDate: false},
-          result: '5 PM - 2 AM'
 
         test "doesn't elide if the morning ends late",
           start: '1982-05-25 17:00'

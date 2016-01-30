@@ -347,9 +347,11 @@
         options = {
           groupMeridiems: true,
           spaceBeforeMeridiem: true,
-          showDate: true,
           showDayOfWeek: false,
+          hideTime: false,
+          hideYear: false,
           implicitMinutes: true,
+          implicitDate: false,
           implicitYear: true,
           yearFormat: 'YYYY',
           monthFormat: 'MMM',
@@ -366,9 +368,18 @@
         Twix._extend(options, inopts || {});
         fs = [];
         needsMeridiem = options.hourFormat && options.hourFormat[0] === 'h';
+        if (options.showTime != null) {
+          options.hideTime = !options.showTime;
+        }
+        if (options.showYear != null) {
+          options.hideYear = !options.showYear;
+        }
+        if (options.showDate != null) {
+          options.implicitDate = !options.showDate;
+        }
         goesIntoTheMorning = options.lastNightEndsAt > 0 && !this.allDay && this.end().startOf('d').valueOf() === this.start().add(1, 'd').startOf('d').valueOf() && this._start.hours() > 12 && this._end.hours() < options.lastNightEndsAt;
-        needDate = options.showDate || (!this.isSame('d') && !goesIntoTheMorning);
-        if (this.allDay && this.isSame('d') && (!options.showDate || options.explicitAllDay)) {
+        needDate = !options.hideDate && (!options.implicitDate || this.start().startOf('d').valueOf() !== moment().startOf('d').valueOf() || !(this.isSame('d') || goesIntoTheMorning));
+        if (this.allDay && this.isSame('d') && (options.implicitDate || options.explicitAllDay)) {
           fs.push({
             name: 'all day simple',
             fn: function() {
@@ -378,7 +389,7 @@
             slot: 0
           });
         }
-        if (needDate && (!options.implicitYear || this._start.year() !== moment().year() || !this.isSame('y'))) {
+        if (needDate && !options.hideYear && (!options.implicitYear || this._start.year() !== moment().year() || !this.isSame('y'))) {
           fs.push({
             name: 'year',
             fn: function(date) {
@@ -431,7 +442,7 @@
             slot: 1
           });
         }
-        if (options.groupMeridiems && needsMeridiem && !this.allDay) {
+        if (options.groupMeridiems && needsMeridiem && !this.allDay && !options.hideTime) {
           fs.push({
             name: 'meridiem',
             fn: function(t) {
@@ -441,7 +452,7 @@
             pre: options.spaceBeforeMeridiem ? ' ' : ''
           });
         }
-        if (!this.allDay) {
+        if (!this.allDay && !options.hideTime) {
           fs.push({
             name: 'time',
             fn: function(date) {
