@@ -395,7 +395,7 @@
             fn: function(date) {
               return date.format(options.yearFormat);
             },
-            pre: ', ',
+            pre: ' ',
             slot: 4
           });
         }
@@ -409,7 +409,7 @@
               return goesIntoTheMorning;
             },
             pre: ' ',
-            slot: 2
+            slot: 3
           });
         }
         if (this.allDay && needDate) {
@@ -419,7 +419,7 @@
               return date.format(options.monthFormat);
             },
             pre: ' ',
-            slot: 2
+            slot: 3
           });
         }
         if (this.allDay && needDate) {
@@ -429,7 +429,7 @@
               return date.format(options.dayFormat);
             },
             pre: ' ',
-            slot: 3
+            slot: 2
           });
         }
         if (needDate && options.showDayOfWeek) {

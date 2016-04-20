@@ -265,7 +265,7 @@ makeTwix = (moment) ->
         fs.push
           name: 'year',
           fn: (date) -> date.format options.yearFormat
-          pre: ', '
+          pre: ' '
           slot: 4
 
       if !@allDay && needDate
@@ -274,21 +274,21 @@ makeTwix = (moment) ->
           fn: (date) -> date.format "#{options.monthFormat} #{options.dayFormat}"
           ignoreEnd: -> goesIntoTheMorning
           pre: ' '
-          slot: 2
+          slot: 3
 
       if @allDay && needDate
         fs.push
           name: 'month'
           fn: (date) -> date.format options.monthFormat
           pre: ' '
-          slot: 2
+          slot: 3
 
       if @allDay && needDate
         fs.push
           name: 'date'
           fn: (date) -> date.format options.dayFormat
           pre: ' '
-          slot: 3
+          slot: 2
 
       if needDate && options.showDayOfWeek
         fs.push
