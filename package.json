@@ -1,5 +1,5 @@
 {
-  "name": "twix",
+  "name": "@mft/twix",
   "version": "0.9.0",
   "description": "Twix.js allows you to work with date ranges",
   "homepage": "http://icambron.github.io/twix.js/",
