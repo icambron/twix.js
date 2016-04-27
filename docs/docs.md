@@ -4,7 +4,7 @@ Twix.js is a [Moment.js](http://momentjs.com) plugin for working with time range
 
 ###Browser
 
-Grab [the file](https://raw.github.com/icambron/twix.js/master/dist/twix.min.js) as well as [moment.js](https://raw.github.com/moment/moment/blob/develop/min/moment.min.js). Then simply reference twix after Moment:
+Grab [the file](https://raw.github.com/icambron/twix.js/master/dist/twix.min.js) as well as [moment.js](https://raw.githubusercontent.com/moment/moment/master/min/moment.min.js). Then simply reference twix after Moment:
 
 ```html
 <script src="moment.min.js"></script>
