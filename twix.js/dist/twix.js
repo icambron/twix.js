@@ -368,15 +368,6 @@
         Twix._extend(options, inopts || {});
         fs = [];
         needsMeridiem = options.hourFormat && options.hourFormat[0] === 'h';
-        if (options.showTime != null) {
-          options.hideTime = !options.showTime;
-        }
-        if (options.showYear != null) {
-          options.hideYear = !options.showYear;
-        }
-        if (options.showDate != null) {
-          options.implicitDate = !options.showDate;
-        }
         goesIntoTheMorning = options.lastNightEndsAt > 0 && !this.allDay && this.end().startOf('d').valueOf() === this.start().add(1, 'd').startOf('d').valueOf() && this._start.hours() > 12 && this._end.hours() < options.lastNightEndsAt;
         needDate = !options.hideDate && (!options.implicitDate || this.start().startOf('d').valueOf() !== moment().startOf('d').valueOf() || !(this.isSame('d') || goesIntoTheMorning));
         if (this.allDay && this.isSame('d') && (options.implicitDate || options.explicitAllDay)) {
