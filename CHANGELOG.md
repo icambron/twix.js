@@ -1,5 +1,7 @@
 # Changelog
 
+ * **1.0.0**: Removed deprecated options
+
  * **0.9.0**: Deprecated the `show` options to `format()`. Added `explicitDate`, `hideTime`, and `hideYear` options.
 
  * **0.8.1**: `isValid()` now checks if the start and end are valid moments.

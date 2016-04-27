@@ -25,7 +25,7 @@ You can find comprehensive docs here:
 
 **[Detailed documentation][documentation-url]**
 
-**Breaking change in 0.9.0**: The `showDate` smart format option has been deprecated but also modified. It previously hid the date if the range spanned only one day, regardless of the day. I found that confusing, so you now have two options: a. hide the date with `hideDate: true` or b. use `implicitDate: true` to elide the date if it spans one day *and* that day is today. `showDate` has been aliased to `!implicitDate`, though that behavior is not consistent with the old behavior. If for some reason "hide the date if the range spans only one day" is a real use case for you that I just broke, please let me know.
+**Breaking change in 1.0.0**: Removed the deprecated `showYear` and `showDate` smart formatter options. Use `hideYear`, `hideDate`, `implicitYear`, and `implicitDate` instead.
 
 ## Building
 
