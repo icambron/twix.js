@@ -1900,7 +1900,7 @@
         stringed = moment.utc('1982-05-25').twix(moment.utc('1982-05-25'), {
           allDay: true
         }).toString();
-        return assertEqual('{start: 1982-05-25T00:00:00+00:00, end: 1982-05-25T00:00:00+00:00, allDay: true}', stringed);
+        return assertEqual('{start: 1982-05-25T00:00:00Z, end: 1982-05-25T00:00:00Z, allDay: true}', stringed);
       });
     });
     return describe('internationalization', function() {
