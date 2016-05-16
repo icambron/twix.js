@@ -258,7 +258,7 @@ makeTwix = (moment) ->
         fs.push
           name: 'all day simple'
           fn: () -> options.allDay
-          pre: moment.locale('en') ? ', ' : ' '
+          pre: if moment.locale() == 'en' then ', ' else ' '
           slot: 0
 
       if needDate && !options.hideYear && (!options.implicitYear || @_start.year() != moment().year() || !@isSame('y'))
@@ -274,21 +274,21 @@ makeTwix = (moment) ->
           fn: (date) -> date.format "#{options.monthFormat} #{options.dayFormat}"
           ignoreEnd: -> goesIntoTheMorning
           pre: ' '
-          slot: moment.locale('en') ? 2 : 3
+          slot: if moment.locale() == 'en' then 2 else 3
 
       if @allDay && needDate
         fs.push
           name: 'month'
           fn: (date) -> date.format options.monthFormat
           pre: ' '
-          slot: moment.locale('en') ? 2 : 3
+          slot: if moment.locale() == 'en' then 2 else 3
 
       if @allDay && needDate
         fs.push
           name: 'date'
           fn: (date) -> date.format options.dayFormat
           pre: ' '
-          slot: moment.locale('en') ? 3 : 2
+          slot: if moment.locale() == 'en' then 3 else 2
 
       if needDate && options.showDayOfWeek
         fs.push
