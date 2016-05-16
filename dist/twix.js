@@ -376,7 +376,7 @@
             fn: function() {
               return options.allDay;
             },
-            pre: ' ',
+            pre: ', ',
             slot: 0
           });
         }
@@ -386,7 +386,7 @@
             fn: function(date) {
               return date.format(options.yearFormat);
             },
-            pre: ', ',
+            pre: moment.locale() === 'en' ? ', ' : ' ',
             slot: 4
           });
         }
@@ -400,7 +400,7 @@
               return goesIntoTheMorning;
             },
             pre: ' ',
-            slot: 2
+            slot: moment.locale() === 'en' ? 2 : 3
           });
         }
         if (this.allDay && needDate) {
@@ -410,7 +410,7 @@
               return date.format(options.monthFormat);
             },
             pre: ' ',
-            slot: 2
+            slot: moment.locale() === 'en' ? 2 : 3
           });
         }
         if (this.allDay && needDate) {
@@ -420,7 +420,7 @@
               return date.format(options.dayFormat);
             },
             pre: ' ',
-            slot: 3
+            slot: moment.locale() === 'en' ? 3 : 2
           });
         }
         if (needDate && options.showDayOfWeek) {
