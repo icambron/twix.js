@@ -368,15 +368,6 @@
         Twix._extend(options, inopts || {});
         fs = [];
         needsMeridiem = options.hourFormat && options.hourFormat[0] === 'h';
-        if (options.showTime != null) {
-          options.hideTime = !options.showTime;
-        }
-        if (options.showYear != null) {
-          options.hideYear = !options.showYear;
-        }
-        if (options.showDate != null) {
-          options.implicitDate = !options.showDate;
-        }
         goesIntoTheMorning = options.lastNightEndsAt > 0 && !this.allDay && this.end().startOf('d').valueOf() === this.start().add(1, 'd').startOf('d').valueOf() && this._start.hours() > 12 && this._end.hours() < options.lastNightEndsAt;
         needDate = !options.hideDate && (!options.implicitDate || this.start().startOf('d').valueOf() !== moment().startOf('d').valueOf() || !(this.isSame('d') || goesIntoTheMorning));
         if (this.allDay && this.isSame('d') && (options.implicitDate || options.explicitAllDay)) {
@@ -385,7 +376,7 @@
             fn: function() {
               return options.allDay;
             },
-            pre: ' ',
+            pre: moment.locale() === 'en' ? ', ' : ' ',
             slot: 0
           });
         }
@@ -409,7 +400,7 @@
               return goesIntoTheMorning;
             },
             pre: ' ',
-            slot: 3
+            slot: moment.locale() === 'en' ? 2 : 3
           });
         }
         if (this.allDay && needDate) {
@@ -419,7 +410,7 @@
               return date.format(options.monthFormat);
             },
             pre: ' ',
-            slot: 3
+            slot: moment.locale() === 'en' ? 2 : 3
           });
         }
         if (this.allDay && needDate) {
@@ -429,7 +420,7 @@
               return date.format(options.dayFormat);
             },
             pre: ' ',
-            slot: 2
+            slot: moment.locale() === 'en' ? 3 : 2
           });
         }
         if (needDate && options.showDayOfWeek) {

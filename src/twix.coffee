@@ -29,7 +29,6 @@ makeTwix = (moment) ->
       first
 
     # -- INFORMATIONAL --
-
     start: -> @_start.clone()
     end: -> @_end.clone()
 
@@ -238,11 +237,6 @@ makeTwix = (moment) ->
       fs = []
 
       needsMeridiem = options.hourFormat && options.hourFormat[0] == 'h'
-
-      #deprecated to make things consistent
-      options.hideTime = !options.showTime if options.showTime?
-      options.hideYear = !options.showYear if options.showYear?
-      options.implicitDate = !options.showDate if options.showDate?
 
       goesIntoTheMorning =
         options.lastNightEndsAt > 0 &&

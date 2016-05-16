@@ -1537,7 +1537,7 @@ test = (moment, Twix) ->
   describe 'toString', ->
     it 'returns a string', ->
       stringed = moment.utc('1982-05-25').twix(moment.utc('1982-05-25'), allDay: true).toString()
-      assertEqual '{start: 1982-05-25T00:00:00+00:00, end: 1982-05-25T00:00:00+00:00, allDay: true}', stringed
+      assertEqual '{start: 1982-05-25T00:00:00Z, end: 1982-05-25T00:00:00Z, allDay: true}', stringed
 
   describe 'internationalization', ->
     it "uses the moment locale's 24-hour setting by default", ->
