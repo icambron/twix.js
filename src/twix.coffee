@@ -252,14 +252,14 @@ makeTwix = (moment) ->
         fs.push
           name: 'all day simple'
           fn: () -> options.allDay
-          pre: if moment.locale() == 'en' then ', ' else ' '
+          pre: ', '
           slot: 0
 
       if needDate && !options.hideYear && (!options.implicitYear || @_start.year() != moment().year() || !@isSame('y'))
         fs.push
           name: 'year',
           fn: (date) -> date.format options.yearFormat
-          pre: ' '
+          pre: if moment.locale() == 'en' then ', ' else ' '
           slot: 4
 
       if !@allDay && needDate
