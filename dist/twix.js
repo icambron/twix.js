@@ -376,7 +376,7 @@
             fn: function() {
               return options.allDay;
             },
-            pre: moment.locale() === 'en' ? ', ' : ' ',
+            pre: ', ',
             slot: 0
           });
         }
@@ -386,7 +386,7 @@
             fn: function(date) {
               return date.format(options.yearFormat);
             },
-            pre: ' ',
+            pre: moment.locale() === 'en' ? ', ' : ' ',
             slot: 4
           });
         }
