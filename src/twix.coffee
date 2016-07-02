@@ -183,7 +183,7 @@ makeTwix = (moment) ->
       vals
 
     divide: (parts) ->
-      @split(@length() / parts, 'ms')
+      @split(@length() / parts, 'ms')[0..(parts - 1)]
 
     isValid: ->
       @_start.isValid() && @_end.isValid() && @_start <= @_displayEnd

@@ -312,6 +312,10 @@
         return vals;
       };
 
+      Twix.prototype.divide = function(parts) {
+        return this.split(this.length() / parts, 'ms').slice(0, +(parts - 1) + 1 || 9e9);
+      };
+
       Twix.prototype.isValid = function() {
         return this._start.isValid() && this._end.isValid() && this._start <= this._displayEnd;
       };
