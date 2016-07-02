@@ -1169,6 +1169,19 @@ test = (moment, Twix) ->
         assertEqual 1, splits.length
         assertTwixEqual range, splits[0]
 
+  describe 'divide()', ->
+    it 'should split a 4 hour period into 4 contiguous 1-hour parts', ->
+      range = thatDay '05:00', '09:00'
+      splits = range.divide(4)
+      assertEqual 4, splits.length
+      assertTwixEqual thatDay('06:00', '07:00'), splits[1]
+
+    it 'should split a 1m30s into 3 30-second parts', ->
+      range = thatDay '05:00:00', '05:01:30'
+      splits = range.divide(3)
+      assertEqual 3, splits.length
+      assertTwixEqual thatDay('05:01:00', '05:01:30'), splits[2]
+
   describe 'isValid()', ->
 
     it 'should return false when the start time is invalid', ->

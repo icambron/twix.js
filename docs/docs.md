@@ -352,6 +352,16 @@ range.split(moment("1982-05-25T06:00")).length; //=> 2
 range.split(moment("1982-05-25T06:00"), moment("1982-05-25T07:00")).length; //=> 3
 ```
 
+###divide
+Divides a range into n evenly-side ranges.
+
+```js
+var divided = moment("1982-05-25T05:00").twix("1982-05-25T07:00").divide(2);
+divided.length; //=> 2
+divided[0].format({hideDate: true}) //=> '5 - 6 AM'
+divided[1].format({hideDate: true}) //=> '6 - 7 AM'
+```
+
 ##Moment durations
 
 Moment now has [durations](http://momentjs.com/docs/#/durations/), which represent a block of time, but not a *specific* block of time, just a period of, say, hours or days. Twix provides some utilities for working with durations.
