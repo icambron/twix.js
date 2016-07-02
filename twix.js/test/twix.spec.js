@@ -1646,7 +1646,7 @@
           options: {
             hideTime: true
           },
-          result: 'May 25 - May 27'
+          result: 'May 25 - 27'
         });
         return test('hide times even for a single day', {
           start: thisYear('05-25', '05:30'),
