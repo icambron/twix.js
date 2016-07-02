@@ -15,5 +15,5 @@ script:
   - make coveralls
 
 branches:
-  except:
-    - gh-pages
+  only:
+    - master
