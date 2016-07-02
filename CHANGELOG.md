@@ -1,5 +1,7 @@
 # Changelog
 
+ * **1.1.0**: Smart formatting: `hideTime` causes months to collapse
+
  * **1.0.0**: Removed deprecated options
 
  * **0.9.0**: Deprecated the `show` options to `format()`. Added `explicitDate`, `hideTime`, and `hideYear` options.
