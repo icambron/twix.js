@@ -4,6 +4,7 @@ test/coverage.html
 *.bak
 npm-debug.log
 .DS_Store
+.#*
 
 #Jetbrains IDE files
 .idea

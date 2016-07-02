@@ -339,7 +339,7 @@
       };
 
       Twix.prototype.format = function(inopts) {
-        var common_bucket, end_bucket, fold, format, fs, global_first, goesIntoTheMorning, j, len, momentHourFormat, needDate, needsMeridiem, options, process, start_bucket, together;
+        var atomicMonthDate, common_bucket, end_bucket, fold, format, fs, global_first, goesIntoTheMorning, j, len, momentHourFormat, needDate, needsMeridiem, options, process, start_bucket, together;
         if (this.isEmpty()) {
           return '';
         }
@@ -370,6 +370,7 @@
         needsMeridiem = options.hourFormat && options.hourFormat[0] === 'h';
         goesIntoTheMorning = options.lastNightEndsAt > 0 && !this.allDay && this.end().startOf('d').valueOf() === this.start().add(1, 'd').startOf('d').valueOf() && this._start.hours() > 12 && this._end.hours() < options.lastNightEndsAt;
         needDate = !options.hideDate && (!options.implicitDate || this.start().startOf('d').valueOf() !== moment().startOf('d').valueOf() || !(this.isSame('d') || goesIntoTheMorning));
+        atomicMonthDate = !(this.allDay || options.hideTime);
         if (this.allDay && this.isSame('d') && (options.implicitDate || options.explicitAllDay)) {
           fs.push({
             name: 'all day simple',
@@ -390,9 +391,9 @@
             slot: 4
           });
         }
-        if (!this.allDay && needDate) {
+        if (atomicMonthDate && needDate) {
           fs.push({
-            name: 'all day month',
+            name: 'month-date',
             fn: function(date) {
               return date.format(options.monthFormat + " " + options.dayFormat);
             },
@@ -403,7 +404,7 @@
             slot: 2
           });
         }
-        if (this.allDay && needDate) {
+        if (!atomicMonthDate && needDate) {
           fs.push({
             name: 'month',
             fn: function(date) {
@@ -413,7 +414,7 @@
             slot: 2
           });
         }
-        if (this.allDay && needDate) {
+        if (!atomicMonthDate && needDate) {
           fs.push({
             name: 'date',
             fn: function(date) {
@@ -476,6 +477,9 @@
                 return start_str;
               }
             };
+            if (_this._start.month() === 9 && _this._start.date() === 6) {
+              console.log("Format: " + (JSON.stringify(format)));
+            }
             if (end_str === start_str && together) {
               return common_bucket.push(start_group);
             } else {

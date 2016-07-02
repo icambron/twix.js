@@ -248,6 +248,8 @@ makeTwix = (moment) ->
       needDate = !options.hideDate &&
         (!options.implicitDate || @start().startOf('d').valueOf() != moment().startOf('d').valueOf() || !(@isSame('d') || goesIntoTheMorning))
 
+        atomicMonthDate = !(@allDay || options.hideTime)
+
       if @allDay && @isSame('d') && (options.implicitDate || options.explicitAllDay)
         fs.push
           name: 'all day simple'
@@ -262,22 +264,22 @@ makeTwix = (moment) ->
           pre: ', '
           slot: 4
 
-      if !@allDay && needDate
+      if atomicMonthDate && needDate
         fs.push
-          name: 'all day month'
+          name: 'month-date'
           fn: (date) -> date.format "#{options.monthFormat} #{options.dayFormat}"
           ignoreEnd: -> goesIntoTheMorning
           pre: ' '
           slot: 2
 
-      if @allDay && needDate
+      if !atomicMonthDate && needDate
         fs.push
           name: 'month'
           fn: (date) -> date.format options.monthFormat
           pre: ' '
           slot: 2
 
-      if @allDay && needDate
+      if !atomicMonthDate && needDate
         fs.push
           name: 'date'
           fn: (date) -> date.format options.dayFormat
@@ -330,6 +332,9 @@ makeTwix = (moment) ->
           else format.fn @_end
 
         start_group = {format: format, value: -> start_str}
+
+        if @_start.month() == 9 && @_start.date() == 6
+          console.log "Format: #{JSON.stringify(format)}"
 
         if end_str == start_str && together
           common_bucket.push start_group
