@@ -559,7 +559,7 @@ That text is customizable through the `allDay` option.
 If you would like to hide the times you can use `hideTime: true`:
 
 ```js
-moment("2012-05-25T8:00").twix("2012-05-27T17:00").format({hideTime: true}); //=> May 25 - May 27, 2012
+moment("2012-05-25T8:00").twix("2012-05-27T17:00").format({hideTime: true}); //=> May 25 - 27, 2012
 ```
 
 If you would like to hide the year, specify `hideYear: true`:
