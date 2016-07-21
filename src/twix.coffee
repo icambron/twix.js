@@ -336,9 +336,6 @@ makeTwix = (moment) ->
 
         start_group = {format: format, value: -> start_str}
 
-        if @_start.month() == 9 && @_start.date() == 6
-          console.log "Format: #{JSON.stringify(format)}"
-
         if end_str == start_str && together
           common_bucket.push start_group
         else
