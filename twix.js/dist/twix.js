@@ -312,6 +312,10 @@
         return vals;
       };
 
+      Twix.prototype.divide = function(parts) {
+        return this.split(this.length() / parts, 'ms').slice(0, +(parts - 1) + 1 || 9e9);
+      };
+
       Twix.prototype.isValid = function() {
         return this._start.isValid() && this._end.isValid() && this._start <= this._displayEnd;
       };
@@ -477,9 +481,6 @@
                 return start_str;
               }
             };
-            if (_this._start.month() === 9 && _this._start.date() === 6) {
-              console.log("Format: " + (JSON.stringify(format)));
-            }
             if (end_str === start_str && together) {
               return common_bucket.push(start_group);
             } else {

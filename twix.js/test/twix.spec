@@ -1422,6 +1422,28 @@
         });
       });
     });
+    describe('divide()', function() {
+      it('should split a 4 hour period into 4 contiguous 1-hour parts', function() {
+        var range, splits;
+        range = thatDay('05:00', '09:00');
+        splits = range.divide(4);
+        assertEqual(4, splits.length);
+        return assertTwixEqual(thatDay('06:00', '07:00'), splits[1]);
+      });
+      it('should split a 1m30s into 3 30-second parts', function() {
+        var range, splits;
+        range = thatDay('05:00:00', '05:01:30');
+        splits = range.divide(3);
+        assertEqual(3, splits.length);
+        return assertTwixEqual(thatDay('05:01:00', '05:01:30'), splits[2]);
+      });
+      return it('always gives you the right number of parts', function() {
+        var range, splits;
+        range = thatDay('05:00:00', '05:01:30');
+        splits = range.divide(17);
+        return assertEqual(17, splits.length);
+      });
+    });
     describe('isValid()', function() {
       it('should return false when the start time is invalid', function() {
         return assertEqual(false, new Twix('1980-13-45', '1982-05-26').isValid());
