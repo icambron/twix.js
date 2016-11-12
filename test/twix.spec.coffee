@@ -745,16 +745,16 @@ test = (moment, Twix) ->
       it 'returns false for an earlier range', ->
         assertNotEngulfing someTime, thatDay '03:30', '04:30'
 
-      it 'returns true for a partially later range', ->
+      it 'returns false for a partially later range', ->
         assertNotEngulfing someTime, thatDay '08:00', '11:30'
 
-      it 'returns true for a partially earlier range', ->
+      it 'returns false for a partially earlier range', ->
         assertNotEngulfing someTime, thatDay '04:30', '06:30'
 
       it 'returns true for an engulfed range', ->
         assertEngulfing someTime, thatDay '06:30', '07:30'
 
-      it 'returns true for an engulfing range', ->
+      it 'returns false for an engulfing range', ->
         assertNotEngulfing someTime, thatDay '04:30', '09:30'
 
     describe 'one all-day range', ->
