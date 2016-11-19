@@ -328,12 +328,12 @@
         return "{start: " + (this._start.format()) + ", end: " + (this._end.format()) + ", allDay: " + (this.allDay ? 'true' : 'false') + "}";
       };
 
-      Twix.prototype.toArray = function(format, intervalAmount, period, minHours) {
+      Twix.prototype.toArray = function(intervalAmount, period, minHours) {
         var itr, range;
         itr = this.iterate(intervalAmount, period, minHours);
         range = [];
         while (itr.hasNext()) {
-          range.push(itr.next().format(format));
+          range.push(itr.next());
         }
         return range;
       };
