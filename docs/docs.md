@@ -235,6 +235,17 @@ iter.next(); //=> null
 
 `iterateInner` takes all the same duration arguments as `iterate`.
 
+###toArray
+
+Returns an array of Moment objects from the range, spaced out by the specified period. Works the same as [iterate()](#iterate) but collects the results for you.
+
+```js
+var arr = moment('1982-05-24T5:00').twix('1982-05-27T6:00').toArray('days');
+arr[0].format('LLL'); //=> 'May 24, 1982 12:00 AM'
+arr[1].format('LLL'); //=> 'May 25, 1982 12:00 AM'
+arr[2].format('LLL'); //=> 'May 26, 1982 12:00 AM'
+```
+
 ###start
 
 Returns the start of the range as a Moment instance. Mutating the returned value does not affect the range. This accessor is often useful when using Twix functions that create ranges, such as `split()` and `intersection()`.
