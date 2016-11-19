@@ -197,6 +197,13 @@ makeTwix = (moment) ->
     # -- FORMATING --
     toString: -> "{start: #{@_start.format()}, end: #{@_end.format()}, allDay: #{if @allDay then 'true' else 'false'}}"
 
+    toArray: (intervalAmount, period, minHours) ->
+      itr = @iterate(intervalAmount, period, minHours)
+      range = []
+      while itr.hasNext()
+        range.push itr.next()
+      range
+
     simpleFormat: (momentOpts, inopts) ->
       options =
         allDay: '(all day)'
