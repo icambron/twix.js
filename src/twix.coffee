@@ -202,7 +202,7 @@ makeTwix = (moment) ->
       range = []
       while itr.hasNext()
         range.push itr.next()
-      return range
+      range
 
     simpleFormat: (momentOpts, inopts) ->
       options =

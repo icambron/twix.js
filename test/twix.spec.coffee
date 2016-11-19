@@ -1560,7 +1560,7 @@ test = (moment, Twix) ->
 
   describe 'toArray', ->
     it 'returns an array of moment objects', ->
-      arrayOfDays = moment.utc('1982-05-25').twix(moment.utc('1982-05-27'), allDay: true).toArray('days').map((m) -> moment(m).format('YYYY-MM-DD'))
+      arrayOfDays = moment.utc('1982-05-25').twix(moment.utc('1982-05-27'), allDay: true).toArray('days').map((m) -> m.format('YYYY-MM-DD'))
       assertArrayEqual ['1982-05-25', '1982-05-26', '1982-05-27'], arrayOfDays
 
   describe 'internationalization', ->
