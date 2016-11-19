@@ -237,7 +237,7 @@ iter.next(); //=> null
 
 ###toArray
 
-Returns an array of Moment objects from the range, spaced out by the specified period. Works the same as [iterate()](#iterate) but collects the results for you.
+Returns an array of Moment objects from the range, spaced out by the specified period. Works the same as [iterate()](#iterate) and takes all the same arguments, but collects the results for you.
 
 ```js
 var arr = moment('1982-05-24T5:00').twix('1982-05-27T6:00').toArray('days');
