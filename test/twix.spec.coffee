@@ -4,6 +4,7 @@ test = (moment, Twix) ->
   assertEqual = (a, b) -> throw new Error("Found #{b}, expected #{a}") unless a == b
   assertTwixEqual = (a, b) -> throw new Error("Found #{b.toString()}, expected #{a.toString()}") unless a.equals b
   assertMomentEqual = (a, b) -> throw new Error("Found #{b.format()}, expected #{a.format()}") unless a.valueOf() == b.valueOf()
+  assertArrayEqual = (a, b) -> throw new Error("Found #{b}, expected #{a}") unless a.length is b.length and a.every (elem, i) -> elem is b[i]
 
   thisYear = (partial, time) ->
     fullDate = "#{moment().year()}-#{partial}"
@@ -1556,6 +1557,11 @@ test = (moment, Twix) ->
     it 'returns a string', ->
       stringed = moment.utc('1982-05-25').twix(moment.utc('1982-05-25'), allDay: true).toString()
       assertEqual '{start: 1982-05-25T00:00:00Z, end: 1982-05-25T00:00:00Z, allDay: true}', stringed
+
+  describe 'toArray', ->
+    it 'returns an array of days', ->
+      arrayOfDays = moment.utc('1982-05-25').twix(moment.utc('1982-05-27'), allDay: true).toArray('YYYY-MM-DD', 'days')
+      assertArrayEqual ['1982-05-25', '1982-05-26', '1982-05-27'], arrayOfDays
 
   describe 'internationalization', ->
     it "uses the moment locale's 24-hour setting by default", ->
