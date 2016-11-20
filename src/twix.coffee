@@ -6,6 +6,42 @@ isArray = (input) ->
 makeTwix = (moment) ->
   throw new Error("Can't find moment") unless moment?
 
+  locales = {}
+
+  loadLocale = (mom) ->
+    loc = mom.locale()
+    return locales[loc] if locales[loc]?
+
+    settings = mom.localeData()._longDateFormat
+    dateFormat = settings.LLLL.replace('LT', settings.LT)
+
+    locData = parseFormat(dateFormat)
+    locales[loc] = locData
+    locData
+
+  parseFormat = (format, options = {}) ->
+
+    #what i would give to be able to use [].reduce
+    results = {}
+
+    for elem, i in format.match(/(\W+)?[a-zA-Z]+/g)
+      matches = elem.match(/(\W*)(\w+)/)
+      if matches?
+        [_, pre, format] = matches
+        unit = if (format[0] == 'A' || format[0] == 'a')
+                 'meridiem'
+               else
+                 moment.normalizeUnits(moment.normalizeUnits(format[0])                 )
+
+        override = options[unit + 'Format']
+
+        results[unit] =
+          slot: i + 1
+          format: override || format
+          pre: pre
+
+    results
+
   class Twix
     constructor: (start, end, parseFormat, options = {}) ->
 
@@ -17,6 +53,8 @@ makeTwix = (moment) ->
 
       @_oStart = moment start, parseFormat, options.parseStrict
       @_oEnd = moment end, parseFormat, options.parseStrict
+
+      @_oEnd.locale(@_oStart.locale())
 
       @allDay = options.allDay ? false
 
@@ -215,28 +253,27 @@ makeTwix = (moment) ->
       s += " #{options.allDay}" if @allDay && options.allDay
       s
 
-    format: (inopts) ->
+    format: (inopts = {}) ->
 
       return '' if @isEmpty()
 
-      momentHourFormat = @_start.localeData()._longDateFormat['LT'][0]
+      tokens = if inopts.parseFormat? then parseFormat(inopts.parseFormat) else loadLocale(@_start, inopts)
 
       options =
         groupMeridiems: true
-        spaceBeforeMeridiem: true
         showDayOfWeek: false
         hideTime: false
         hideYear: false
         implicitMinutes: true
         implicitDate: false
         implicitYear: true
-        yearFormat: 'YYYY'
-        monthFormat: 'MMM'
-        weekdayFormat: 'ddd'
-        dayFormat: 'D'
-        meridiemFormat: 'A'
-        hourFormat: momentHourFormat
-        minuteFormat: 'mm'
+        yearFormat: tokens.year.format || 'YYYY'
+        monthFormat: tokens.month.format || 'MMM'
+        weekdayFormat: tokens.day.format || 'ddd'
+        dayFormat: tokens.date.format || 'D'
+        meridiemFormat: tokens.meridiem?.format || 'A'
+        hourFormat: tokens.hour.format || if tokens.meridiem then 'hh' else 'HH'
+        minuteFormat: tokens.minute.format || 'mm'
         allDay: 'all day'
         explicitAllDay: false
         lastNightEndsAt: 0
@@ -258,8 +295,6 @@ makeTwix = (moment) ->
       needDate = !options.hideDate &&
         (!options.implicitDate || @start().startOf('d').valueOf() != moment().startOf('d').valueOf() || !(@isSame('d') || goesIntoTheMorning))
 
-        atomicMonthDate = !(@allDay || options.hideTime)
-
       if @allDay && @isSame('d') && (options.implicitDate || options.explicitAllDay)
         fs.push
           name: 'all day simple'
@@ -267,66 +302,63 @@ makeTwix = (moment) ->
           pre: ' '
           slot: 0
 
-      if needDate && !options.hideYear && (!options.implicitYear || @_start.year() != moment().year() || !@isSame('y'))
-        fs.push
-          name: 'year',
-          fn: (date) -> date.format options.yearFormat
-          pre: ', '
-          slot: 4
+      if needDate
+        if !options.hideYear && (!options.implicitYear || @_start.year() != moment().year() || !@isSame('y'))
+          fs.push
+            name: 'year'
+            fn: (date) -> date.format(options.yearFormat)
+            pre: tokens.year?.pre || ', '
+            slot: tokens.year?.slot || 4
 
-      if atomicMonthDate && needDate
-        fs.push
-          name: 'month-date'
-          fn: (date) -> date.format "#{options.monthFormat} #{options.dayFormat}"
-          ignoreEnd: -> goesIntoTheMorning
-          pre: ' '
-          slot: 2
+        if  @allDay || options.hideTime
+          fs.push
+            name: 'month'
+            fn: (date) -> date.format(options.monthFormat)
+            pre: tokens.month?.pre || ' '
+            slot: tokens.month?.slot || 2
 
-      if !atomicMonthDate && needDate
-        fs.push
-          name: 'month'
-          fn: (date) -> date.format options.monthFormat
-          pre: ' '
-          slot: 2
+          fs.push
+            name: 'date'
+            fn: (date) -> date.format(options.dayFormat)
+            pre: tokens.date?.pre || ' '
+            slot: tokens.date?.slot || 3
+            ignoreEnd: -> goesIntoTheMorning
+        else
 
-      if !atomicMonthDate && needDate
-        fs.push
-          name: 'date'
-          fn: (date) -> date.format options.dayFormat
-          pre: ' '
-          slot: 3
+          month = Twix._extend(tokens.month, {fn: (date) -> date.format(options.monthFormat)})
+          date = Twix._extend(tokens.date, {fn: (date) -> date.format(options.dayFormat)})
+          [first, second] = [month, date].sort((a, b) -> a.slot - b.slot)
 
-      if needDate && options.showDayOfWeek
-        fs.push
-          name: 'day of week',
-          fn: (date) -> date.format options.weekdayFormat
-          pre: ' '
-          slot: 1
+          fs.push
+            name: 'month-date'
+            fn: (date) -> "#{first.fn(date)}#{second.pre}#{second.fn(date)}"
+            pre: first.pre || ' '
+            slot: tokens.month?.slot || 2
+
+        if options.showDayOfWeek
+          fs.push
+            name: 'day of week',
+            fn: (date) -> date.format(options.weekdayFormat)
+            pre: tokens.day?.pre || ' '
+            slot: tokens.day?.slot || 1
 
       if options.groupMeridiems && needsMeridiem && !@allDay && !options.hideTime
         fs.push
           name: 'meridiem',
           fn: (t) -> t.format options.meridiemFormat
-          slot: 6
-          pre: if options.spaceBeforeMeridiem then ' ' else ''
+          pre: tokens.meridiem?.pre
+          slot: tokens.meridiem.slot || 7
 
       if !@allDay && !options.hideTime
         fs.push
-
           name: 'time',
           fn: (date) ->
-            str =
-              if date.minutes() == 0 && options.implicitMinutes && needsMeridiem
-                date.format options.hourFormat
-              else
-                date.format "#{options.hourFormat}:#{options.minuteFormat}"
-
-            if !options.groupMeridiems && needsMeridiem
-              str += ' ' if options.spaceBeforeMeridiem
-              str += date.format options.meridiemFormat
-            str
-          slot: 5
-          pre: ', '
+            if date.minutes() == 0 && options.implicitMinutes && needsMeridiem
+              date.format options.hourFormat
+            else
+              date.format "#{options.hourFormat}:#{options.minuteFormat}"
+          pre: tokens.hour?.pre
+          slot: tokens.hour?.slot || 5
 
       start_bucket = []
       end_bucket = []
@@ -339,7 +371,7 @@ makeTwix = (moment) ->
         end_str =
           if format.ignoreEnd && format.ignoreEnd()
             start_str
-          else format.fn @_end
+          else format.fn(@_end)
 
         start_group = {format: format, value: -> start_str}
 
@@ -348,10 +380,10 @@ makeTwix = (moment) ->
         else
           if together
             together = false
-            common_bucket.push {
+            common_bucket.push({
               format: {slot: format.slot, pre: ''}
               value: -> options.template(fold(start_bucket), fold(end_bucket, true).trim())
-            }
+            })
 
           start_bucket.push start_group
           end_bucket.push {format: format, value: -> end_str}

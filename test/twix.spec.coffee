@@ -1258,34 +1258,34 @@ test = (moment, Twix) ->
       test 'different year, different day shows everything',
         start: '1982-05-25T05:30'
         end: '1983-05-26T15:30'
-        result: 'May 25, 1982, 5:30 AM - May 26, 1983, 3:30 PM'
+        result: 'May 25, 1982 5:30 AM - May 26, 1983 3:30 PM'
 
       test 'this year, different day skips year',
         start: thisYear('05-25', '05:30')
         end: thisYear('05-26', '15:30')
-        result: 'May 25, 5:30 AM - May 26, 3:30 PM'
+        result: 'May 25 5:30 AM - May 26 3:30 PM'
 
       test 'this year, different day shows year if requested',
         start: thisYear('05-25', '05:30')
         end: thisYear('05-26', '15:30')
         options: {implicitYear: false}
-        result: "May 25, 5:30 AM - May 26, 3:30 PM, #{new Date().getFullYear()}"
+        result: "May 25 5:30 AM - May 26 3:30 PM, #{new Date().getFullYear()}"
 
       test 'same day, different times shows date once',
         start: '1982-05-25 05:30'
         end: '1982-05-25 15:30'
-        result: 'May 25, 1982, 5:30 AM - 3:30 PM'
+        result: 'May 25, 1982 5:30 AM - 3:30 PM'
 
       test 'same day, different times, same meridian shows date and meridiem once',
         start: '1982-05-25T05:30'
         end: '1982-05-25T06:30'
-        result: 'May 25, 1982, 5:30 - 6:30 AM'
+        result: 'May 25, 1982 5:30 - 6:30 AM'
 
       test 'custom month format for regular range',
         start: '2010-08-25T05:30'
         end: '2010-08-25T06:30'
         options: {monthFormat: 'MMMM'}
-        result: 'August 25, 2010, 5:30 - 6:30 AM'
+        result: 'August 25, 2010 5:30 - 6:30 AM'
 
       test 'custom month format for all day range',
         start: '2010-08-25'
@@ -1298,12 +1298,12 @@ test = (moment, Twix) ->
       test "round hour doesn't show :00",
         start: '1982-05-25T05:00'
         end: '1982-05-25T07:00'
-        result: 'May 25, 1982, 5 - 7 AM'
+        result: 'May 25, 1982 5 - 7 AM'
 
       test 'mixed times still shows :30',
         start: '1982-05-25T05:00'
         end: '1982-05-25T05:30'
-        result: 'May 25, 1982, 5 - 5:30 AM'
+        result: 'May 25, 1982 5 - 5:30 AM'
 
     describe 'implicit minutes', ->
       test 'still shows the :00',
@@ -1536,7 +1536,7 @@ test = (moment, Twix) ->
         start: '1982-05-25 05:00'
         end: '1982-05-26 04:00'
         options: {lastNightEndsAt: 5},
-        result: 'May 25, 5 AM - May 26, 4 AM, 1982'
+        result: 'May 25 5 AM - May 26 4 AM, 1982'
 
       describe "and we're trying to hide the date", ->
 
@@ -1544,7 +1544,7 @@ test = (moment, Twix) ->
           start: '1982-05-25 17:00'
           end: '1982-05-26 10:00'
           options: {lastNightEndsAt: 5},
-          result: 'May 25, 5 PM - May 26, 10 AM, 1982'
+          result: 'May 25 5 PM - May 26 10 AM, 1982'
 
       describe 'other options', ->
         it 'accepts a custom format', ->
@@ -1567,12 +1567,12 @@ test = (moment, Twix) ->
     it "uses the moment locale's 24-hour setting by default", ->
       start = moment('1982-05-25').locale 'en-gb'
       range = start.twix(start.clone().add 1, 'days')
-      assertEqual 'May 25, 0:00 - May 26, 0:00, 1982', range.format()
+      assertEqual '25 May 0:00 - 26 0:00, 1982', range.format()
 
     it "uses the moment locale's settings by default", ->
       start = moment('1982-05-25').locale 'fr'
       range = start.twix(start.clone().add 1, 'days')
-      assertEqual 'mai 25, 0:00 - mai 26, 0:00, 1982', range.format()
+      assertEqual '25 mai 0:00 - 26 mai 0:00, 1982', range.format()
 
 if define?
   define(['moment', 'twix'], (moment, Twix) -> test moment, Twix)
