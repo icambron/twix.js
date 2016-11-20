@@ -11,6 +11,8 @@ Grab [the file](https://raw.github.com/icambron/twix.js/master/dist/twix.min.js)
 <script src="twix.min.js"></script>
 ```
 
+If you want to pull from a CDN, [this one](http://www.jsdelivr.com/projects/twix.js) is automatically kept up to date.
+
 ###Browser with RequireJS
 
 Twix supports AMD, so you can load it as a RequireJS module. Natrually, it depends on Moment:
