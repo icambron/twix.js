@@ -2,7 +2,7 @@
   var Twix, moment, ref, ref1, test;
 
   test = function(moment, Twix) {
-    var assertEqual, assertMomentEqual, assertTwixEqual, nextYear, thatDay, thisYear, tomorrow, yesterday;
+    var assertArrayEqual, assertEqual, assertMomentEqual, assertTwixEqual, nextYear, thatDay, thisYear, tomorrow, yesterday;
     moment.locale('en');
     assertEqual = function(a, b) {
       if (a !== b) {
@@ -17,6 +17,13 @@
     assertMomentEqual = function(a, b) {
       if (a.valueOf() !== b.valueOf()) {
         throw new Error("Found " + (b.format()) + ", expected " + (a.format()));
+      }
+    };
+    assertArrayEqual = function(a, b) {
+      if (!(a.length === b.length && a.every(function(elem, i) {
+        return elem === b[i];
+      }))) {
+        throw new Error("Found " + b + ", expected " + a);
       }
     };
     thisYear = function(partial, time) {
@@ -943,16 +950,16 @@
         it('returns false for an earlier range', function() {
           return assertNotEngulfing(someTime, thatDay('03:30', '04:30'));
         });
-        it('returns true for a partially later range', function() {
+        it('returns false for a partially later range', function() {
           return assertNotEngulfing(someTime, thatDay('08:00', '11:30'));
         });
-        it('returns true for a partially earlier range', function() {
+        it('returns false for a partially earlier range', function() {
           return assertNotEngulfing(someTime, thatDay('04:30', '06:30'));
         });
         it('returns true for an engulfed range', function() {
           return assertEngulfing(someTime, thatDay('06:30', '07:30'));
         });
-        return it('returns true for an engulfing range', function() {
+        return it('returns false for an engulfing range', function() {
           return assertNotEngulfing(someTime, thatDay('04:30', '09:30'));
         });
       });
@@ -1923,6 +1930,17 @@
           allDay: true
         }).toString();
         return assertEqual('{start: 1982-05-25T00:00:00Z, end: 1982-05-25T00:00:00Z, allDay: true}', stringed);
+      });
+    });
+    describe('toArray', function() {
+      return it('returns an array of moment objects', function() {
+        var arrayOfDays;
+        arrayOfDays = moment.utc('1982-05-25').twix(moment.utc('1982-05-27'), {
+          allDay: true
+        }).toArray('days').map(function(m) {
+          return m.format('YYYY-MM-DD');
+        });
+        return assertArrayEqual(['1982-05-25', '1982-05-26', '1982-05-27'], arrayOfDays);
       });
     });
     return describe('internationalization', function() {

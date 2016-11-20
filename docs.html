@@ -196,6 +196,15 @@ Returns an iterator that will return each a Moment for each time period included
 
 <p><code>iterateInner</code> takes all the same duration arguments as <code>iterate</code>.</p>
 
+<h3 id="toarray">toArray</h3>
+
+<p>Returns an array of Moment objects from the range, spaced out by the specified period. Works the same as <a href="#iterate">iterate()</a> and takes all the same arguments, but collects the results for you.</p>
+<pre class="javascript highlight"><code><span class="kd">var</span> <span class="nx">arr</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s1">'1982-05-24T5:00'</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s1">'1982-05-27T6:00'</span><span class="p">).</span><span class="nx">toArray</span><span class="p">(</span><span class="s1">'days'</span><span class="p">);</span>
+<span class="nx">arr</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">format</span><span class="p">(</span><span class="s1">'LLL'</span><span class="p">);</span> <span class="c1">//=&gt; 'May 24, 1982 12:00 AM'</span>
+<span class="nx">arr</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">format</span><span class="p">(</span><span class="s1">'LLL'</span><span class="p">);</span> <span class="c1">//=&gt; 'May 25, 1982 12:00 AM'</span>
+<span class="nx">arr</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="nx">format</span><span class="p">(</span><span class="s1">'LLL'</span><span class="p">);</span> <span class="c1">//=&gt; 'May 26, 1982 12:00 AM'</span>
+</code></pre>
+
 <h3 id="start">start</h3>
 
 <p>Returns the start of the range as a Moment instance. Mutating the returned value does not affect the range. This accessor is often useful when using Twix functions that create ranges, such as <code>split()</code> and <code>intersection()</code>.</p>
@@ -575,6 +584,9 @@ Returns an iterator that will return each a Moment for each time period included
 </li>
 <li>
 <a href="#iterateinner">iterateInner</a>
+</li>
+<li>
+<a href="#toarray">toArray</a>
 </li>
 <li>
 <a href="#start">start</a>
