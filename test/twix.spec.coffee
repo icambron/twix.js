@@ -1170,6 +1170,12 @@ test = (moment, Twix) ->
         assertEqual 1, splits.length
         assertTwixEqual range, splits[0]
 
+      it 'splits at all provided times', ->
+        splits = moment.twix('2016-11-16T16:00:00', '2016-11-17T00:00:00').split('2016-11-16T18:00:00', '2016-11-17T00:00:00')
+        assertEqual 2, splits.length
+        assertTwixEqual moment.twix('2016-11-16T16:00:00', '2016-11-16T18:00:00'), splits[0]
+        assertTwixEqual moment.twix('2016-11-16T18:00:00', '2016-11-17T00:00:00'), splits[1]
+
   describe 'divide()', ->
     it 'should split a 4 hour period into 4 contiguous 1-hour parts', ->
       range = thatDay '05:00', '09:00'
