@@ -1,5 +1,7 @@
 # Changelog
 
+ * **1.1.3**: Fix for `split`
+
  * **1.1.2**: Added `toArray`
 
  * **1.1.0**: Smart formatting: `hideTime` causes months to collapse
