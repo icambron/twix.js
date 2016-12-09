@@ -167,7 +167,7 @@ makeTwix = (moment) ->
 
       if times
         times = (moment(time) for time in times)
-        times = (mom for mom in times when mom.isValid() && mom >= start).sort()
+        times = (mom for mom in times when mom.isValid() && mom >= start).sort((a, b) -> a.valueOf() - b.valueOf())
 
       return [this] if (dur && dur.asMilliseconds() == 0) || (times && times.length == 0)
 
