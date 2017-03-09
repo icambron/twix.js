@@ -157,6 +157,12 @@ test = (moment, Twix) ->
         mom = moment()
         assertEqual 60 * 1000, mom.twix(mom.clone().add(1, 'minute')).length()
 
+    describe 'floating point', ->
+      it 'return 4.5', ->
+        range1 = moment('1982-05-25T00:00').twix('1982-05-25T06:00');
+        range2 = moment('1982-05-25T01:00').twix('1982-05-25T05:30');
+        assertEqual 4.5, range1.intersection(range2).length 'hours', true
+
     describe 'days', ->
       it 'returns 1 for yesterday - today', ->
         assertEqual 1, yesterday().twix(moment()).length('days')
