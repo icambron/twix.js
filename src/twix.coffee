@@ -34,8 +34,8 @@ makeTwix = (moment) ->
 
     isSame: (period) -> @_start.isSame @_end, period
 
-    length: (period) ->
-      @_displayEnd.diff @_start, period
+    length: (period, floatingPoint = false) ->
+      @_displayEnd.diff @_start, period, floatingPoint
 
     count: (period) ->
       start = @start().startOf period
