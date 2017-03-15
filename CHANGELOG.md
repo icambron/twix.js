@@ -1,5 +1,7 @@
 # Changelog
 
+ * **1.1.4**: Add a floating point option to `length`
+
  * **1.1.3**: Fix for `split`
 
  * **1.1.2**: Added `toArray`

@@ -162,11 +162,12 @@ moment("1982-05-25").twix("1982-05-28").contains("1982-05-26"); //=> true
 ```
 
 ###length
-Calculate the length of the range in terms of minutes/hours/days/months/etc. Any time period understood by Moment will work.
+Calculate the length of the range in terms of minutes/hours/days/months/etc. Any time period understood by Moment will work. Accepts an optional boolean argument to switch on floating point results.
 
 ```js
-moment("1982-05-25T5:30").twix("1982-05-25T6:30").length("hours")  //=> 1
-moment("1982-05-25T5:00").twix("1982-05-30T6:00").length("days")   //=> 6
+moment("1982-05-25T05:30").twix("1982-05-25T06:30").length("hours")  //=> 1
+moment("1982-05-25T05:00").twix("1982-05-30T06:00").length("days")   //=> 5.041666666666667
+moment("1982-05-25T05:00").twix("1982-05-30T06:00").length("days", true)   //=> 6
 ```
 
 See also [asDuration()](#reating-a-duration-from-a-range).
