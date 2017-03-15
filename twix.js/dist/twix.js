@@ -61,8 +61,11 @@
         return this._start.isSame(this._end, period);
       };
 
-      Twix.prototype.length = function(period) {
-        return this._displayEnd.diff(this._start, period);
+      Twix.prototype.length = function(period, floatingPoint) {
+        if (floatingPoint == null) {
+          floatingPoint = false;
+        }
+        return this._displayEnd.diff(this._start, period, floatingPoint);
       };
 
       Twix.prototype.count = function(period) {
@@ -289,7 +292,9 @@
               }
             }
             return results1;
-          })()).sort();
+          })()).sort(function(a, b) {
+            return a.valueOf() - b.valueOf();
+          });
         }
         if ((dur && dur.asMilliseconds() === 0) || (times && times.length === 0)) {
           return [this];

@@ -133,9 +133,10 @@ otherwise.</p>
 
 <h3 id="length">length</h3>
 
-<p>Calculate the length of the range in terms of minutes/hours/days/months/etc. Any time period understood by Moment will work.</p>
-<pre class="javascript highlight"><code><span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-25T5:30"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"1982-05-25T6:30"</span><span class="p">).</span><span class="nx">length</span><span class="p">(</span><span class="s2">"hours"</span><span class="p">)</span>  <span class="c1">//=&gt; 1</span>
-<span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-25T5:00"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"1982-05-30T6:00"</span><span class="p">).</span><span class="nx">length</span><span class="p">(</span><span class="s2">"days"</span><span class="p">)</span>   <span class="c1">//=&gt; 6</span>
+<p>Calculate the length of the range in terms of minutes/hours/days/months/etc. Any time period understood by Moment will work. Accepts an optional boolean argument to switch on floating point results.</p>
+<pre class="javascript highlight"><code><span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-25T05:30"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"1982-05-25T06:30"</span><span class="p">).</span><span class="nx">length</span><span class="p">(</span><span class="s2">"hours"</span><span class="p">)</span>  <span class="c1">//=&gt; 1</span>
+<span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-25T05:00"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"1982-05-30T06:00"</span><span class="p">).</span><span class="nx">length</span><span class="p">(</span><span class="s2">"days"</span><span class="p">)</span>   <span class="c1">//=&gt; 5.041666666666667</span>
+<span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-25T05:00"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"1982-05-30T06:00"</span><span class="p">).</span><span class="nx">length</span><span class="p">(</span><span class="s2">"days"</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>   <span class="c1">//=&gt; 6</span>
 </code></pre>
 
 <p>See also <a href="#reating-a-duration-from-a-range">asDuration()</a>.</p>

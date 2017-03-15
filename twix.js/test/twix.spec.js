@@ -209,6 +209,13 @@
           return assertEqual(60 * 1000, mom.twix(mom.clone().add(1, 'minute')).length());
         });
       });
+      describe('floating point', function() {
+        return it('returns a decimal', function() {
+          var range;
+          range = moment('1982-05-25T00:00').twix('1982-05-25T06:30');
+          return assertEqual(6.5, range.length('hours', true));
+        });
+      });
       describe('days', function() {
         it('returns 1 for yesterday - today', function() {
           return assertEqual(1, yesterday().twix(moment()).length('days'));
@@ -1421,12 +1428,19 @@
           assertTwixEqual(thatDay('05:00', '05:30'), splits[0]);
           return assertTwixEqual(thatDay('05:30', '06:00'), splits[1]);
         });
-        return it("returns the original if they're all bad times", function() {
+        it("returns the original if they're all bad times", function() {
           var range, splits;
           range = thatDay('05:01', '07:30');
           splits = range.split(moment.invalid());
           assertEqual(1, splits.length);
           return assertTwixEqual(range, splits[0]);
+        });
+        return it('splits at all provided times', function() {
+          var splits;
+          splits = moment.twix('2016-11-16T16:00:00', '2016-11-17T00:00:00').split('2016-11-16T18:00:00', '2016-11-17T00:00:00');
+          assertEqual(2, splits.length);
+          assertTwixEqual(moment.twix('2016-11-16T16:00:00', '2016-11-16T18:00:00'), splits[0]);
+          return assertTwixEqual(moment.twix('2016-11-16T18:00:00', '2016-11-17T00:00:00'), splits[1]);
         });
       });
     });
