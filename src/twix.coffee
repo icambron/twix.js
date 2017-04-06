@@ -1,4 +1,4 @@
-hasModule = module? && module.exports?
+hasModule = module? && module.exports? && typeof(require) == 'function'
 
 isArray = (input) ->
   Object.prototype.toString.call(input) == '[object Array]'
