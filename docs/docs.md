@@ -176,8 +176,8 @@ See also [asDuration()](#reating-a-duration-from-a-range).
 The number of minutes/hours/days/months/years the range includes, even in part. Any time period understood by Moment will work.
 
 ```js
-moment("1982-05-25T5:00").twix("1982-05-25T6:00").count("days")  //=> 1
-moment("1982-05-25T5:00").twix("1982-05-26T6:00").count("days")  //=> 2
+moment("1982-05-25T05:00").twix("1982-05-25T06:00").count("days")  //=> 1
+moment("1982-05-25T05:00").twix("1982-05-26T06:00").count("days")  //=> 2
 ```
 
 Note that this is counting sections of the calendar, not periods of time. So it asks "what dates are included by this range?" as opposed to "how many 24-hour periods are contained in this range?" For the latter, see [length()](#length).
@@ -187,8 +187,8 @@ Note that this is counting sections of the calendar, not periods of time. So it 
 The number of minutes/hours/days/months/years that are completely contained, such that both the beginning and end of the period fall inside the range. Any time period understood by Moment will work.
 
 ```js
-moment("1982-05-25T5:00").twix("1982-05-25T6:00").countInner("days")  //=> 0
-moment("1982-05-24T5:00").twix("1982-05-26T6:00").countInner("days")  //=> 1
+moment("1982-05-25T05:00").twix("1982-05-25T06:00").countInner("days")  //=> 0
+moment("1982-05-24T05:00").twix("1982-05-26T06:00").countInner("days")  //=> 1
 ```
 
 See also [count()](#count) and [length()](#length).
@@ -198,7 +198,7 @@ See also [count()](#count) and [length()](#length).
 Returns an iterator that will return each a Moment for each time period included in the range. Any time period understood by Moment will work.
 
 ```js
-var iter = moment("1982-05-25T5:00").twix("1982-05-26T6:00").iterate("days");
+var iter = moment("1982-05-25T05:00").twix("1982-05-26T06:00").iterate("days");
 iter.hasNext(); //=> true
 iter.next(); //=> moment("1982-05-25")
 iter.next(); //=> moment("1982-05-26")
@@ -228,7 +228,7 @@ iter.next().format('LT'); //=> '9:00 PM'
 Like [iterate()](#iterate), but only for days completely contained in the range.
 
 ```js
-var iter = moment("1982-05-24T5:00").twix("1982-05-27T6:00").iterateInner("days");
+var iter = moment("1982-05-24T05:00").twix("1982-05-27T06:00").iterateInner("days");
 iter.hasNext(); //=> true
 iter.next(); //=> moment("1982-05-25")
 iter.next(); //=> moment("1982-05-26")
@@ -243,7 +243,7 @@ iter.next(); //=> null
 Returns an array of Moment objects from the range, spaced out by the specified period. Works the same as [iterate()](#iterate) and takes all the same arguments, but collects the results for you.
 
 ```js
-var arr = moment('1982-05-24T5:00').twix('1982-05-27T6:00').toArray('days');
+var arr = moment('1982-05-24T05:00').twix('1982-05-27T06:00').toArray('days');
 arr[0].format('LLL'); //=> 'May 24, 1982 12:00 AM'
 arr[1].format('LLL'); //=> 'May 25, 1982 12:00 AM'
 arr[2].format('LLL'); //=> 'May 26, 1982 12:00 AM'
