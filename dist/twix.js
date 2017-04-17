@@ -3,7 +3,7 @@
   var hasModule, isArray, makeTwix,
     slice = [].slice;
 
-  hasModule = (typeof module !== "undefined" && module !== null) && (module.exports != null);
+  hasModule = (typeof module !== "undefined" && module !== null) && (module.exports != null) && typeof require === 'function';
 
   isArray = function(input) {
     return Object.prototype.toString.call(input) === '[object Array]';
