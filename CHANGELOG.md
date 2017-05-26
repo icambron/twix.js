@@ -1,5 +1,7 @@
 # Changelog
 
+ * **1.2.0**: Add basic internationalization
+
  * **1.1.4**: Add a floating point option to `length`
 
  * **1.1.3**: Fix for `split`
