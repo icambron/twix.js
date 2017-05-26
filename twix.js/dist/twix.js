@@ -3,7 +3,7 @@
   var hasModule, isArray, makeTwix,
     slice = [].slice;
 
-  hasModule = (typeof module !== "undefined" && module !== null) && (module.exports != null);
+  hasModule = (typeof module !== "undefined" && module !== null) && (module.exports != null) && typeof require === 'function';
 
   isArray = function(input) {
     return Object.prototype.toString.call(input) === '[object Array]';
@@ -358,7 +358,7 @@
       };
 
       Twix.prototype.format = function(inopts) {
-        var atomicMonthDate, common_bucket, end_bucket, fold, format, fs, global_first, goesIntoTheMorning, j, len, momentHourFormat, needDate, needsMeridiem, options, process, start_bucket, together;
+        var americanish, atomicMonthDate, common_bucket, end_bucket, fold, format, fs, global_first, goesIntoTheMorning, j, len, localFormat, momentHourFormat, needDate, needsMeridiem, options, process, start_bucket, together;
         if (this.isEmpty()) {
           return '';
         }
@@ -387,6 +387,8 @@
         Twix._extend(options, inopts || {});
         fs = [];
         needsMeridiem = options.hourFormat && options.hourFormat[0] === 'h';
+        localFormat = this._start.localeData()._longDateFormat['L'];
+        americanish = localFormat.indexOf('M') < localFormat.indexOf('D');
         goesIntoTheMorning = options.lastNightEndsAt > 0 && !this.allDay && this.end().startOf('d').valueOf() === this.start().add(1, 'd').startOf('d').valueOf() && this._start.hours() > 12 && this._end.hours() < options.lastNightEndsAt;
         needDate = !options.hideDate && (!options.implicitDate || this.start().startOf('d').valueOf() !== moment().startOf('d').valueOf() || !(this.isSame('d') || goesIntoTheMorning));
         atomicMonthDate = !(this.allDay || options.hideTime);
@@ -406,7 +408,7 @@
             fn: function(date) {
               return date.format(options.yearFormat);
             },
-            pre: ', ',
+            pre: americanish ? ', ' : ' ',
             slot: 4
           });
         }
@@ -414,7 +416,9 @@
           fs.push({
             name: 'month-date',
             fn: function(date) {
-              return date.format(options.monthFormat + " " + options.dayFormat);
+              var format;
+              format = americanish ? options.monthFormat + " " + options.dayFormat : options.dayFormat + " " + options.monthFormat;
+              return date.format(format);
             },
             ignoreEnd: function() {
               return goesIntoTheMorning;
@@ -430,7 +434,7 @@
               return date.format(options.monthFormat);
             },
             pre: ' ',
-            slot: 2
+            slot: americanish ? 2 : 3
           });
         }
         if (!atomicMonthDate && needDate) {
@@ -440,7 +444,7 @@
               return date.format(options.dayFormat);
             },
             pre: ' ',
-            slot: 3
+            slot: americanish ? 3 : 2
           });
         }
         if (needDate && options.showDayOfWeek) {

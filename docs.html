@@ -144,8 +144,8 @@ otherwise.</p>
 <h3 id="count">count</h3>
 
 <p>The number of minutes/hours/days/months/years the range includes, even in part. Any time period understood by Moment will work.</p>
-<pre class="javascript highlight"><code><span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-25T5:00"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"1982-05-25T6:00"</span><span class="p">).</span><span class="nx">count</span><span class="p">(</span><span class="s2">"days"</span><span class="p">)</span>  <span class="c1">//=&gt; 1</span>
-<span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-25T5:00"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"1982-05-26T6:00"</span><span class="p">).</span><span class="nx">count</span><span class="p">(</span><span class="s2">"days"</span><span class="p">)</span>  <span class="c1">//=&gt; 2</span>
+<pre class="javascript highlight"><code><span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-25T05:00"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"1982-05-25T06:00"</span><span class="p">).</span><span class="nx">count</span><span class="p">(</span><span class="s2">"days"</span><span class="p">)</span>  <span class="c1">//=&gt; 1</span>
+<span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-25T05:00"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"1982-05-26T06:00"</span><span class="p">).</span><span class="nx">count</span><span class="p">(</span><span class="s2">"days"</span><span class="p">)</span>  <span class="c1">//=&gt; 2</span>
 </code></pre>
 
 <p>Note that this is counting sections of the calendar, not periods of time. So it asks &quot;what dates are included by this range?&quot; as opposed to &quot;how many 24-hour periods are contained in this range?&quot; For the latter, see <a href="#length">length()</a>.</p>
@@ -154,8 +154,8 @@ otherwise.</p>
 
 <p><a id="counter-inner-int"></a>
 The number of minutes/hours/days/months/years that are completely contained, such that both the beginning and end of the period fall inside the range. Any time period understood by Moment will work.</p>
-<pre class="javascript highlight"><code><span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-25T5:00"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"1982-05-25T6:00"</span><span class="p">).</span><span class="nx">countInner</span><span class="p">(</span><span class="s2">"days"</span><span class="p">)</span>  <span class="c1">//=&gt; 0</span>
-<span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-24T5:00"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"1982-05-26T6:00"</span><span class="p">).</span><span class="nx">countInner</span><span class="p">(</span><span class="s2">"days"</span><span class="p">)</span>  <span class="c1">//=&gt; 1</span>
+<pre class="javascript highlight"><code><span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-25T05:00"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"1982-05-25T06:00"</span><span class="p">).</span><span class="nx">countInner</span><span class="p">(</span><span class="s2">"days"</span><span class="p">)</span>  <span class="c1">//=&gt; 0</span>
+<span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-24T05:00"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"1982-05-26T06:00"</span><span class="p">).</span><span class="nx">countInner</span><span class="p">(</span><span class="s2">"days"</span><span class="p">)</span>  <span class="c1">//=&gt; 1</span>
 </code></pre>
 
 <p>See also <a href="#count">count()</a> and <a href="#length">length()</a>.</p>
@@ -164,7 +164,7 @@ The number of minutes/hours/days/months/years that are completely contained, suc
 
 <p><a id="iterate-int"></a>
 Returns an iterator that will return each a Moment for each time period included in the range. Any time period understood by Moment will work.</p>
-<pre class="javascript highlight"><code><span class="kd">var</span> <span class="nx">iter</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-25T5:00"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"1982-05-26T6:00"</span><span class="p">).</span><span class="nx">iterate</span><span class="p">(</span><span class="s2">"days"</span><span class="p">);</span>
+<pre class="javascript highlight"><code><span class="kd">var</span> <span class="nx">iter</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-25T05:00"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"1982-05-26T06:00"</span><span class="p">).</span><span class="nx">iterate</span><span class="p">(</span><span class="s2">"days"</span><span class="p">);</span>
 <span class="nx">iter</span><span class="p">.</span><span class="nx">hasNext</span><span class="p">();</span> <span class="c1">//=&gt; true</span>
 <span class="nx">iter</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span> <span class="c1">//=&gt; moment("1982-05-25")</span>
 <span class="nx">iter</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span> <span class="c1">//=&gt; moment("1982-05-26")</span>
@@ -189,7 +189,7 @@ Returns an iterator that will return each a Moment for each time period included
 <h3 id="iterateinner">iterateInner</h3>
 
 <p>Like <a href="#iterate">iterate()</a>, but only for days completely contained in the range.</p>
-<pre class="javascript highlight"><code><span class="kd">var</span> <span class="nx">iter</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-24T5:00"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"1982-05-27T6:00"</span><span class="p">).</span><span class="nx">iterateInner</span><span class="p">(</span><span class="s2">"days"</span><span class="p">);</span>
+<pre class="javascript highlight"><code><span class="kd">var</span> <span class="nx">iter</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s2">"1982-05-24T05:00"</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s2">"1982-05-27T06:00"</span><span class="p">).</span><span class="nx">iterateInner</span><span class="p">(</span><span class="s2">"days"</span><span class="p">);</span>
 <span class="nx">iter</span><span class="p">.</span><span class="nx">hasNext</span><span class="p">();</span> <span class="c1">//=&gt; true</span>
 <span class="nx">iter</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span> <span class="c1">//=&gt; moment("1982-05-25")</span>
 <span class="nx">iter</span><span class="p">.</span><span class="nx">next</span><span class="p">();</span> <span class="c1">//=&gt; moment("1982-05-26")</span>
@@ -202,7 +202,7 @@ Returns an iterator that will return each a Moment for each time period included
 <h3 id="toarray">toArray</h3>
 
 <p>Returns an array of Moment objects from the range, spaced out by the specified period. Works the same as <a href="#iterate">iterate()</a> and takes all the same arguments, but collects the results for you.</p>
-<pre class="javascript highlight"><code><span class="kd">var</span> <span class="nx">arr</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s1">'1982-05-24T5:00'</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s1">'1982-05-27T6:00'</span><span class="p">).</span><span class="nx">toArray</span><span class="p">(</span><span class="s1">'days'</span><span class="p">);</span>
+<pre class="javascript highlight"><code><span class="kd">var</span> <span class="nx">arr</span> <span class="o">=</span> <span class="nx">moment</span><span class="p">(</span><span class="s1">'1982-05-24T05:00'</span><span class="p">).</span><span class="nx">twix</span><span class="p">(</span><span class="s1">'1982-05-27T06:00'</span><span class="p">).</span><span class="nx">toArray</span><span class="p">(</span><span class="s1">'days'</span><span class="p">);</span>
 <span class="nx">arr</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">format</span><span class="p">(</span><span class="s1">'LLL'</span><span class="p">);</span> <span class="c1">//=&gt; 'May 24, 1982 12:00 AM'</span>
 <span class="nx">arr</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nx">format</span><span class="p">(</span><span class="s1">'LLL'</span><span class="p">);</span> <span class="c1">//=&gt; 'May 25, 1982 12:00 AM'</span>
 <span class="nx">arr</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="nx">format</span><span class="p">(</span><span class="s1">'LLL'</span><span class="p">);</span> <span class="c1">//=&gt; 'May 26, 1982 12:00 AM'</span>

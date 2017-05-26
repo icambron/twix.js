@@ -1959,17 +1959,31 @@
       });
     });
     return describe('internationalization', function() {
-      it("uses the moment locale's 24-hour setting by default", function() {
+      it('shows the date in the right order', function() {
+        var range, start;
+        start = moment('1982-05-25').locale('en-gb');
+        range = start.twix(start.clone().add(1, 'hour'));
+        return assertEqual('25 May 1982, 0:00 - 1:00', range.format());
+      });
+      it('shows the date in the right order for all day ranges', function() {
+        var range, start;
+        start = moment('1982-05-25').locale('en-gb');
+        range = start.twix(start.clone().add(1, 'days'), {
+          allDay: true
+        });
+        return assertEqual('25 - 26 May 1982', range.format());
+      });
+      it("uses the moment locale's 24-hour setting", function() {
         var range, start;
         start = moment('1982-05-25').locale('en-gb');
         range = start.twix(start.clone().add(1, 'days'));
-        return assertEqual('May 25, 0:00 - May 26, 0:00, 1982', range.format());
+        return assertEqual('25 May, 0:00 - 26 May, 0:00 1982', range.format());
       });
-      return it("uses the moment locale's settings by default", function() {
+      return it("uses the moment locale's month names", function() {
         var range, start;
         start = moment('1982-05-25').locale('fr');
         range = start.twix(start.clone().add(1, 'days'));
-        return assertEqual('mai 25, 0:00 - mai 26, 0:00, 1982', range.format());
+        return assertEqual('25 mai, 0:00 - 26 mai, 0:00 1982', range.format());
       });
     });
   };
