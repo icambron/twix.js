@@ -248,6 +248,9 @@ makeTwix = (moment) ->
 
       needsMeridiem = options.hourFormat && options.hourFormat[0] == 'h'
 
+      localFormat = @_start.localeData()._longDateFormat['L']
+      americanish = localFormat.indexOf('M') < localFormat.indexOf('D')
+
       goesIntoTheMorning =
         options.lastNightEndsAt > 0 &&
         !@allDay &&
@@ -271,13 +274,19 @@ makeTwix = (moment) ->
         fs.push
           name: 'year',
           fn: (date) -> date.format options.yearFormat
-          pre: ', '
+          pre: if americanish then ', ' else ' '
           slot: 4
 
       if atomicMonthDate && needDate
         fs.push
           name: 'month-date'
-          fn: (date) -> date.format "#{options.monthFormat} #{options.dayFormat}"
+          fn: (date) ->
+            format =
+              if americanish
+                "#{options.monthFormat} #{options.dayFormat}"
+              else
+                "#{options.dayFormat} #{options.monthFormat}"
+            date.format format
           ignoreEnd: -> goesIntoTheMorning
           pre: ' '
           slot: 2
@@ -287,14 +296,14 @@ makeTwix = (moment) ->
           name: 'month'
           fn: (date) -> date.format options.monthFormat
           pre: ' '
-          slot: 2
+          slot: if americanish then 2 else 3
 
       if !atomicMonthDate && needDate
         fs.push
           name: 'date'
           fn: (date) -> date.format options.dayFormat
           pre: ' '
-          slot: 3
+          slot: if americanish then 3 else 2
 
       if needDate && options.showDayOfWeek
         fs.push

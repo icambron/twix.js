@@ -1575,15 +1575,26 @@ test = (moment, Twix) ->
       assertArrayEqual ['1982-05-25', '1982-05-26', '1982-05-27'], arrayOfDays
 
   describe 'internationalization', ->
-    it "uses the moment locale's 24-hour setting by default", ->
+
+    it 'shows the date in the right order', ->
+      start = moment('1982-05-25').locale 'en-gb'
+      range = start.twix(start.clone().add(1, 'hour'))
+      assertEqual '25 May 1982, 0:00 - 1:00', range.format()
+
+    it 'shows the date in the right order for all day ranges', ->
+      start = moment('1982-05-25').locale 'en-gb'
+      range = start.twix(start.clone().add(1, 'days'), allDay: true)
+      assertEqual '25 - 26 May 1982', range.format()
+
+    it "uses the moment locale's 24-hour setting", ->
       start = moment('1982-05-25').locale 'en-gb'
       range = start.twix(start.clone().add 1, 'days')
-      assertEqual 'May 25, 0:00 - May 26, 0:00, 1982', range.format()
+      assertEqual '25 May, 0:00 - 26 May, 0:00 1982', range.format()
 
-    it "uses the moment locale's settings by default", ->
+    it "uses the moment locale's month names", ->
       start = moment('1982-05-25').locale 'fr'
       range = start.twix(start.clone().add 1, 'days')
-      assertEqual 'mai 25, 0:00 - mai 26, 0:00, 1982', range.format()
+      assertEqual '25 mai, 0:00 - 26 mai, 0:00 1982', range.format()
 
 if define?
   define(['moment', 'twix'], (moment, Twix) -> test moment, Twix)
