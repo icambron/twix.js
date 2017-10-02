@@ -663,7 +663,7 @@
     return module.exports = makeTwix(require('moment'));
   }
 
-  if (typeof define === 'function') {
+  if (typeof define === 'function' && define.amd) {
     define('twix', ['moment'], function(moment) {
       return makeTwix(moment);
     });

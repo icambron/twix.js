@@ -1,5 +1,7 @@
 # Changelog
 
+ * **1.2.1**: Fix for AMD support
+
  * **1.2.0**: Add basic internationalization
 
  * **1.1.4**: Add a floating point option to `length`
