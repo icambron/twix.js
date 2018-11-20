@@ -1,6 +1,6 @@
 # Twix.js
 
-[![MIT License][license-image]][license] [![Build Status][travis-image]][travis-url] [![Code Climate][code-climate-img]][code-climate-url] [![Version][release-version-image]][release-url] [![NPM version][npm-version-image]][npm-url]
+[![MIT License][license-image]][license] [![Build Status][travis-image]][travis-url] [![Version][release-version-image]][release-url] [![NPM version][npm-version-image]][npm-url]
 
 Twix is a comprehensive JS library for working with date ranges, and includes a customizable smart formatter. It's written in CoffeeScript and it depends on [Moment.js](http://momentjs.com/).
 
@@ -75,9 +75,6 @@ Copyright 2012-2015 Isaac Cambron and contributors. Distributed under the MIT Li
 
 [coveralls-url]: https://coveralls.io/github/icambron/twix.js
 [coveralls-image]: https://img.shields.io/coveralls/icambron/twix.js/master.svg?style=flat-square
-
-[code-climate-img]: https://img.shields.io/codeclimate/github/icambron/twix.js.svg?style=flat-square
-[code-climate-url]: https://codeclimate.com/github/icambron/twix.js
 
 [gemnasium-url]: https://gemnasium.com/icambron/twix.js
 [gemnasium-image]: https://img.shields.io/gemnasium/icambron/twix.js.svg?style=flat-square
