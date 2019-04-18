@@ -1,5 +1,7 @@
 # Changelog
 
+ * **1.2.1**: Add formatting for japanese dates
+
  * **1.2.1**: Fix for AMD support
 
  * **1.2.0**: Add basic internationalization
