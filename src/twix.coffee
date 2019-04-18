@@ -224,7 +224,10 @@ makeTwix = (moment) ->
       options =
         groupMeridiems: true
         spaceBeforeMeridiem: true
+        spaceBeforeMonth: true
+        spaceBeforeDay: true
         showDayOfWeek: false
+        showYearFirst: false
         hideTime: false
         hideYear: false
         implicitMinutes: true
@@ -275,7 +278,7 @@ makeTwix = (moment) ->
           name: 'year',
           fn: (date) -> date.format options.yearFormat
           pre: if americanish then ', ' else ' '
-          slot: 4
+          slot: if options.showYearFirst then -1 else 4
 
       if atomicMonthDate && needDate
         fs.push
@@ -295,14 +298,14 @@ makeTwix = (moment) ->
         fs.push
           name: 'month'
           fn: (date) -> date.format options.monthFormat
-          pre: ' '
+          pre: if options.spaceBeforeMonth then ' ' else ''
           slot: if americanish then 2 else 3
 
       if !atomicMonthDate && needDate
         fs.push
           name: 'date'
           fn: (date) -> date.format options.dayFormat
-          pre: ' '
+          pre: if options.spaceBeforeDay then ' ' else ''
           slot: if americanish then 3 else 2
 
       if needDate && options.showDayOfWeek
