@@ -9,3 +9,5 @@ npm-debug.log
 #Jetbrains IDE files
 .idea
 *.iml
+
+package-lock.json
