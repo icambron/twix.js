@@ -366,10 +366,7 @@
         options = {
           groupMeridiems: true,
           spaceBeforeMeridiem: true,
-          spaceBeforeMonth: true,
-          spaceBeforeDay: true,
           showDayOfWeek: false,
-          showYearFirst: false,
           hideTime: false,
           hideYear: false,
           implicitMinutes: true,
@@ -412,7 +409,7 @@
               return date.format(options.yearFormat);
             },
             pre: americanish ? ', ' : ' ',
-            slot: ' '
+            slot: 4
           });
         }
         if (atomicMonthDate && needDate) {
