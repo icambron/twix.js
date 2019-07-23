@@ -4,7 +4,11 @@
   "description": "Twix.js allows you to work with date ranges",
   "homepage": "http://icambron.github.io/twix.js/",
   "author": "Isaac Cambron",
-  "keywords": ["twix", "date", "date range"],
+  "keywords": [
+    "twix",
+    "date",
+    "date range"
+  ],
   "peerDependencies": {
     "moment": ">= 2.10.0"
   },
@@ -37,7 +41,9 @@
   "license": "MIT",
   "config": {
     "blanket": {
-      "pattern": ["dist/twix.js"]
+      "pattern": [
+        "dist/twix.js"
+      ]
     }
   }
 }

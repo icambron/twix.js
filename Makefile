@@ -29,13 +29,7 @@ bench: build
 	@node test/twix.bench.js
 
 test: build
-	@mocha -R dot
+	@mocha test/twix.spec.js -R dot
 
 lint: build
 	@coffeelint src test
-
-coverage: build
-	@mocha --require blanket -R html-cov > test/coverage.html
-
-coveralls: build
-	@mocha --require blanket -R mocha-lcov-reporter | coveralls
