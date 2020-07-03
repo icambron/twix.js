@@ -455,7 +455,7 @@ makeTwix = (moment) ->
   Twix
 
 # -- MAKE AVAILABLE
-return module.exports = makeTwix(require 'moment') if hasModule
+return module.exports = makeTwix(if moment? then moment else require 'moment') if hasModule
 
 if typeof(define) == 'function' && define.amd
   define 'twix', ['moment'], (moment) -> makeTwix(moment)
